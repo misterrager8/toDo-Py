@@ -24,6 +24,10 @@ def changeItem(item):
   fileText = input("Content of the file:\n")
   newFile.write(fileText)
   newFile.close()
+  
+def deleteItem(item):
+  fileItem = os.listdir(folderPath)[item]
+  os.remove(folderPath + "/" + fileItem)
     
 def handleInput(answer):
   if answer == "a":
@@ -35,32 +39,23 @@ def handleInput(answer):
     itemSelected = input("Which item do you want to edit? ")
     changeItem(int(itemSelected))
   elif answer == "c":
-    print("na")
+    formatList(listFiles())
+    itemSelected_a = input("Which item do you want to delete? ")
+    deleteItem(int(itemSelected_a))
+    print("Item deleted")
   elif answer == "d":
     exit()
 
-# print("There are " + str(len(listFiles())) + " items on the list")
-
 while True:
-  # formatList(listFiles())
   answer = input(
   """
+  Main Menu
+  
   A: Add To List
   B: Edit Item
   C: Delete Item
   D: Quit Program
 
-  Please select
-  """
+  Please select: """
   )
   handleInput(answer)
-  # if (addItem(answer)):
-    # item = input("Item name: ") + ".txt"
-    # newFile = open(folderPath + "/" + item, "a+")
-    # newFile.close()
-    # formatList(listFiles())
-  # elif (not addItem(answer)):
-    # formatList(listFiles())
-    # break
-    
-    
