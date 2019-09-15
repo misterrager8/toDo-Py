@@ -47,15 +47,6 @@ def handleInput(answer):
     exit()
 
 while True:
-  answer = input(
-  """
-  Main Menu
-  
-  A: Add To List
-  B: Edit Item
-  C: Delete Item
-  D: Quit Program
-
-  Please select: """
-  )
+  formatList(listFiles())
+  answer = input("\nA: Add To List\tB: Edit Item\tC: Delete Item\tD: Quit Program")
   handleInput(answer)
