@@ -1,52 +1,59 @@
-import os
+import MySQLdb
+from datetime import datetime
 
-folderPath = os.getcwd() + "/toDoList"
+date_now = datetime.now().strftime("%m/%d/%Y")
 
-if not os.path.exists(folderPath):
-  os.mkdir(folderPath)
-
-def formatList(fileList):
-  for index, item in enumerate(fileList):
-    print(str(index) + " - " + item)
+def addItem(item, dateAdded):
+  db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
+  cursor = db.cursor()
+  sql = "INSERT INTO todolist (item, datecreated) VALUES ('%s', '%s')" % (item, dateAdded)
+  try:
+    cursor.execute(sql)
+    db.commit()
+  except MySQLdb.Error, e:
+    print(e)
+  db.close()
   
-def listFiles():
-  return os.listdir(folderPath)
+def viewItems():
+  db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
+  cursor = db.cursor()
+  sql = "SELECT * FROM todolist"
+  try:
+    cursor.execute(sql)
+    results = cursor.fetchall()
+    for row in results:
+      itemid = row[0]
+      item = row[1]
+      dateadded = row[2]
+      print "%d\t%s\t%s" % (itemid, item, dateadded)
+  except MySQLdb.Error, e:
+    print(e)
+  db.close()
   
-def addItem(answer):
-  if answer == "y":
-    return True
-  elif answer == "n":
-    return False
-    
-def changeItem(item):
-  fileItem = os.listdir(folderPath)[item]
-  newFile = open(folderPath + "/" + fileItem, "a+")
-  fileText = input("Content of the file:\n")
-  newFile.write(fileText)
-  newFile.close()
-  
-def deleteItem(item):
-  fileItem = os.listdir(folderPath)[item]
-  os.remove(folderPath + "/" + fileItem)
-    
-def handleInput(answer):
-  if answer == "a":
-    item = input("Item name: ") + ".txt"
-    newFile = open(folderPath + "/" + item, "a+")
-    newFile.close()
-  elif answer == "b":
-    formatList(listFiles())
-    itemSelected = input("Which item do you want to edit? ")
-    changeItem(int(itemSelected))
-  elif answer == "c":
-    formatList(listFiles())
-    itemSelected_a = input("Which item do you want to delete? ")
-    deleteItem(int(itemSelected_a))
-    print("Item deleted")
-  elif answer == "d":
-    exit()
+def deleteItem(itemid):
+  db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
+  cursor = db.cursor()
+  sql = "DELETE FROM todolist WHERE id = '%d'" % (itemid)
+  try:
+    cursor.execute(sql)
+    db.commit()
+  except MySQLdb.Error, e:
+    print(e)
+  db.close()
 
 while True:
-  formatList(listFiles())
-  answer = input("\nA: Add To List\tB: Edit Item\tC: Delete Item\tD: Quit Program")
-  handleInput(answer)
+  answer = raw_input("(A)View Items\t(B)Add Item\t(C)Delete Item\t(D)Exit\n")
+  if answer == "a":
+    viewItems()
+  elif answer == "b":
+    itemName = raw_input("Item Name: ")
+    addItem(itemName, date_now)
+    print("Item Added.")
+    viewItems()
+  elif answer == "c":
+    itemID = raw_input("Item ID: ")
+    deleteItem(int(itemID))
+    print("Item Deleted.")
+    viewItems()
+  elif answer == "d":
+    exit()
