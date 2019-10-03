@@ -1,7 +1,6 @@
-import MySQLdb
-from datetime import datetime
-import os
 import time
+from datetime import datetime
+import MySQLdb
 
 date_now = datetime.now().strftime("%m/%d/%Y")
 
@@ -15,7 +14,7 @@ def addItem(item, dateAdded):
   except MySQLdb.Error, e:
     print(e)
   db.close()
-  
+
 def viewItems():
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
   cursor = db.cursor()
@@ -30,7 +29,7 @@ def viewItems():
   except MySQLdb.Error, e:
     print(e)
   db.close()
-  
+
 def deleteItem(itemid):
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
   cursor = db.cursor()
@@ -41,9 +40,9 @@ def deleteItem(itemid):
   except MySQLdb.Error, e:
     print(e)
   db.close()
-  
+
 def exportTXT():
-  fo = open(os.getcwd() + ".txt", "w")
+  fo = open("toDo.txt", "w")
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
   cursor = db.cursor()
   sql = "SELECT * FROM todolist"
@@ -57,7 +56,7 @@ def exportTXT():
     print(e)
   db.close()
   fo.close()
-  
+
 while True:
   print("-TO-DO LIST-\n[ID]\t[ITEM]")
   viewItems()
