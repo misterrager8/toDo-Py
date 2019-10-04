@@ -1,6 +1,7 @@
 import time
 from datetime import datetime
 import MySQLdb
+from Tkinter import Tk
 
 date_now = datetime.now().strftime("%m/%d/%Y")
 
