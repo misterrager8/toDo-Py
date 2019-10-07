@@ -83,7 +83,9 @@ def exportTXT():
 #    exit()
     
 def buttonA():
-  print("A")
+  window = Tkinter.Toplevel(top)
+  itemName = Tkinter.Entry(window)
+  itemName.pack()
 def buttonB():
   print("B")
 def buttonD():
