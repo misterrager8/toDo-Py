@@ -1,14 +1,13 @@
-import time
 from datetime import datetime
 import MySQLdb
 import Tkinter
 
-top = Tkinter.Tk()
-top.title("To Do Py")
-list = Tkinter.Listbox(top)
+top_window = Tkinter.Tk()
+top_window.title("To Do Py")
+items_list = Tkinter.Listbox(top_window)
 date_now = datetime.now().strftime("%m/%d/%Y")
 
-def addItem(item, dateAdded):
+def addItem(item, dateAdded, window):
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
   cursor = db.cursor()
   sql = "INSERT INTO todolist (item, datecreated) VALUES ('%s', '%s')" % (item, dateAdded)
@@ -18,8 +17,11 @@ def addItem(item, dateAdded):
   except MySQLdb.Error, e:
     print(e)
   db.close()
+  window.destroy()
+  viewItems()
 
 def viewItems():
+  items_list.delete(0, "end")
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
   cursor = db.cursor()
   sql = "SELECT * FROM todolist"
@@ -29,7 +31,7 @@ def viewItems():
     for idx, row in enumerate(results):
       itemid = row[0]
       item = row[1]
-      list.insert(idx, str(itemid) + " - " + item)
+      items_list.insert(idx, str(itemid) + " - " + item)
 #      print "%d\t%s" % (itemid, item)
   except MySQLdb.Error, e:
     print(e)
@@ -47,7 +49,7 @@ def deleteItem(itemid):
   db.close()
 
 def exportTXT():
-  fo = open("toDo.txt", "w")
+  outputFile = open("toDo.txt", "w")
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
   cursor = db.cursor()
   sql = "SELECT * FROM todolist"
@@ -56,51 +58,38 @@ def exportTXT():
     results = cursor.fetchall()
     for row in results:
       item = row[1]
-      fo.write("%s\n" % (item))
+      outputFile.write("%s\n" % (item))
   except MySQLdb.Error, e:
     print(e)
   db.close()
-  fo.close()
-
-#while True:
-#  print("-TO-DO LIST-\n[ID]\t[ITEM]")
-#  viewItems()
-#  answer = raw_input("\n(A) Add Item\n(B) Delete Item\n(C) Export To TXT\n(D) Exit\n")
-#  if answer == "a":
-#    itemName = raw_input("Item Name: ")
-#    addItem(itemName, date_now)
-#    print("Item Added.")
-#  elif answer == "b":
-#    itemID = raw_input("Item ID: ")
-#    deleteItem(int(itemID))
-#    print("Item Deleted.")
-#    time.sleep(1)
-#  elif answer == "c":
-#    exportTXT()
-#    print("Exported to .txt")
-#    time.sleep(1)
-#  elif answer == "d":
-#    exit()
+  outputFile.close()
     
-def buttonA():
-  window = Tkinter.Toplevel(top)
-  itemName = Tkinter.Entry(window)
-  itemName.pack()
-def buttonB():
-  print("B")
-def buttonD():
+def addButtonClicked():
+  entry_window = Tkinter.Toplevel(top_window)
+  entry_window.title("Add Item")
+  itemField = Tkinter.Entry(entry_window)
+  itemField.pack()
+  submitButton = Tkinter.Button(entry_window, text = "Submit", command = lambda: addItem(itemField.get(), date_now, entry_window))
+  submitButton.pack()
+  
+def deleteButtonClicked():
+  itemid = int(items_list.get(items_list.curselection()).split(" - ")[0])
+  deleteItem(itemid)
+  viewItems()
+  
+def exitButtonClicked():
   exit()
     
-addButton = Tkinter.Button(top, text ="Add", command = buttonA)
-deleteButton = Tkinter.Button(top, text ="Delete", command = buttonB)
-exportButton = Tkinter.Button(top, text ="Export", command = exportTXT)
-exitButton = Tkinter.Button(top, text ="Exit", command = buttonD)
+addButton = Tkinter.Button(top_window, text ="Add", command = addButtonClicked)
+deleteButton = Tkinter.Button(top_window, text ="Delete", command = deleteButtonClicked)
+exportButton = Tkinter.Button(top_window, text ="Export", command = exportTXT)
+exitButton = Tkinter.Button(top_window, text ="Exit", command = exitButtonClicked)
 
-list.pack()
+items_list.pack()
 viewItems()
 addButton.pack()
 deleteButton.pack()
 exportButton.pack()
 exitButton.pack()
 
-top.mainloop()
+top_window.mainloop()
