@@ -32,7 +32,6 @@ def viewItems():
       itemid = row[0]
       item = row[1]
       items_list.insert(idx, str(itemid) + " - " + item)
-#      print "%d\t%s" % (itemid, item)
   except MySQLdb.Error, e:
     print(e)
   db.close()
@@ -73,9 +72,12 @@ def addButtonClicked():
   submitButton.pack()
   
 def deleteButtonClicked():
-  itemid = int(items_list.get(items_list.curselection()).split(" - ")[0])
-  deleteItem(itemid)
-  viewItems()
+  try:  
+    itemid = int(items_list.get(items_list.curselection()).split(" - ")[0])
+    deleteItem(itemid)
+    viewItems()
+  except:
+      print("Error!")
   
 def exitButtonClicked():
   exit()
