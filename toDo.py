@@ -1,13 +1,14 @@
 from datetime import datetime
 import MySQLdb
 import Tkinter
+import tkMessageBox
 
 top_window = Tkinter.Tk()
 top_window.title("To Do Py")
-items_list = Tkinter.Listbox(top_window)
+
 date_now = datetime.now().strftime("%m/%d/%Y")
 
-def addItem(item, dateAdded, window):
+def addItem(item, dateAdded):
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
   cursor = db.cursor()
   sql = "INSERT INTO todolist (item, datecreated) VALUES ('%s', '%s')" % (item, dateAdded)
@@ -17,7 +18,6 @@ def addItem(item, dateAdded, window):
   except MySQLdb.Error, e:
     print(e)
   db.close()
-  window.destroy()
   viewItems()
 
 def viewItems():
@@ -62,14 +62,6 @@ def exportTXT():
     print(e)
   db.close()
   outputFile.close()
-    
-def addButtonClicked():
-  entry_window = Tkinter.Toplevel(top_window)
-  entry_window.title("Add Item")
-  itemField = Tkinter.Entry(entry_window)
-  itemField.pack()
-  submitButton = Tkinter.Button(entry_window, text = "Submit", command = lambda: addItem(itemField.get(), date_now, entry_window))
-  submitButton.pack()
   
 def deleteButtonClicked():
   try:  
@@ -77,21 +69,29 @@ def deleteButtonClicked():
     deleteItem(itemid)
     viewItems()
   except:
-      print("Error!")
+      tkMessageBox.showinfo("Error", "Error: no item selected. Please try again")
   
 def exitButtonClicked():
   exit()
+  
+itemField = Tkinter.Entry(top_window)
+itemField.pack()
     
-addButton = Tkinter.Button(top_window, text ="Add", command = addButtonClicked)
-deleteButton = Tkinter.Button(top_window, text ="Delete", command = deleteButtonClicked)
-exportButton = Tkinter.Button(top_window, text ="Export", command = exportTXT)
-exitButton = Tkinter.Button(top_window, text ="Exit", command = exitButtonClicked)
-
-items_list.pack()
-viewItems()
+addButton = Tkinter.Button(top_window, text ="Add", command = lambda: addItem(itemField.get(), date_now))
 addButton.pack()
+
+deleteButton = Tkinter.Button(top_window, text ="Delete", command = deleteButtonClicked)
 deleteButton.pack()
+
+exportButton = Tkinter.Button(top_window, text ="Export", command = exportTXT)
 exportButton.pack()
+
+exitButton = Tkinter.Button(top_window, text ="Exit", command = exitButtonClicked)
 exitButton.pack()
+
+items_list = Tkinter.Listbox(top_window)
+items_list.pack()
+
+viewItems()
 
 top_window.mainloop()
