@@ -19,6 +19,7 @@ def addItem(item, dateAdded):
     print(e)
   db.close()
   viewItems()
+  itemField.delete(0, "end")
 
 def viewItems():
   items_list.delete(0, "end")
@@ -37,15 +38,29 @@ def viewItems():
   db.close()
 
 def deleteItem(itemid):
-  db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
-  cursor = db.cursor()
-  sql = "DELETE FROM todolist WHERE id = '%d'" % (itemid)
-  try:
-    cursor.execute(sql)
-    db.commit()
-  except MySQLdb.Error, e:
-    print(e)
-  db.close()
+  if tkMessageBox.askyesno("Confirm", "Are you sure you want to delete?"):
+    db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
+    cursor = db.cursor()
+    sql = "DELETE FROM todolist WHERE id = '%d'" % (itemid)
+    try:
+      cursor.execute(sql)
+      db.commit()
+    except MySQLdb.Error, e:
+      print(e)
+    db.close()
+
+def deleteAllItems():
+  if tkMessageBox.askyesno("Confirm", "Are you sure you want to delete?"):
+    db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
+    cursor = db.cursor()
+    sql = "TRUNCATE todolist"
+    try:
+      cursor.execute(sql)
+      db.commit()
+    except MySQLdb.Error, e:
+      print(e)
+    db.close()
+    viewItems()
 
 def exportTXT():
   outputFile = open("toDo.txt", "w")
@@ -64,7 +79,7 @@ def exportTXT():
   outputFile.close()
   
 def deleteButtonClicked():
-  try:  
+  try:
     itemid = int(items_list.get(items_list.curselection()).split(" - ")[0])
     deleteItem(itemid)
     viewItems()
@@ -76,12 +91,16 @@ def exitButtonClicked():
   
 itemField = Tkinter.Entry(top_window)
 itemField.pack()
+itemField.focus_set()
     
 addButton = Tkinter.Button(top_window, text ="Add", command = lambda: addItem(itemField.get(), date_now))
 addButton.pack()
 
 deleteButton = Tkinter.Button(top_window, text ="Delete", command = deleteButtonClicked)
 deleteButton.pack()
+
+deleteAllButton = Tkinter.Button(top_window, text ="Delete All", command = deleteAllItems)
+deleteAllButton.pack()
 
 exportButton = Tkinter.Button(top_window, text ="Export", command = exportTXT)
 exportButton.pack()
