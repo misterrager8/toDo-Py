@@ -3,10 +3,10 @@ import MySQLdb
 import Tkinter
 import tkMessageBox
 
-top_window = Tkinter.Tk()
-top_window.title("To Do Py")
+topWindow = Tkinter.Tk()
+topWindow.title("To Do Py")
 
-date_now = datetime.now().strftime("%m/%d/%Y")
+currentDate = datetime.now().strftime("%m/%d/%Y")
 
 def addItem(item, dateAdded):
   db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
@@ -89,28 +89,28 @@ def deleteButtonClicked():
 def exitButtonClicked():
   exit()
   
-itemField = Tkinter.Entry(top_window)
+itemField = Tkinter.Entry(topWindow)
 itemField.pack()
 itemField.focus_set()
     
-addButton = Tkinter.Button(top_window, text ="Add", command = lambda: addItem(itemField.get(), date_now))
+addButton = Tkinter.Button(topWindow, text ="Add", command = lambda: addItem(itemField.get(), currentDate))
 addButton.pack()
 
-deleteButton = Tkinter.Button(top_window, text ="Delete", command = deleteButtonClicked)
+deleteButton = Tkinter.Button(topWindow, text ="Delete", command = deleteButtonClicked)
 deleteButton.pack()
 
-deleteAllButton = Tkinter.Button(top_window, text ="Delete All", command = deleteAllItems)
+deleteAllButton = Tkinter.Button(topWindow, text ="Delete All", command = deleteAllItems)
 deleteAllButton.pack()
 
-exportButton = Tkinter.Button(top_window, text ="Export", command = exportTXT)
+exportButton = Tkinter.Button(topWindow, text ="Export", command = exportTXT)
 exportButton.pack()
 
-exitButton = Tkinter.Button(top_window, text ="Exit", command = exitButtonClicked)
+exitButton = Tkinter.Button(topWindow, text ="Exit", command = exitButtonClicked)
 exitButton.pack()
 
-items_list = Tkinter.Listbox(top_window)
+items_list = Tkinter.Listbox(topWindow)
 items_list.pack()
 
 viewItems()
 
-top_window.mainloop()
+topWindow.mainloop()
