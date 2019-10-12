@@ -77,6 +77,11 @@ def exportTXT():
     print(e)
   db.close()
   outputFile.close()
+
+def importTXT():
+  with open("toDo.txt", "r") as f:
+    lines = f.readlines()
+    addItem(f, currentDate)
   
 def deleteButtonClicked():
   try:
@@ -104,6 +109,9 @@ deleteAllButton.pack()
 
 exportButton = Tkinter.Button(topWindow, text ="Export", command = exportTXT)
 exportButton.pack()
+
+importButton = Tkinter.Button(topWindow, text ="Import", command = importTXT)
+importButton.pack()
 
 exitButton = Tkinter.Button(topWindow, text ="Exit", command = exitButtonClicked)
 exitButton.pack()
