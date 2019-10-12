@@ -79,9 +79,9 @@ def exportTXT():
   outputFile.close()
 
 def importTXT():
-  with open("toDo.txt", "r") as f:
-    lines = f.readlines()
-    addItem(f, currentDate)
+  lines = [line.rstrip('\n') for line in open("toDo.txt")]
+  for i in lines:
+    addItem(i, currentDate)
   
 def deleteButtonClicked():
   try:
