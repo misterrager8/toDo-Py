@@ -1,124 +1,140 @@
+from java.awt import *
+from javax.swing import *
+import sys
 from datetime import datetime
-import MySQLdb
-import Tkinter
-import tkMessageBox
-
-topWindow = Tkinter.Tk()
-topWindow.title("To Do Py")
+from taskModel import task
 
 currentDate = datetime.now().strftime("%m/%d/%Y")
+taskDB = []
 
-def addItem(item, dateAdded):
-  db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
-  cursor = db.cursor()
-  sql = "INSERT INTO todolist (item, datecreated) VALUES ('%s', '%s')" % (item, dateAdded)
-  try:
-    cursor.execute(sql)
-    db.commit()
-  except MySQLdb.Error, e:
-    print(e)
-  db.close()
-  viewItems()
-  itemField.delete(0, "end")
-
-def viewItems():
-  items_list.delete(0, "end")
-  db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
-  cursor = db.cursor()
-  sql = "SELECT * FROM todolist"
-  try:
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    for idx, row in enumerate(results):
-      itemid = row[0]
-      item = row[1]
-      items_list.insert(idx, str(itemid) + " - " + item)
-  except MySQLdb.Error, e:
-    print(e)
-  db.close()
-
-def deleteItem(itemid):
-  if tkMessageBox.askyesno("Confirm", "Are you sure you want to delete?"):
-    db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
-    cursor = db.cursor()
-    sql = "DELETE FROM todolist WHERE id = '%d'" % (itemid)
-    try:
-      cursor.execute(sql)
-      db.commit()
-    except MySQLdb.Error, e:
-      print(e)
-    db.close()
-
-def deleteAllItems():
-  if tkMessageBox.askyesno("Confirm", "Are you sure you want to delete?"):
-    db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
-    cursor = db.cursor()
-    sql = "TRUNCATE todolist"
-    try:
-      cursor.execute(sql)
-      db.commit()
-    except MySQLdb.Error, e:
-      print(e)
-    db.close()
-    viewItems()
-
-def exportTXT():
-  outputFile = open("toDo.txt", "w")
-  db = MySQLdb.connect("localhost","root","bre9ase4","TESTDB")
-  cursor = db.cursor()
-  sql = "SELECT * FROM todolist"
-  try:
-    cursor.execute(sql)
-    results = cursor.fetchall()
-    for row in results:
-      item = row[1]
-      outputFile.write("%s\n" % (item))
-  except MySQLdb.Error, e:
-    print(e)
-  db.close()
-  outputFile.close()
-
-def importTXT():
-  lines = [line.rstrip('\n') for line in open("toDo.txt")]
-  for i in lines:
-    addItem(i, currentDate)
+class mainWindow(JFrame):
   
-def deleteButtonClicked():
-  try:
-    itemid = int(items_list.get(items_list.curselection()).split(" - ")[0])
-    deleteItem(itemid)
-    viewItems()
-  except:
-      tkMessageBox.showinfo("Error", "Error: no item selected. Please try again")
-  
-def exitButtonClicked():
-  exit()
-  
-itemField = Tkinter.Entry(topWindow)
-itemField.pack()
-itemField.focus_set()
+  def __init__(self):
+    super(mainWindow, self).__init__()
+    self.initComponents()
     
-addButton = Tkinter.Button(topWindow, text ="Add", command = lambda: addItem(itemField.get(), currentDate))
-addButton.pack()
+  def initComponents(self):
 
-deleteButton = Tkinter.Button(topWindow, text ="Delete", command = deleteButtonClicked)
-deleteButton.pack()
+    bgPanel = JPanel()
+    exitButton = JLabel(mouseClicked = self.exitButtonMouseClicked)
+    addButton = JLabel(mouseClicked = self.addButtonMouseClicked)
+    deleteButton = JLabel()
+    clearButton = JLabel()
+    jScrollPane1 = JScrollPane()
+    taskTable = JTable()
+    taskField = JTextField()
+    notesField = JTextField()
+    taskLabel = JLabel()
+    notesLabel = JLabel()
 
-deleteAllButton = Tkinter.Button(topWindow, text ="Delete All", command = deleteAllItems)
-deleteAllButton.pack()
+    self.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    self.setUndecorated(True)
 
-exportButton = Tkinter.Button(topWindow, text ="Export", command = exportTXT)
-exportButton.pack()
+    bgPanel.setBackground(Color(51, 153, 255))
 
-importButton = Tkinter.Button(topWindow, text ="Import", command = importTXT)
-importButton.pack()
+    exitButton.setText("X")
+    exitButton.setCursor(Cursor(Cursor.HAND_CURSOR))
 
-exitButton = Tkinter.Button(topWindow, text ="Exit", command = exitButtonClicked)
-exitButton.pack()
+    addButton.setBackground(Color(51, 204, 255))
+    addButton.setHorizontalAlignment(SwingConstants.CENTER)
+    addButton.setText("Add Task")
+    addButton.setCursor(Cursor(Cursor.HAND_CURSOR))
+    addButton.setOpaque(True)
 
-items_list = Tkinter.Listbox(topWindow)
-items_list.pack()
+    deleteButton.setBackground(Color(51, 204, 255))
+    deleteButton.setHorizontalAlignment(SwingConstants.CENTER)
+    deleteButton.setText("Delete Task")
+    deleteButton.setCursor(Cursor(Cursor.HAND_CURSOR))
+    deleteButton.setOpaque(True)
 
-viewItems()
+    clearButton.setBackground(Color(51, 204, 255))
+    clearButton.setHorizontalAlignment(SwingConstants.CENTER)
+    clearButton.setText("Delete All")
+    clearButton.setCursor(Cursor(Cursor.HAND_CURSOR))
+    clearButton.setOpaque(True)
 
-topWindow.mainloop()
+    taskTable.setModel(table.DefaultTableModel(
+      [],
+      ["Task", "Notes", "Date Created", "Done"]
+    )
+                      )
+    jScrollPane1.setViewportView(taskTable)
+
+    taskLabel.setText("Task")
+
+    notesLabel.setText("Note(s)")
+
+    bgPanelLayout = GroupLayout(bgPanel)
+    bgPanel.setLayout(bgPanelLayout)
+    bgPanelLayout.setHorizontalGroup(
+      bgPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+      .addGroup(bgPanelLayout.createSequentialGroup()
+        .addContainerGap()
+        .addGroup(bgPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+          .addGroup(bgPanelLayout.createSequentialGroup()
+            .addGap(0, 0, sys.maxint)
+            .addComponent(exitButton))
+          .addGroup(bgPanelLayout.createSequentialGroup()
+            .addGroup(bgPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+              .addComponent(addButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, sys.maxint)
+              .addComponent(deleteButton, GroupLayout.DEFAULT_SIZE, 204, sys.maxint)
+              .addComponent(clearButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, sys.maxint)
+              .addGroup(GroupLayout.Alignment.TRAILING, bgPanelLayout.createSequentialGroup()
+                .addGroup(bgPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, False)
+                  .addComponent(taskLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, sys.maxint)
+                  .addComponent(notesLabel, GroupLayout.DEFAULT_SIZE, 51, sys.maxint))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bgPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                  .addComponent(taskField)
+                  .addComponent(notesField))))
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+        .addContainerGap())
+    )
+    bgPanelLayout.setVerticalGroup(
+      bgPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+      .addGroup(bgPanelLayout.createSequentialGroup()
+        .addContainerGap()
+        .addComponent(exitButton)
+        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+        .addGroup(bgPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+          .addGroup(bgPanelLayout.createSequentialGroup()
+            .addGroup(bgPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+              .addComponent(taskField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+              .addComponent(taskLabel))
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(bgPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+              .addComponent(notesField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+              .addComponent(notesLabel))
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(addButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 144, sys.maxint)
+            .addComponent(deleteButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(clearButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
+          .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 0, sys.maxint))
+        .addContainerGap())
+    )
+
+    layout = GroupLayout(self.getContentPane())
+    self.getContentPane().setLayout(layout)
+    layout.setHorizontalGroup(
+      layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+      .addComponent(bgPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, sys.maxint)
+    )
+    layout.setVerticalGroup(
+      layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+      .addComponent(bgPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, sys.maxint)
+    )
+
+    self.pack()
+    self.setLocationRelativeTo(None)
+    
+  def exitButtonMouseClicked(self, event):
+    sys.exit()
+    
+  def addButtonMouseClicked(self, event):
+    JOptionPane.showMessageDialog(None, "Fn incomplete")
+  
+if __name__ == "__main__":
+  mainWindow().setVisible(True)
