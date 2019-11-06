@@ -1,10 +1,10 @@
 class task:
   
-  def __init__(self, taskName, notes, dateCreated):
+  def __init__(self, taskName, notes, dateCreated, done):
     self.taskName = taskName
     self.notes = notes
     self.dateCreated = dateCreated
-    self.done = False
+    self.done = done
     
   def getTaskName(self):
     return self.taskName
