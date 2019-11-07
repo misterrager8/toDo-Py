@@ -7,6 +7,7 @@ import csv
 
 currentDate = datetime.now().strftime("%m/%d/%Y")
 taskDB = []
+mouseLoc = []
 
 class mainWindow(JFrame):
   
@@ -16,7 +17,8 @@ class mainWindow(JFrame):
     
   def initComponents(self):
 
-    self.bgPanel = JPanel()
+    self.bgPanel = JPanel(mouseDragged = self.bgPanelMouseDragged,
+                          mousePressed = self.bgPanelMousePressed)
     self.exitButton = JLabel(mouseClicked = self.exitButtonMouseClicked)
     self.addButton = JLabel(mouseClicked = self.addButtonMouseClicked,
                             mouseEntered = self.addButtonMouseEntered,
@@ -143,6 +145,16 @@ class mainWindow(JFrame):
         
     for i in taskDB:
       self.taskTable.getModel().addRow([i.taskName, i.notes, i.dateCreated, str(i.done)])
+      
+  def bgPanelMouseDragged(self, event):
+    x = event.getXOnScreen()
+    y = event.getYOnScreen()
+
+    self.setLocation(x - mouseLoc[0], y - mouseLoc[1])
+      
+  def bgPanelMousePressed(self, event):
+    mouseLoc.append(event.getX())
+    mouseLoc.append(event.getY())
     
   def addButtonMouseEntered(self, event):
     self.addButton.setBorder(border.LineBorder(Color.black))
