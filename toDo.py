@@ -181,6 +181,22 @@ class mainWindow(JFrame):
     self.notesField.selectAll()
     
   def exitButtonMouseClicked(self, event):
+    del taskDB[:]
+    boolVal = None
+    
+    for i in range(0, self.taskTable.getRowCount()):
+      if str(self.taskTable.getValueAt(i, 3)) == "False":
+        boolVal = 0
+      else:
+        boolVal = 1
+      
+      taskDB.append(task(str(self.taskTable.getValueAt(i, 0)),
+                         str(self.taskTable.getValueAt(i, 1)),
+                         str(self.taskTable.getValueAt(i, 2)),
+                         bool(boolVal)
+                        )
+                   )
+    
     csvData = []
     for i in taskDB:
       csvData.append([i.taskName,
