@@ -24,7 +24,8 @@ class mainWindow(JFrame):
                             mouseEntered = self.addButtonMouseEntered,
                             mouseExited = self.addButtonMouseExited)
     self.deleteButton = JLabel(mouseEntered = self.deleteButtonMouseEntered,
-                               mouseExited = self.deleteButtonMouseExited)
+                               mouseExited = self.deleteButtonMouseExited,
+                               mouseClicked = self.deleteButtonMouseClicked)
     self.clearButton = JLabel(mouseClicked = self.clearButtonMouseClicked,
                               mouseEntered = self.clearButtonMouseEntered,
                               mouseExited = self.clearButtonMouseExited)
@@ -153,6 +154,7 @@ class mainWindow(JFrame):
     self.setLocation(x - mouseLoc[0], y - mouseLoc[1])
       
   def bgPanelMousePressed(self, event):
+    del mouseLoc[:]
     mouseLoc.append(event.getX())
     mouseLoc.append(event.getY())
     
@@ -225,8 +227,12 @@ class mainWindow(JFrame):
       self.taskTable.getModel().addRow([taskName, notes, currentDate, str(False)])
     
   def clearButtonMouseClicked(self, event):
-    del taskDB[:]
-    self.taskTable.getModel().setRowCount(0)
+    if JOptionPane.showConfirmDialog(None, "Delete All?") == JOptionPane.YES_OPTION:
+      del taskDB[:]
+      self.taskTable.getModel().setRowCount(0)
   
+  def deleteButtonMouseClicked(self, event):
+    self.taskTable.getModel().removeRow(self.taskTable.getSelectedRow())
+    
 if __name__ == "__main__":
   mainWindow().setVisible(True)
