@@ -1,8 +1,9 @@
 import MySQLdb
+import datetime
 
 
 class TaskModel:
-    def __init__(self, descrip: str, priority: str = "mid", date_added: str = "2020-12-13", done: bool = False,
+    def __init__(self, descrip: str, priority: str = "mid", date_added: str = datetime.datetime.now().strftime("%Y-%m-%d"), done: bool = False,
                  task_id: int = None):
         self.descrip = descrip
         self.priority = priority
@@ -49,12 +50,14 @@ class TaskDB:
         return TaskModel("")
 
     def get_all_tasks(self) -> list:
+        results = []
         stmt = "SELECT * FROM tasks"
-        self.db_read(stmt)
-        return []
+        for row in self.db_read(stmt):
+            results.append(TaskModel(row[0], row[1], row[2], row[3], row[4]))
+        return results
 
     def add_task(self, new_task: TaskModel):
-        stmt = "INSERT INTO tasks(descrip, priority, date_added, done) VALUES(%s, %s, %s, %d)" % (
+        stmt = "INSERT INTO tasks(descrip, priority, date_added, done) VALUES('%s', '%s', '%s', '%d')" % (
             new_task.descrip, new_task.priority, new_task.date_added, new_task.done)
         self.db_write(stmt)
         print("Added.")
@@ -71,6 +74,11 @@ class TaskDB:
 
 
 if __name__ == "__main__":
-    tc = TaskDB()
-    tm = TaskModel("exampletask")
-    tc.add_task(tm)
+    td = TaskDB()
+    test_data = ["wash dishes", "take out trash", "wash car", "clean bathroom", "vacuum"]
+
+    # for i in td.get_all_tasks(): i.to_string()
+    # td.get_task_by_id(3).to_string()
+    # for i in test_data: td.add_task(i)
+    # td.delete_task(3)
+    # td.delete_all_tasks()
