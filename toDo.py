@@ -2,7 +2,8 @@ import MySQLdb
 
 
 class TaskModel:
-    def __init__(self, descrip, priority="mid", date_added="2020-12-13", done=False, task_id=None):
+    def __init__(self, descrip: str, priority: str = "mid", date_added: str = "2020-12-13", done: bool = False,
+                 task_id: int = None):
         self.descrip = descrip
         self.priority = priority
         self.date_added = date_added
@@ -17,34 +18,48 @@ class TaskModel:
               bool(self.done))
 
 
-class TaskCtrla:
+class TaskDB:
     def __init__(self):
-        pass
+        MySQLdb.connect("localhost", "root", "bre9ase4", "TESTDB").cursor().execute(
+            "CREATE TABLE IF NOT EXISTS tasks(descrip TEXT, priority TEXT, date_added TEXT, done BOOLEAN, task_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY)")
 
-    def db_read(self, stmt):
-        db = MySQLdb.connect()
-        return
+    @staticmethod
+    def db_read(stmt: str) -> list:
+        db = MySQLdb.connect("localhost", "root", "bre9ase4", "TESTDB")
+        cursor = db.cursor()
+        try:
+            cursor.execute(stmt)
+            return cursor.fetchall()
+        except MySQLdb.Error as e:
+            print(e)
 
-    def db_write(self, stmt):
-        db = MySQLdb.connect()
-        pass
+    @staticmethod
+    def db_write(stmt: str):
+        db = MySQLdb.connect("localhost", "root", "bre9ase4", "TESTDB")
+        cursor = db.cursor()
+        try:
+            cursor.execute(stmt)
+            db.commit()
+        except MySQLdb.Error as e:
+            print(e)
 
-    def get_task_by_id(self, task_id):
+    def get_task_by_id(self, task_id: int) -> TaskModel:
         stmt = "SELECT FROM tasks WHERE task_id = %d" % task_id
         self.db_read(stmt)
-        return
+        return TaskModel("")
 
-    def get_all_tasks(self):
+    def get_all_tasks(self) -> list:
         stmt = "SELECT * FROM tasks"
         self.db_read(stmt)
-        return
+        return []
 
-    def add_task(self, new_task):
-        stmt = "INSERT INTO tasks(descrip, priority, date_added, done) VALUES(%s, %s, %s, %s)" % (new_task.descrip, new_task.priority, new_task.date_added, new_task.done)
+    def add_task(self, new_task: TaskModel):
+        stmt = "INSERT INTO tasks(descrip, priority, date_added, done) VALUES(%s, %s, %s, %d)" % (
+            new_task.descrip, new_task.priority, new_task.date_added, new_task.done)
         self.db_write(stmt)
         print("Added.")
 
-    def delete_task(self, task_id):
+    def delete_task(self, task_id: int):
         stmt = "DELETE FROM tasks WHERE = %d" % task_id
         self.db_write(stmt)
         print("Deleted.")
@@ -56,4 +71,6 @@ class TaskCtrla:
 
 
 if __name__ == "__main__":
-    pass
+    tc = TaskDB()
+    tm = TaskModel("exampletask")
+    tc.add_task(tm)
