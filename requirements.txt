@@ -1,0 +1,4 @@
+SQLAlchemy
+python-dotenv
+Flask
+PyInquirer
