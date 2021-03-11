@@ -1,36 +1,32 @@
-import os
-
-import dotenv
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-
-dotenv.load_dotenv()
-db_host = os.getenv("host")
-db_user = os.getenv("user")
-db_passwd = os.getenv("passwd")
-db_name = os.getenv("db")
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://{db_user}:{db_passwd}@{db_host}/{db_name}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
+from modules.model import db, Task
 
 
-class DB:
-    def __init__(self):
-        pass
+class TaskDB:
+    def __init__(self): pass
 
     @staticmethod
-    def create(item):
-        db.session.add(item)
+    def get_all():
+        return db.session.query(Task).all()
+
+    @staticmethod
+    def get_all_done():
+        return db.session.query(Task).filter(Task.done)
+
+    @staticmethod
+    def get_all_undone():
+        return db.session.query(Task).filter(not Task.done)
+
+    @staticmethod
+    def remove_all():
+        db.session.execute("TRUNCATE table tasks")
         db.session.commit()
 
-    def read(self):
-        pass
+    @staticmethod
+    def mark_all_undone():
+        db.session.execute("UPDATE tasks SET done = False")
+        db.session.commit()
 
-    def update(self):
-        pass
-
-    def delete(self):
-        pass
+    @staticmethod
+    def mark_all_done():
+        db.session.execute("UPDATE tasks SET done = True")
+        db.session.commit()

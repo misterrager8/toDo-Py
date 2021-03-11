@@ -1,6 +1,21 @@
+import os
+
+import dotenv
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Text, Boolean, Integer
 
-from modules.ctrla import db
+app = Flask(__name__)
+
+dotenv.load_dotenv()
+db_host = os.getenv("host")
+db_user = os.getenv("user")
+db_passwd = os.getenv("passwd")
+db_name = os.getenv("db")
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://{db_user}:{db_passwd}@{db_host}/{db_name}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
 
 
 class Task(db.Model):
@@ -24,6 +39,14 @@ class Task(db.Model):
         self.priority = priority
         self.date_created = date_created
         self.done = done
+
+    def add(self): pass
+
+    def remove(self): pass
+
+    def mark_done(self): pass
+
+    def mark_undone(self): pass
 
     def to_string(self):
         print([
