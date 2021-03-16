@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block body %}
+<title>Home</title>
+<body>
+{% for i in task %}
+<p>{{ i.title }}</p>
+{% endfor %}
+</body>
+{% endblock %}

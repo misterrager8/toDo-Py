@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import dotenv
 from flask import Flask
@@ -31,31 +32,47 @@ class Task(db.Model):
     def __init__(self,
                  title: str,
                  notes: str = None,
-                 priority: str = "low",
-                 date_created: str = "03/04/2021",
+                 priority: str = "mid",
+                 date_created: str = datetime.now().strftime("%m/%d/%Y"),
                  done: bool = False):
+        """
+        Task object
+
+        Args:
+            title(str):
+            notes(str):
+            priority(str):
+            date_created(str):
+            done(bool):
+        """
         self.title = title
         self.notes = notes
         self.priority = priority
         self.date_created = date_created
         self.done = done
 
-    def add(self): pass
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
 
-    def remove(self): pass
+    def remove(self):
+        db.session.remove(self)
+        db.session.commit()
 
-    def mark_done(self): pass
+    def mark_done(self):
+        self.done = True
+        db.session.commit()
 
-    def mark_undone(self): pass
+    def mark_undone(self):
+        self.done = False
+        db.session.commit()
 
     def to_string(self):
-        print([
-            self.title,
-            self.notes,
-            self.priority,
-            self.date_created,
-            self.done
-        ])
+        print(self.title,
+              self.notes,
+              self.priority,
+              self.date_created,
+              self.done)
 
 
 db.create_all()
