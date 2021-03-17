@@ -6,5 +6,9 @@
 {% for i in task %}
 <p>{{ i.title }}</p>
 {% endfor %}
+<form method="post">
+  <input type="text" name="task_title">
+  <button type="submit">Enter</button>
+</form>
 </body>
 {% endblock %}
