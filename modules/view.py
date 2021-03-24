@@ -1,20 +1,11 @@
-from flask import render_template, request
+from flask import render_template
 
+from modules import app
 from modules.ctrla import TaskDB
-from modules.model import Task, app
 
-b = TaskDB().get_all()
+task_db = TaskDB()
 
 
-@app.route("/", methods=["POST", "GET"])
+@app.route("/")
 def index():
-    if request.method == "POST":
-        task_title = request.form["task_title"]
-        x = Task(task_title)
-        x.add()
-
-    return render_template("index.html", task=b)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    return render_template("index.html", tasks=task_db.get_all())

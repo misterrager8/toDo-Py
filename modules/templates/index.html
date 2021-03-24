@@ -2,13 +2,23 @@
 
 {% block body %}
 <title>Home</title>
-<body>
-{% for i in task %}
-<div class="text-center">{{ i.title }}</div>
-{% endfor %}
-<form method="post" action="{{ url_for('index') }}" class="text-center">
-  <input type="text" name="task_title" autocomplete="off">
-  <button type="submit">Enter</button>
-</form>
-</body>
+<div class="jumbotron">
+  <h1 class="display-3">Hello, world!</h1>
+  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for
+    calling extra attention to featured content or information.</p>
+  <hr class="my-2">
+  <p>It uses utility classes for typography and
+    spacing to space content out within the larger container.</p>
+</div>
+<div class="row">
+  {% for i in tasks %}
+  <a href="#" class="col-4">
+    <div class="bg-light shadow card-body mb-4">
+      <h4 class="card-title">{{ i.title }}</h4>
+      <p>{{ i.date_added.strftime("%B %w") }}</p>
+      <span class="badge badge-warning">{{ i.priority }}</span>
+    </div>
+  </a>
+  {% endfor %}
+</div>
 {% endblock %}

@@ -1,78 +1,53 @@
-import os
-from datetime import datetime
+from datetime import date, datetime
 
-import dotenv
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Text, Boolean, Integer
+from sqlalchemy import Column, Text, Date, Boolean, Integer
 
-app = Flask(__name__)
-
-dotenv.load_dotenv()
-db_host = os.getenv("host")
-db_user = os.getenv("user")
-db_passwd = os.getenv("passwd")
-db_name = os.getenv("db")
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://{db_user}:{db_passwd}@{db_host}/{db_name}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-db = SQLAlchemy(app)
+from modules import db
 
 
 class Task(db.Model):
     __tablename__ = "tasks"
 
-    title: str = Column(Text)
-    notes: str = Column(Text)
-    priority: str = Column(Text)
-    date_created: str = Column(Text)
-    done: bool = Column(Boolean)
-    id: int = Column(Integer, primary_key=True)
+    title = Column(Text)
+    notes = Column(Text)
+    date_added = Column(Date)
+    priority = Column(Text)
+    done = Column(Boolean)
+    id = Column(Integer, primary_key=True)
 
     def __init__(self,
                  title: str,
-                 notes: str = None,
-                 priority: str = "mid",
-                 date_created: str = datetime.now().strftime("%m/%d/%Y"),
+                 notes: str = "",
+                 date_added: date = datetime.now().date(),
+                 priority: str = "Low",
                  done: bool = False):
-        """
-        Task object
-
-        Args:
-            title(str):
-            notes(str):
-            priority(str):
-            date_created(str):
-            done(bool):
-        """
-        self.title = title
-        self.notes = notes
-        self.priority = priority
-        self.date_created = date_created
+        self.title = title.capitalize()
+        self.notes = notes.capitalize()
+        self.date_added = date_added
+        self.priority = priority.capitalize()
         self.done = done
 
-    def add(self):
+    def create(self):
         db.session.add(self)
         db.session.commit()
 
-    def remove(self):
+    def toggle_done(self, done: bool):
+        self.done = done
+        db.session.commit()
+
+    def set_note(self, note: str):
+        self.notes = note.capitalize()
+        db.session.commit()
+
+    def set_priority(self, priority: str):
+        self.priority = priority.capitalize()
+        db.session.commit()
+
+    def delete(self):
         db.session.remove(self)
         db.session.commit()
 
-    def mark_done(self):
-        self.done = True
-        db.session.commit()
-
-    def mark_undone(self):
-        self.done = False
-        db.session.commit()
-
-    def to_string(self):
-        print(self.title,
-              self.notes,
-              self.priority,
-              self.date_created,
-              self.done)
+    def __str__(self): return "%d\t%s" % (self.id, self.title)
 
 
 db.create_all()
