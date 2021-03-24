@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block body %}
+<title>{{ task.title }}</title>
+<form method="post" action="{{ url_for('index') }}" class="text-center">
+  <input type="text" name="task_title" autocomplete="off">
+  <button type="submit">Enter</button>
+</form>
+{% endblock %}
+

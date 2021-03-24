@@ -35,6 +35,20 @@ class Task(db.Model):
         self.done = done
         db.session.commit()
 
+    def get_done(self):
+        if self.done:
+            return ["Done", "badge badge-success"]
+        else:
+            return ["Not Done", "badge badge-secondary"]
+
+    def get_priority(self):
+        if self.priority == "Low":
+            return ["Low", "badge badge-primary"]
+        elif self.priority == "Medium":
+            return ["Medium", "badge badge-warning"]
+        elif self.priority == "High":
+            return ["High", "badge badge-danger"]
+
     def set_note(self, note: str):
         self.notes = note.capitalize()
         db.session.commit()
@@ -47,7 +61,8 @@ class Task(db.Model):
         db.session.remove(self)
         db.session.commit()
 
-    def __str__(self): return "%d\t%s" % (self.id, self.title)
+    def __str__(self):
+        return "%d\t%s" % (self.id, self.title)
 
 
 db.create_all()

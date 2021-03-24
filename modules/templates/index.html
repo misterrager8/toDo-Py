@@ -2,23 +2,40 @@
 
 {% block body %}
 <title>Home</title>
-<div class="jumbotron">
-  <h1 class="display-3">Hello, world!</h1>
-  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for
-    calling extra attention to featured content or information.</p>
-  <hr class="my-2">
-  <p>It uses utility classes for typography and
-    spacing to space content out within the larger container.</p>
-</div>
+<h1 class="display-1 text-center">To Do</h1>
 <div class="row">
   {% for i in tasks %}
-  <a href="#" class="col-4">
+  <a href="{{ url_for('task_pg', id_=i.id) }}" class="col-4">
     <div class="bg-light shadow card-body mb-4">
-      <h4 class="card-title">{{ i.title }}</h4>
-      <p>{{ i.date_added.strftime("%B %w") }}</p>
-      <span class="badge badge-warning">{{ i.priority }}</span>
+      <h5 class="card-title m-0">{{ i.title }}</h5>
+      <p class="text-muted font-italic">{{ i.date_added.strftime("%B %w") }}</p><br>
+      <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
+      <span class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</span>
     </div>
   </a>
   {% endfor %}
 </div>
+<style type="text/css">
+a:link {
+/* link in normal state */
+color: black;
+}
+
+a:active {
+/* link in clicked state */
+color: black;
+}
+
+a:hover {
+/* link with mouse over it */
+color: gray;
+text-decoration: none;
+}
+
+a:visited {
+/* visited link */
+color: black;
+}
+</style>
 {% endblock %}
+
