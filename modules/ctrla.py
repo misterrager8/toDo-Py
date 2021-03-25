@@ -1,4 +1,7 @@
+import csv
 import os
+from datetime import datetime
+from time import strptime, mktime
 
 from modules import db
 from modules.model import Task
@@ -40,6 +43,24 @@ class TaskDB:
         db.session.commit()
 
     def export_all(self):
-        path = os.path.join(os.path.dirname(__file__), "../output.txt")
+        path = os.path.join(os.path.dirname(__file__), "../output.csv")
         with open(path, "w") as f:
-            for i in self.get_all(): f.write(str(i) + "\n")
+            w = csv.writer(f)
+            for i in self.get_all():
+                w.writerow([i.title,
+                            i.notes,
+                            i.date_added,
+                            i.priority,
+                            i.done])
+
+    @staticmethod
+    def import_all():
+        path = os.path.join(os.path.dirname(__file__), "../input.csv")
+        csv_data = csv.reader(open(path))
+        for row in csv_data:
+            _ = Task(row[0],
+                     row[1],
+                     datetime.fromtimestamp(mktime(strptime(row[2], "%Y-%m-%d"))),
+                     int(row[3]),
+                     bool(row[4]))
+            _.create()
