@@ -11,7 +11,7 @@ class Task(db.Model):
     title = Column(Text)
     notes = Column(Text)
     date_added = Column(Date)
-    priority = Column(Text)
+    priority = Column(Integer)
     done = Column(Boolean)
     id = Column(Integer, primary_key=True)
 
@@ -19,12 +19,12 @@ class Task(db.Model):
                  title: str,
                  notes: str = "",
                  date_added: date = datetime.now().date(),
-                 priority: str = "Low",
+                 priority: int = 3,
                  done: bool = False):
         self.title = title.capitalize()
         self.notes = notes.capitalize()
         self.date_added = date_added
-        self.priority = priority.capitalize()
+        self.priority = priority
         self.done = done
 
     def create(self):
@@ -42,19 +42,19 @@ class Task(db.Model):
             return ["Not Done", "badge badge-secondary"]
 
     def get_priority(self):
-        if self.priority == "Low":
+        if self.priority == 3:
             return ["Low", "badge badge-primary"]
-        elif self.priority == "Medium":
+        elif self.priority == 2:
             return ["Medium", "badge badge-warning"]
-        elif self.priority == "High":
+        elif self.priority == 1:
             return ["High", "badge badge-danger"]
 
     def set_note(self, note: str):
         self.notes = note.capitalize()
         db.session.commit()
 
-    def set_priority(self, priority: str):
-        self.priority = priority.capitalize()
+    def set_priority(self, priority: int):
+        self.priority = priority
         db.session.commit()
 
     def __str__(self):
