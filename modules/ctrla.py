@@ -13,8 +13,8 @@ class TaskDB:
         for i in stuff: i.create()
 
     @staticmethod
-    def get_all():
-        return db.session.query(Task).all()
+    def get_all(criterion=None):
+        return db.session.query(Task).order_by(criterion)
 
     @staticmethod
     def find_by_priority(priority: str):
@@ -27,6 +27,12 @@ class TaskDB:
     @staticmethod
     def find_by_id(id_: int):
         return db.session.query(Task).get(id_)
+
+    def delete(self, id_: int):
+        _: Task = self.find_by_id(id_)
+        db.session.delete(_)
+        db.session.commit()
+        db.session.close()
 
     @staticmethod
     def delete_all():

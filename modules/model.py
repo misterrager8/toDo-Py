@@ -57,10 +57,6 @@ class Task(db.Model):
         self.priority = priority.capitalize()
         db.session.commit()
 
-    def delete(self):
-        db.session.remove(self)
-        db.session.commit()
-
     def __str__(self):
         return "%d\t%s" % (self.id, self.title)
 
