@@ -3,12 +3,15 @@
 {% block body %}
 <title>Home</title>
 <h1 class="display-1 text-center">To Do</h1>
+<h6>
+  <a href="{{ url_for('sort_by_priority') }}">Sort by priority</a>
+</h6>
 <div class="row">
   {% for i in tasks %}
   <a href="{{ url_for('task_pg', id_=i.id) }}" class="col-4">
     <div class="bg-light shadow card-body mb-4">
       <h5 class="card-title m-0">{{ i.title }}</h5>
-      <p class="text-muted font-italic">{{ i.date_added.strftime("%B %w") }}</p><br>
+      <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
       <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
       <span class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</span>
     </div>

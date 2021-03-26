@@ -20,7 +20,17 @@ def task_pg(id_: int):
     return render_template("task_pg.html", task=task)
 
 
+@app.route("/add")
+def add_pg():
+    return render_template("add_pg.html")
+
+
 @app.route("/delete/<id_>")
 def delete(id_: int):
     task_db.delete(id_)
     return redirect("index.html")
+
+
+@app.route("/sort-priority")
+def sort_by_priority():
+    return index(criterion=Task.priority)
