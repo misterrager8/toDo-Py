@@ -2,9 +2,44 @@
 
 {% block body %}
 <title>{{ task.title }}</title>
-<form method="post" action="{{ url_for('index') }}" class="text-center">
-  <input type="text" name="task_title" autocomplete="off">
-  <button type="submit">Enter</button>
-</form>
+<h1 class="display-1 text-center">Edit</h1>
+<div class="col-4 offset-4">
+  <div class="bg-light shadow card-body mb-4">
+    <h5 class="card-title m-0">{{ task.title }}</h5>
+    <p class="text-muted font-italic">{{ task.date_added.strftime("%B %d") }}</p><br>
+    <span class="{{ task.get_priority()[1] }}">{{ task.get_priority()[0] }}</span><br>
+    <span class="{{ task.get_done()[1] }}">{{ task.get_done()[0] }}</span>
+  </div>
+</div>
+<div class="col-4 offset-4">
+  <form class="bg-light shadow card-body mb-4" method="post" action="{{ url_for('index') }}">
+    <input id="title" class="form-control m-1" type="text" placeholder="Title" value="{{ task.title }}">
+    <input id="notes" class="form-control m-1" type="text" placeholder="Notes" value="{{ task.notes }}">
+    <select class="custom-select m-1 col-4">
+      {% if task.priority == 3 %}
+      <option>High</option>
+      <option>Medium</option>
+      {% elif task.priority == 2 %}
+      <option>High</option>
+      <option>Low</option>
+      {% elif task.priority == 1 %}
+      <option>Medium</option>
+      <option>Low</option>
+      {% endif %}
+    </select>
+    <div class="form-check m-1">
+      {% if task.done %}
+      <input class="form-check-input" type="checkbox" value="" checked>
+      {% else %}
+      <input class="form-check-input" type="checkbox" value="">
+      {% endif %}
+      <label class="form-check-label">Done</label>
+    </div>
+    <button type="submit" class="btn btn-primary col-6 offset-3">Edit</button>
+  </form>
+</div>
+<div class="col-4 offset-4">
+  <a href="" class="btn btn-danger w-100">Delete Task</a>
+</div>
 {% endblock %}
 
