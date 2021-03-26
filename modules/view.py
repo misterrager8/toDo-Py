@@ -1,4 +1,4 @@
-from flask import render_template, redirect
+from flask import render_template, redirect, request
 
 from modules import app, db
 from modules.ctrla import TaskDB
@@ -20,8 +20,16 @@ def task_pg(id_: int):
     return render_template("task_pg.html", task=task)
 
 
-@app.route("/add")
+@app.route("/add", methods=["POST", "GET"])
 def add_pg():
+    if request.method == "POST":
+        title = request.form["title"]
+        notes = request.form["notes"]
+        priority = request.form["priority"]
+
+        _ = Task(title, notes=notes, priority=priority)
+        _.create()
+
     return render_template("add_pg.html")
 
 
