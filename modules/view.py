@@ -42,3 +42,8 @@ def delete(id_: int):
 @app.route("/sort-priority")
 def sort_by_priority():
     return index(criterion=Task.priority)
+
+
+@app.route("/sort-date_added")
+def sort_by_date_added():
+    return index(criterion=Task.date_added)

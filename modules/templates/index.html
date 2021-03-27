@@ -4,7 +4,8 @@
 <title>Home</title>
 <h1 class="display-1 text-center">To Do</h1>
 <h6>
-  <a href="{{ url_for('sort_by_priority') }}">Sort by priority</a>
+  <a class="m-3" href="{{ url_for('sort_by_priority') }}">Sort by priority</a>
+  <a class="m-3" href="{{ url_for('sort_by_date_added') }}">Sort by date</a>
 </h6>
 <div class="row">
   {% for i in tasks %}
