@@ -4,12 +4,12 @@
 <title>Home</title>
 <h1 class="display-1 text-center">To Do</h1>
 <h6>
-  <a class="m-3" href="{{ url_for('sort_by_priority') }}">Sort by priority</a>
-  <a class="m-3" href="{{ url_for('sort_by_date_added') }}">Sort by date</a>
+  <a class="m-3" href="#">Priority</a>
+  <a class="m-3" href="#">Date</a>
 </h6>
 <div class="row">
   {% for i in tasks %}
-  <a href="{{ url_for('task_pg', id_=i.id) }}" class="col-4">
+  <a href="#" class="col-4" data-toggle="modal" data-target="#editModal">
     <div class="bg-light shadow card-body mb-4">
       <h5 class="card-title m-0">{{ i.title }}</h5>
       <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
@@ -18,6 +18,56 @@
     </div>
   </a>
   {% endfor %}
+</div>
+
+<div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-group" method="POST" action="{{ url_for('index') }}">
+          <input name="task_title" type="text" class="form-control m-2" placeholder="Task Title" autocomplete="off">
+          <input name="task_notes" type="text" class="form-control m-2" placeholder="Notes" autocomplete="off">
+          <select name="priority" class="custom-select m-2">
+            <option value="3">Low</option>
+            <option value="2">Medium</option>
+            <option value="1">High</option>
+          </select>
+          <button type="submit" class="btn btn-secondary m-2 w-100">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="">New Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-group" method="POST" action="{{ url_for('index') }}">
+          <input name="task_title" type="text" class="form-control m-2" placeholder="Task Title" autocomplete="off">
+          <input name="task_notes" type="text" class="form-control m-2" placeholder="Notes" autocomplete="off">
+          <select name="priority" class="custom-select m-2">
+            <option value="3">Low</option>
+            <option value="2">Medium</option>
+            <option value="1">High</option>
+          </select>
+          <button type="submit" class="btn btn-secondary m-2 w-100">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 <style type="text/css">
 a:link {

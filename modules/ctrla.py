@@ -35,7 +35,6 @@ class TaskDB:
         _: Task = self.find_by_id(id_)
         db.session.delete(_)
         db.session.commit()
-        db.session.close()
 
     @staticmethod
     def delete_all():
