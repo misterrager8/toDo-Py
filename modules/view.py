@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 
 from modules import app
 from modules.ctrla import TaskDB
@@ -16,3 +16,11 @@ def index():
         Task(title, notes=notes, priority=priority).create()
 
     return render_template("index.html", tasks=task_db.get_all())
+
+
+@app.route("/delete")
+def delete_task():
+    id_: int = request.args.get("id_")
+    task_db.delete(id_)
+
+    return redirect(url_for("index"))

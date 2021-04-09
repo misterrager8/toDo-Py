@@ -2,94 +2,56 @@
 
 {% block body %}
 <title>Home</title>
-<h1 class="display-1 text-center">To Do</h1>
+<h1 class="display-1 text-center">To Do
+<a href="#" data-toggle="modal" data-target="#addModal">+</a>
+</h1>
 <h6>
   <a class="m-3" href="#">Priority</a>
   <a class="m-3" href="#">Date</a>
 </h6>
 <div class="row">
   {% for i in tasks %}
-  <a href="#" class="col-4" data-toggle="modal" data-target="#editModal">
-    <div class="bg-light shadow card-body mb-4">
-      <h5 class="card-title m-0">{{ i.title }}</h5>
+  <div class="col-4">
+    <div class="bg-light shadow card-body rounded">
+      <a href="{{ url_for('delete_task', id_=i.id) }}" class="close text-danger">x</a>
+      <h5 class="card-title">{{ i.title }}</h5>
       <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
       <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
       <span class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</span>
     </div>
-  </a>
+  </div>
   {% endfor %}
 </div>
 
-<div class="modal" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal" id="addModal" role="dialog">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New Task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
+        <h5 class="modal-title">New Task</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>×</span>
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-group" method="POST" action="{{ url_for('index') }}">
-          <input name="task_title" type="text" class="form-control m-2" placeholder="Task Title" autocomplete="off">
-          <input name="task_notes" type="text" class="form-control m-2" placeholder="Notes" autocomplete="off">
-          <select name="priority" class="custom-select m-2">
+        <form class="form-group add-form" method="POST" action="{{ url_for('index') }}">
+          <input name="task_title" type="text" class="form-control" placeholder="Task Title" autocomplete="off">
+          <input name="task_notes" type="text" class="form-control" placeholder="Notes" autocomplete="off">
+          <select name="priority" class="custom-select">
             <option value="3">Low</option>
             <option value="2">Medium</option>
             <option value="1">High</option>
           </select>
-          <button type="submit" class="btn btn-secondary m-2 w-100">Add</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="">New Task</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">×</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form class="form-group" method="POST" action="{{ url_for('index') }}">
-          <input name="task_title" type="text" class="form-control m-2" placeholder="Task Title" autocomplete="off">
-          <input name="task_notes" type="text" class="form-control m-2" placeholder="Notes" autocomplete="off">
-          <select name="priority" class="custom-select m-2">
-            <option value="3">Low</option>
-            <option value="2">Medium</option>
-            <option value="1">High</option>
-          </select>
-          <button type="submit" class="btn btn-secondary m-2 w-100">Add</button>
+          <button type="submit" class="btn btn-secondary col-6 offset-3">Add</button>
         </form>
       </div>
     </div>
   </div>
 </div>
 <style type="text/css">
-a:link {
-/* link in normal state */
-color: black;
-}
-
-a:active {
-/* link in clicked state */
-color: black;
-}
-
-a:hover {
-/* link with mouse over it */
-color: gray;
-text-decoration: none;
-}
-
-a:visited {
-/* visited link */
-color: black;
-}
+  .add-form * {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  }
 </style>
 {% endblock %}
 
