@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for
+from sqlalchemy import text
 
 from modules import app
 from modules.ctrla import TaskDB
@@ -24,3 +25,10 @@ def delete_task():
     task_db.delete(id_)
 
     return redirect(url_for("index"))
+
+
+@app.route("/sort")
+def sort():
+    order_by = request.args.get("order_by")
+
+    return render_template("index.html", tasks=task_db.get_all(criterion=text(order_by)))
