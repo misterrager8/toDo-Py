@@ -32,3 +32,12 @@ def sort():
     order_by = request.args.get("order_by")
 
     return render_template("index.html", tasks=task_db.get_all(criterion=text(order_by)))
+
+
+@app.route("/mark_done")
+def mark_done():
+    id_ = int(request.args.get("id_"))
+    _: Task = task_db.find_by_id(id_)
+    _.toggle_done(True)
+
+    return redirect(url_for("index"))

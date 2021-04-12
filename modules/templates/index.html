@@ -17,7 +17,7 @@
       <h5 class="card-title">{{ i.title }}</h5>
       <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
       <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
-      <span class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</span>
+      <a href="{{ url_for('mark_done', id_=i.id) }}" class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</a>
     </div>
   </div>
   {% endfor %}
