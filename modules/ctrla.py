@@ -1,65 +1,55 @@
 import csv
 import os
-from datetime import datetime
-from time import strptime, mktime
+
+from sqlalchemy import text
 
 from modules import db
-from modules.model import Task
 
 
-class TaskDB:
+class ToDoDB:
     def __init__(self):
         pass
 
     @staticmethod
+    def create_one(item):
+        db.session.add(item)
+        db.session.commit()
+
+    @staticmethod
     def create_many(stuff: list):
-        for i in stuff: i.create()
+        for i in stuff:
+            db.session.add(i)
+            db.session.commit()
 
     @staticmethod
-    def get_all(criterion=None):
-        return db.session.query(Task).order_by(criterion)
+    def get_all(item_type,
+                order_by: str = "",
+                filter_: str = ""):
+        return db.session \
+            .query(item_type) \
+            .order_by(text(order_by)) \
+            .filter(text(filter_))
 
     @staticmethod
-    def find_by_priority(priority: str):
-        return db.session.query(Task).filter(Task.priority == priority)
+    def find_by_id(item_type,
+                   id_: int):
+        return db.session \
+            .query(item_type) \
+            .get(id_)
 
     @staticmethod
-    def find_by_done(done: bool):
-        return db.session.query(Task).filter(Task.done == done)
-
-    @staticmethod
-    def find_by_id(id_: int):
-        return db.session.query(Task).get(id_)
-
-    def delete(self, id_: int):
-        _: Task = self.find_by_id(id_)
-        db.session.delete(_)
+    def delete_one(item):
+        db.session.delete(item)
         db.session.commit()
 
     @staticmethod
-    def delete_all():
-        db.session.execute("TRUNCATE TABLE tasks")
+    def delete_all(table_name: str):
+        db.session.execute("TRUNCATE TABLE '%s'" % table_name)
         db.session.commit()
 
-    def export_all(self):
+    def export_all(self, item_type):
         path = os.path.join(os.path.dirname(__file__), "../output.csv")
         with open(path, "w") as f:
             w = csv.writer(f)
-            for i in self.get_all():
-                w.writerow([i.title,
-                            i.notes,
-                            i.date_added,
-                            i.priority,
-                            i.done])
-
-    @staticmethod
-    def import_all():
-        path = os.path.join(os.path.dirname(__file__), "../input.csv")
-        csv_data = csv.reader(open(path))
-        for row in csv_data:
-            _ = Task(row[0],
-                     row[1],
-                     datetime.fromtimestamp(mktime(strptime(row[2], "%Y-%m-%d"))),
-                     int(row[3]),
-                     bool(row[4]))
-            _.create()
+            for i in self.get_all(item_type):
+                w.writerow(str(i))
