@@ -27,10 +27,6 @@ class Task(db.Model):
         self.priority = priority
         self.done = done
 
-    def create(self):
-        db.session.add(self)
-        db.session.commit()
-
     def toggle_done(self, done: bool):
         self.done = done
         db.session.commit()
