@@ -2,26 +2,33 @@
 
 {% block body %}
 <title>Home</title>
-<h1 class="display-1 text-center">To Do
-<a href="#" data-toggle="modal" data-target="#addModal">+</a>
+<h1 class="display-1 text-center">Folders
+  <a href="#" data-toggle="modal" data-target="#addModal">+</a>
 </h1>
 <h6>
   <a class="m-3" href="{{ url_for('sort', order_by='priority') }}">Priority</a>
   <a class="m-3" href="{{ url_for('sort', order_by='date_added') }}">Date</a>
 </h6>
-<div class="row">
-  {% for i in tasks %}
-  <div class="col-4">
-    <div class="bg-light shadow card-body rounded">
-      <a href="{{ url_for('delete_task', id_=i.id) }}" class="close text-danger">x</a>
-      <h5 class="card-title">{{ i.title }}</h5>
-      <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
-      <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
-      <a href="{{ url_for('mark_done', id_=i.id) }}" class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</a>
-    </div>
-  </div>
+<table class="table table-borderless table-hover col-6 offset-3">
+  {% for i in folders %}
+  <tr class="row" style="border-radius: 10px;">
+    <td>
+      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="{{ i.color }}" class="bi bi-folder-fill"
+           viewBox="0 0 16 16">
+        <path d="M9.828 3h3.982a2 2 0 0 1 1.992 2.181l-.637 7A2 2 0 0 1 13.174 14H2.825a2 2 0 0 1-1.991-1.819l-.637-7a1.99 1.99 0 0 1 .342-1.31L.5 3a2 2 0 0 1 2-2h3.672a2 2 0 0 1 1.414.586l.828.828A2 2 0 0 0 9.828 3zm-8.322.12C1.72 3.042 1.95 3 2.19 3h5.396l-.707-.707A1 1 0 0 0 6.172 2H2.5a1 1 0 0 0-1 .981l.006.139z"/>
+      </svg>
+    </td>
+    <td>
+      <a href="#" class="text-muted">
+        {{ i.name }}
+      </a>
+    </td>
+    <td>
+      <span class="badge badge-info">0</span>
+    </td>
+  </tr>
   {% endfor %}
-</div>
+</table>
 
 <div class="modal" id="addModal" role="dialog">
   <div class="modal-dialog">
@@ -34,12 +41,14 @@
       </div>
       <div class="modal-body">
         <form class="form-group add-form" method="POST" action="{{ url_for('index') }}">
-          <input name="task_title" type="text" class="form-control" placeholder="Task Title" autocomplete="off">
-          <input name="task_notes" type="text" class="form-control" placeholder="Notes" autocomplete="off">
-          <select name="priority" class="custom-select">
-            <option value="3">Low</option>
-            <option value="2">Medium</option>
-            <option value="1">High</option>
+          <input name="folder_name" type="text" class="form-control" placeholder="Folder Name" autocomplete="off">
+          <select name="color" class="custom-select">
+            <option value="#fa1500">Red</option>
+            <option value="#fa7900">Orange</option>
+            <option value="#fae900">Yellow</option>
+            <option value="#47fa00">Green</option>
+            <option value="#0036fa">Blue</option>
+            <option value="#8900fa">Purple</option>
           </select>
           <button type="submit" class="btn btn-secondary col-6 offset-3">Add</button>
         </form>

@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
-from sqlalchemy import Column, Text, Date, Boolean, Integer
+from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
 from modules import db
 
@@ -13,6 +14,7 @@ class Task(db.Model):
     date_added = Column(Date)
     priority = Column(Integer)
     done = Column(Boolean)
+    folder_id = Column(Integer, ForeignKey("folders.id"))
     id = Column(Integer, primary_key=True)
 
     def __init__(self,
@@ -55,6 +57,27 @@ class Task(db.Model):
 
     def __str__(self):
         return "%d\t%s" % (self.id, self.title)
+
+
+class Folder(db.Model):
+    __tablename__ = "folders"
+
+    name = Column(Text)
+    date_created = Column(Date)
+    color = Column(Text)
+    tasks = relationship("Task", backref="folders")
+    id = Column(Integer, primary_key=True)
+
+    def __init__(self,
+                 name: str,
+                 date_created: date = datetime.now().date(),
+                 color: str = None):
+        self.name = name.capitalize()
+        self.date_created = date_created
+        self.color = color
+
+    def __str__(self):
+        return "%d\t%s" % (self.id, self.name)
 
 
 db.create_all()
