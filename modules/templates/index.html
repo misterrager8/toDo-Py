@@ -34,23 +34,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">New Task</h5>
+        <h5 class="modal-title">New Folder</h5>
         <button type="button" class="close" data-dismiss="modal">
           <span>×</span>
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-group add-form" method="POST" action="{{ url_for('index') }}">
+        <form class="add-form text-center" method="POST" action="{{ url_for('index') }}">
           <input name="folder_name" type="text" class="form-control" placeholder="Folder Name" autocomplete="off">
-          <select name="color" class="custom-select">
-            <option value="#fa1500">Red</option>
-            <option value="#fa7900">Orange</option>
-            <option value="#fae900">Yellow</option>
-            <option value="#47fa00">Green</option>
-            <option value="#0036fa">Blue</option>
-            <option value="#8900fa">Purple</option>
-          </select>
-          <button type="submit" class="btn btn-secondary col-6 offset-3">Add</button>
+          <input type="color" name="color" class="form-control form-control-color">
+          <button type="submit" class="btn btn-secondary col-6">Add</button>
         </form>
       </div>
     </div>
