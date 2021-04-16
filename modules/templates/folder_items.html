@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block body %}
+<title>{{ folder.name }}</title>
+<h1 class="display-1 text-center">{{ folder.name }}
+  <a href="#" data-toggle="modal" data-target="#addModal" class="unstyled-link">+</a>
+</h1>
+<h6>
+  <a class="m-3" href="{{ url_for('sort', order_by='priority') }}">Priority</a>
+  <a class="m-3" href="{{ url_for('sort', order_by='date_added') }}">Date</a>
+</h6>
+<div class="row">
+  {% for i in folder.tasks %}
+  <div class="col-4">
+    <div class="bg-light shadow card-body rounded">
+      <a href="#" class="close text-danger">x</a>
+      <h5 class="card-title">{{ i.title }}</h5>
+      <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
+      <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
+      <a href="{{ url_for('mark_done', id_=i.id) }}" class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="modal" id="addModal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">New Task</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-group add-form" method="POST" action="{{ url_for('folder_items', id_=folder.id) }}">
+          <input name="task_title" type="text" class="form-control" placeholder="Task Title" autocomplete="off">
+          <input name="task_notes" type="text" class="form-control" placeholder="Notes" autocomplete="off">
+          <select name="priority" class="custom-select">
+            <option value="3">Low</option>
+            <option value="2">Medium</option>
+            <option value="1">High</option>
+          </select>
+          <button type="submit" class="btn btn-secondary col-6 offset-3">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
