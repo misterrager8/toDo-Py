@@ -17,10 +17,25 @@ def index():
     return render_template("index.html", folders=task_db.get_all(Folder))
 
 
-@app.route("/delete")
-def delete_task():
+@app.route("/folder", methods=["POST", "GET"])
+def folder_items():
     id_: int = request.args.get("id_")
-    task_db.delete_one(task_db.find_by_id(Task, id_))
+    folder: Folder = task_db.find_by_id(Folder, id_)
+
+    if request.method == "POST":
+        task_title = request.form["task_title"]
+        task_notes = request.form["task_notes"]
+        priority = request.form["priority"]
+
+        folder.add_task(Task(task_title, notes=task_notes, priority=priority))
+
+    return render_template("folder_items.html", folder=folder)
+
+
+@app.route("/delete")
+def delete_folder():
+    id_: int = request.args.get("id_")
+    task_db.delete_one(task_db.find_by_id(Folder, id_))
 
     return redirect(url_for("index"))
 
