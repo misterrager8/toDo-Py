@@ -76,6 +76,10 @@ class Folder(db.Model):
         self.date_created = date_created
         self.color = color
 
+    def add_task(self, task: Task):
+        self.tasks.append(task)
+        db.session.commit()
+
     def __str__(self):
         return "%d\t%s" % (self.id, self.name)
 
