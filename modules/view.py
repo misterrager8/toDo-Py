@@ -40,7 +40,7 @@ def delete_folder():
     id_: int = request.args.get("id_")
     task_db.delete_one(task_db.find_by_id(Folder, id_))
 
-    return redirect(url_for("index"))
+    return redirect(url_for("index", folders=task_db.get_all(Folder)))
 
 
 @app.route("/mark_done")
