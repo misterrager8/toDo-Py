@@ -3,7 +3,9 @@
 {% block body %}
 <title>{{ folder.name }}</title>
 <h1 class="display-1 text-center">{{ folder.name }}
-  <a href="#" data-toggle="modal" data-target="#addModal" class="unstyled-link">+</a>
+  <a href="#" data-toggle="modal" data-target="#addModal" class="unstyled-link">
+    <small>+</small>
+  </a>
 </h1>
 <h6>
   <a class="m-3" href="{{ url_for('sort', order_by='priority') }}">Priority</a>
