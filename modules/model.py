@@ -66,6 +66,7 @@ class Folder(db.Model):
     date_created = Column(Date)
     color = Column(Text)
     tasks = relationship("Task", backref="folders")
+    notes = relationship("Note", backref="folders")
     id = Column(Integer, primary_key=True)
 
     def __init__(self,
@@ -82,6 +83,30 @@ class Folder(db.Model):
 
     def __str__(self):
         return "%d\t%s" % (self.id, self.name)
+
+
+class Note(db.Model):
+    __tablename__ = "notes"
+
+    title = Column(Text)
+    content = Column(Text)
+    date_created = Column(Date)
+    date_modified = Column(Date)
+    folder_id = Column(Integer, ForeignKey("folders.id"))
+    id = Column(Integer, primary_key=True)
+
+    def __init__(self,
+                 title: str,
+                 content: str,
+                 date_created: date = datetime.now().date(),
+                 date_modified: date = datetime.now().date()):
+        self.title = title.capitalize()
+        self.content = content
+        self.date_created = date_created
+        self.date_modified = date_modified
+
+    def __str__(self):
+        return "%d\t%s" % (self.id, self.title)
 
 
 db.create_all()
