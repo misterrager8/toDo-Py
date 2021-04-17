@@ -53,4 +53,4 @@ def mark_done():
     _: Task = task_db.find_by_id(Task, id_)
     _.toggle_done(True)
 
-    return redirect(url_for("index"))
+    return redirect(url_for("folder_items", id_=_.folders.id))
