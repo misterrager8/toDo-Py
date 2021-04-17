@@ -9,12 +9,15 @@ task_db = ToDoDB()
 
 @app.route("/", methods=["POST", "GET"])
 def index():
+    order_by = request.args.get("order_by", default="date_created desc")
+
     if request.method == "POST":
         name = request.form["folder_name"]
         color = request.form["color"]
         task_db.create_one(Folder(name, color=color))
 
-    return render_template("index.html", folders=task_db.get_all(Folder))
+    folders = task_db.get_all(Folder, order_by=order_by)
+    return render_template("index.html", folders=folders, order_by=order_by)
 
 
 @app.route("/folder", methods=["POST", "GET"])
@@ -38,13 +41,6 @@ def delete_folder():
     task_db.delete_one(task_db.find_by_id(Folder, id_))
 
     return redirect(url_for("index"))
-
-
-@app.route("/sort")
-def sort():
-    order_by = request.args.get("order_by")
-
-    return render_template("index.html", tasks=task_db.get_all(Task, order_by=order_by))
 
 
 @app.route("/mark_done")

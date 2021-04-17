@@ -5,9 +5,12 @@
 <h1 class="display-1 text-center">Folders
   <a href="#" data-toggle="modal" data-target="#addModal">+</a>
 </h1>
-<h6>
-  <a class="m-3" href="{{ url_for('sort', order_by='priority') }}">Priority</a>
-  <a class="m-3" href="{{ url_for('sort', order_by='date_added') }}">Date</a>
+<h6 class="text-center">Sort by:
+  {% if order_by == "date_created desc" %}
+  <a class="unstyled-link m-3" href="{{ url_for('index', order_by='name') }}">Name</a>
+  {% elif order_by == "name" %}
+  <a class="unstyled-link m-3" href="{{ url_for('index', order_by='date_created desc') }}">Date</a>
+  {% endif %}
 </h6>
 {% for i in folders %}
 <div class="list-group-item list-group-item-action d-flex justify-content-between border-0 col-6 offset-3 py-2"
