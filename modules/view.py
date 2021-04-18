@@ -16,6 +16,8 @@ def index():
         color = request.form["color"]
         task_db.create_one(Folder(name, color=color))
 
+        return redirect(url_for("index"))
+
     folders = task_db.get_all(Folder, order_by=order_by)
     return render_template("index.html", folders=folders, order_by=order_by)
 
