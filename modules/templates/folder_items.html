@@ -10,19 +10,22 @@
     <small>-</small>
   </a>
 </h1>
-<h6>
-  <a class="m-3" href="{{ url_for('sort', order_by='priority') }}">Priority</a>
-  <a class="m-3" href="{{ url_for('sort', order_by='date_added') }}">Date</a>
+<h6 class="text-center">Sort by:
+  {% if order_by == "priority" %}
+  <a class="m-3 unstyled-link" href="{{ url_for('folder_items', id_=folder.id, order_by='date_added desc') }}">Date</a>
+  {% elif order_by == "date_added desc" %}
+  <a class="m-3 unstyled-link" href="{{ url_for('folder_items', id_=folder.id, order_by='priority') }}">Priority</a>
+  {% endif %}
 </h6>
 <div class="row">
-  {% for i in folder.tasks %}
+  {% for i in folder.get_tasks(order_by) %}
   <div class="col-4">
     <div class="bg-light shadow card-body rounded">
       <a href="#" class="close text-danger">x</a>
       <h5 class="card-title">{{ i.title }}</h5>
       <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
       <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
-      <a href="{{ url_for('toggle_done', id_=i.id) }}" class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</a>
+      <a href="{{ url_for('toggle_done', id_=i.id, order_by=order_by) }}" class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</a>
     </div>
   </div>
   {% endfor %}
@@ -38,7 +41,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-group add-form" method="POST" action="{{ url_for('folder_items', id_=folder.id) }}">
+        <form class="form-group add-form" method="POST" action="{{ url_for('folder_items', id_=folder.id, order_by=order_by) }}">
           <input name="task_title" type="text" class="form-control" placeholder="Task Title" autocomplete="off">
           <input name="task_notes" type="text" class="form-control" placeholder="Notes" autocomplete="off">
           <select name="priority" class="custom-select">

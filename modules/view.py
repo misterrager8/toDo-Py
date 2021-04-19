@@ -24,6 +24,7 @@ def index():
 
 @app.route("/folder", methods=["POST", "GET"])
 def folder_items():
+    order_by = request.args.get("order_by", default="date_added desc")
     id_: int = request.args.get("id_")
     folder: Folder = task_db.find_by_id(Folder, id_)
 
@@ -34,7 +35,7 @@ def folder_items():
 
         folder.add_task(Task(task_title, notes=task_notes, priority=priority))
 
-    return render_template("folder_items.html", folder=folder)
+    return render_template("folder_items.html", folder=folder, order_by=order_by)
 
 
 @app.route("/delete")
@@ -48,10 +49,11 @@ def delete_folder():
 @app.route("/toggle_done")
 def toggle_done():
     id_ = int(request.args.get("id_"))
+    order_by = request.args.get("order_by")
     _: Task = task_db.find_by_id(Task, id_)
     if _.done:
         _.toggle_done(False)
     else:
         _.toggle_done(True)
 
-    return redirect(url_for("folder_items", id_=_.folders.id))
+    return redirect(url_for("folder_items", id_=_.folders.id, order_by=order_by))

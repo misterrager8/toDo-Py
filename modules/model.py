@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey
+from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey, text
 from sqlalchemy.orm import relationship
 
 from modules import db
@@ -80,6 +80,9 @@ class Folder(db.Model):
     def add_task(self, task: Task):
         self.tasks.append(task)
         db.session.commit()
+
+    def get_tasks(self, order_by: str):
+        return db.session.query(Task).order_by(text(order_by)).filter(Task.folder_id == self.id)
 
     def __str__(self):
         return "%d\t%s" % (self.id, self.name)
