@@ -20,7 +20,7 @@
 <div class="row">
   {% for i in folder.get_tasks(order_by) %}
   <div class="col-4">
-    <div class="bg-light shadow card-body rounded">
+    <div class="bg-light shadow card-body rounded mb-4">
       <a href="#" class="close text-danger">x</a>
       <h5 class="card-title">{{ i.title }}</h5>
       <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
