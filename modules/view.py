@@ -45,10 +45,13 @@ def delete_folder():
     return redirect(url_for("index", folders=task_db.get_all(Folder)))
 
 
-@app.route("/mark_done")
-def mark_done():
+@app.route("/toggle_done")
+def toggle_done():
     id_ = int(request.args.get("id_"))
     _: Task = task_db.find_by_id(Task, id_)
-    _.toggle_done(True)
+    if _.done:
+        _.toggle_done(False)
+    else:
+        _.toggle_done(True)
 
     return redirect(url_for("folder_items", id_=_.folders.id))
