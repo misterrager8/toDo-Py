@@ -21,7 +21,7 @@
   {% for i in folder.get_tasks(order_by) %}
   <div class="col-4">
     <div class="bg-light shadow card-body rounded mb-4">
-      <a href="#" class="close text-danger">x</a>
+      <a href="{{ url_for('delete_task', id_=i.id, order_by=order_by) }}" class="close text-danger">x</a>
       <h5 class="card-title">{{ i.title }}</h5>
       <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
       <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>

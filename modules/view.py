@@ -46,6 +46,18 @@ def delete_folder():
     return redirect(url_for("index", folders=task_db.get_all(Folder)))
 
 
+@app.route("/delete_task")
+def delete_task():
+    id_: int = request.args.get("id_")
+    order_by = request.args.get("order_by")
+    task: Task = task_db.find_by_id(Task, id_)
+    folder_id = task.folder_id
+
+    task_db.delete_one(task)
+
+    return redirect(url_for("folder_items", id_=folder_id, order_by=order_by))
+
+
 @app.route("/toggle_done")
 def toggle_done():
     id_ = int(request.args.get("id_"))
