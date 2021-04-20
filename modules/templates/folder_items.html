@@ -24,6 +24,13 @@
       <a href="{{ url_for('delete_task', id_=i.id, order_by=order_by) }}" class="close text-danger">x</a>
       <h5 class="card-title">{{ i.title }}</h5>
       <p class="text-muted font-italic">{{ i.date_added.strftime("%B %d") }}</p><br>
+      {% if i.notes %}
+        {% if i.notes | length > 20 %}
+        <p class="text-muted font-italic" data-toggle="tooltip" title="{{ i.notes }}">{{ i.notes[:20] }}...</p><br>
+        {% else %}
+        <p class="text-muted font-italic">{{ i.notes }}</p><br>
+        {% endif %}
+      {% endif %}
       <span class="{{ i.get_priority()[1] }}">{{ i.get_priority()[0] }}</span><br>
       <a href="{{ url_for('toggle_done', id_=i.id, order_by=order_by) }}" class="{{ i.get_done()[1] }}">{{ i.get_done()[0] }}</a>
     </div>
