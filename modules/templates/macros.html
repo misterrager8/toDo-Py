@@ -8,11 +8,45 @@
 <a href="{{ href }}" style="text-decoration : none; color : {{ color }};">{{ text }}</a>
 {% endmacro %}
 
+<!--Button-->
+{% macro button(text, href, color) %}
+<a href="{{ href }}" class="btn" style="background-color: {{ color }}">{{ text }}</a>
+{% endmacro %}
+
 <!--Colored Circle Icon-->
 {% macro colored_circle_icon(size, color) %}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill" viewBox="0 0 16 16">
   <circle cx="8" cy="8" r="8"/>
 </svg>
+{% endmacro %}
+
+<!--Plus Icon-->
+{% macro plus_icon(size, color) %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill" viewBox="0 0 16 16">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{ color }}" class="bi bi-plus-circle" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+  </svg>
+</svg>
+{% endmacro %}
+
+<!--X Icon-->
+{% macro delete_icon(size, color) %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill" viewBox="0 0 16 16">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{ color }}" class="bi bi-x-circle" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+  </svg>
+</svg>
+{% endmacro %}
+
+<!--Folder Ctrl Panel-->
+{% macro folder_ctrl_panel(folder) %}
+<div class="text-center m-5">
+  <p class="display-4">{{ folder.name }}</p>
+  <a href=# data-toggle="modal" data-target="#add_task_modal" style="text-decoration: none;">{{ plus_icon(20, 'green') }}</a>
+  <a href=# data-toggle="modal" data-target="#delete_folder_modal" style="text-decoration: none;">{{ delete_icon(20, 'red') }}</a>
+</div>
 {% endmacro %}
 
 <!--Sort Filter-->
@@ -30,13 +64,12 @@ Sort By:
 <div class="card col-4 border-0">
   <div class="m-2 border rounded">
     <div class="pb-0 card-header d-flex justify-content-between">
-      <p class="font-weight-bold">
-        {{ unstyled_anchor(task.title, url_for('index'), 'black') }}
-      </p>
-      <span>{{ colored_circle_icon(20, task.folders.color) }}</span>
+      <p class="font-weight-bold">{{ unstyled_anchor(task.title, url_for('index'), 'black') }}</p>
+      <p class="py-2 {{ task.get_priority()[1] }}">{{ task.get_priority()[0] }}</p>
     </div>
     <div class="card-body">
       {{ task.notes }}
+      <span class="{{ task.get_done()[1] }}">{{ task.get_done()[0] }}</span>
     </div>
     <div class="card-footer">
       <small>{{ task.date_added.strftime("%m/%d/%Y") }}</small>
@@ -61,9 +94,9 @@ Sort By:
 <span class="badge" style="color: {{ text_color }}; background-color: {{ badge_color }};">{{ text }}</span>
 {% endmacro %}
 
-<!--Add Modal-->
-{% macro add_modal() %}
-<div class="modal" id="addModal" role="dialog">
+<!--Add Task Modal-->
+{% macro add_task_modal(folder) %}
+<div class="modal" id="add_task_modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -73,7 +106,7 @@ Sort By:
         </button>
       </div>
       <div class="modal-body">
-        <form class="form-group add-form" method="POST" action="">
+        <form class="form-group add-form" method="POST" action="{{ url_for('folder_items', id_=folder.id) }}">
           <input name="task_title" type="text" class="form-control" placeholder="Task Title" autocomplete="off">
           <input name="task_notes" type="text" class="form-control" placeholder="Notes" autocomplete="off">
           <select name="priority" class="custom-select">
@@ -84,6 +117,18 @@ Sort By:
           <button type="submit" class="btn btn-secondary col-6 offset-3">Add</button>
         </form>
       </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+<!--Delete Folder Modal-->
+{% macro delete_folder_modal(folder) %}
+<div class="modal" id="delete_folder_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {{ title_heading('Delete Folder?') }}
+      <a class="btn btn-danger" href="{{ url_for('delete_folder', id_=folder.id) }}">Delete</a>
     </div>
   </div>
 </div>

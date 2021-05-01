@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import task_card, sort_filter, title_heading, add_modal %}
+{% import "macros.html" as macros %}
 
 {% block body %}
 <title>{{ folder.name }}</title>
@@ -7,9 +7,10 @@
 {{ sort_filter([[url_for('index'), 'Title'], [url_for('index'), 'Date Added']]) }}
 <div class="row">
   {% for i in folder.get_tasks(order_by) %}
-  {{ task_card(i) }}
+  {{ macros.task_card(i) }}
   {% endfor %}
 </div>
-{{ add_modal() }}
+{{ macros.delete_folder_modal(folder) }}
+{{ macros.add_task_modal(folder) }}
 {% endblock %}
 
