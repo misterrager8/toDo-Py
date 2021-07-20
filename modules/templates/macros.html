@@ -1,62 +1,108 @@
 <!--Title Div-->
-{% macro title_heading(text) %}
-<p class="display-4 text-center m-5">{{ text }}</p>
+{% macro paragraph(text, class='', size=1) %}
+<!--suppress ALL-->
+<p class="m-0 {{ class }}" style="font-size:{{ size }}em">{{ text }}</p>
 {% endmacro %}
 
 <!--Unstyled Anchor Text-->
-{% macro unstyled_anchor(text, href, color) %}
-<a href="{{ href }}" style="text-decoration : none; color : {{ color }};">{{ text }}</a>
+{% macro link(href='#', color='black', newtab=false, modal_id='', class='') %}
+<a href="{{ href }}"
+   style="text-decoration:none; color:{{ color }};"
+   class="m-0 {{ class }}"
+   {% if newtab %}
+   target="_blank"
+   {% endif %}
+
+   {% if modal_id %}
+   data-toggle="modal"
+   data-target="#{{ modal_id }}"
+   {% endif %}
+>
+  {{ caller() }}
+</a>
 {% endmacro %}
 
 <!--Button-->
-{% macro button(text, href, color) %}
-<a href="{{ href }}" class="btn" style="background-color: {{ color }}">{{ text }}</a>
+{% macro button(text, bg_color='black', txt_color='white') %}
+<button type="submit"
+        class="btn btn-lg"
+        style="backround-color:{{ bg_color }}; color:{{ txt_color }}"
+>
+  {{ text }}
+</button>
 {% endmacro %}
 
-<!--Colored Circle Icon-->
-{% macro colored_circle_icon(size, color) %}
+<!--Generic Badge-->
+{% macro badge(text, class='', txt_color='black', bg_color='white', pill=false, newtab=false, modal_id='', href='') %}
+<a class="badge {% if pill %}badge-pill{% endif %} {{ class }}"
+   {% if href %}href="{{ href }}" {% endif %}
+   style="text-decoration:none; color:{{ txt_color }}; background-color:{{ bg_color }};"
+   {% if newtab %}
+   target="_blank"
+   {% endif %}
+
+   {% if modal_id %}
+   data-toggle="modal"
+   data-target="{{ modal_id }}"
+   {% endif %}
+>
+  {{ text }}
+</a>
+{% endmacro %}
+
+{% macro modal(id, lg=false) %}
+<div class="modal" id="{{ id }}">
+  <div class="modal-dialog {% if lg %}modal-lg{% endif %}">
+    <div class="modal-content p-3">
+      {{ caller() }}
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro dropdown(text) %}
+<div class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ text }}</a>
+  <div class="dropdown-menu">
+    {{ caller() }}
+  </div>
+</div>
+{% endmacro %}
+
+<!--Circle Icon-->
+{% macro circle_icon(size=25, color='black') %}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill" viewBox="0 0 16 16">
   <circle cx="8" cy="8" r="8"/>
 </svg>
 {% endmacro %}
 
-<!--Plus Icon-->
-{% macro plus_icon(size, color) %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill" viewBox="0 0 16 16">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{ color }}" class="bi bi-plus-circle" viewBox="0 0 16 16">
-    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-  </svg>
+<!--Add Icon-->
+{% macro add_icon(size=25, color='green') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-plus-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
 </svg>
 {% endmacro %}
 
-<!--X Icon-->
-{% macro delete_icon(size, color) %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill" viewBox="0 0 16 16">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="{{ color }}" class="bi bi-x-circle" viewBox="0 0 16 16">
-    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-  </svg>
+<!--Delete Icon-->
+{% macro delete_icon(size=25, color='red') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-x-circle" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
 </svg>
 {% endmacro %}
 
 <!--Folder Ctrl Panel-->
 {% macro folder_ctrl_panel(folder) %}
-<div class="text-center m-5">
-  <p class="display-4">{{ folder.name }}</p>
-  <a href=# data-toggle="modal" data-target="#add_task_modal" style="text-decoration: none;">{{ plus_icon(20, 'green') }}</a>
-  <a href=# data-toggle="modal" data-target="#delete_folder_modal" style="text-decoration: none;">{{ delete_icon(20, 'red') }}</a>
+<div>
+  {% call link() %}{{ add_icon() }}{% endcall %}
+  {% call link() %}{{ delete_icon() }}{% endcall %}
 </div>
 {% endmacro %}
 
 <!--Sort Filter-->
-{% macro sort_filter(attr_list) %}
-Sort By:
-{% for i in attr_list %}
-<span class="badge badge-dark mx-1">
-  {{ unstyled_anchor(i[1], i[0], 'white') }}
-</span>
-{% endfor %}
+{% macro folders_sort_filter() %}
+<div class="list-inline"></div>
 {% endmacro %}
 
 <!--Task Card-->
@@ -64,7 +110,7 @@ Sort By:
 <div class="card col-4 border-0">
   <div class="m-2 border rounded">
     <div class="pb-0 card-header d-flex justify-content-between">
-      <p class="font-weight-bold">{{ unstyled_anchor(task.title, url_for('index'), 'black') }}</p>
+      {% call link(href=url_for('index')) %}{{ paragraph(task.title) }}{% endcall %}
       <p class="py-2 {{ task.get_priority()[1] }}">{{ task.get_priority()[0] }}</p>
     </div>
     <div class="card-body">
@@ -80,18 +126,13 @@ Sort By:
 
 <!--Folder List Item-->
 {% macro folder_list_item(folder) %}
-<div class="list-group-item list-group-item-action d-flex justify-content-between border-0">
-  <div>
-    {{ colored_circle_icon(20, folder.color) }}
-    {{ unstyled_anchor(folder.name, url_for('folder_items', id_=folder.id), 'black') }}
+<div class="list-group-item list-group-item-action d-flex justify-content-between border-0 rounded">
+  <div class="list-inline">
+    <div class="list-inline-item">{{ circle_icon(size=20, color=folder.color) }}</div>
+    {% call link(href=url_for('folder_items', id_=folder.id), class='list-inline-item') %}{{ paragraph(folder.name) }}{% endcall %}
   </div>
-  <small>{{ folder.date_created.strftime("%m/%d/%Y") }}</small>
+  {{ paragraph(folder.date_created.strftime("%m/%d/%Y"), size=0.8) }}
 </div>
-{% endmacro %}
-
-<!--Generic Badge-->
-{% macro badge(text, text_color, badge_color) %}
-<span class="badge" style="color: {{ text_color }}; background-color: {{ badge_color }};">{{ text }}</span>
 {% endmacro %}
 
 <!--Add Task Modal-->
@@ -127,7 +168,7 @@ Sort By:
 <div class="modal" id="delete_folder_modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
-      {{ title_heading('Delete Folder?') }}
+      {{ paragraph('Delete Folder?') }}
       <a class="btn btn-danger" href="{{ url_for('delete_folder', id_=folder.id) }}">Delete</a>
     </div>
   </div>
