@@ -1,24 +1,17 @@
 {% extends "base.html" %}
-{% import "macros.html" as macros %}
+{% import "macros.html" as macros with context %}
 
 {% block body %}
 <title>{{ folder.name }}</title>
-{{ macros.folder_ctrl_panel(folder) }}
-
-{% if order_by == "title" %}
-{{ macros.sort_filter([[url_for('folder_items', id_=folder.id, order_by='date_added desc'), 'Date Added'], [url_for('folder_items', id_=folder.id, order_by='priority'), 'Priority']]) }}
-{% elif order_by == "date_added desc" %}
-{{ macros.sort_filter([[url_for('folder_items', id_=folder.id, order_by='title'), 'Title'], [url_for('folder_items', id_=folder.id, order_by='priority'), 'Priority']]) }}
-{% elif order_by == "priority" %}
-{{ macros.sort_filter([[url_for('folder_items', id_=folder.id, order_by='title'), 'Title'], [url_for('folder_items', id_=folder.id, order_by='date_added desc'), 'Date Added']]) }}
-{% endif %}
+<div class="text-center m-3">
+  {{ macros.paragraph(folder.name, size=3, class='m-0') }}
+  {{ macros.folder_ctrl_panel(folder) }}
+</div>
 
 <div class="row">
-  {% for i in folder.get_tasks(order_by) %}
+  {% for i in folder.tasks %}
   {{ macros.task_card(i) }}
   {% endfor %}
 </div>
-{{ macros.delete_folder_modal(folder) }}
-{{ macros.add_task_modal(folder) }}
 {% endblock %}
 
