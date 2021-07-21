@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block body %}
+<title>Habits</title>
+<div>
+  <div class="text-center m-3">
+    {{ macros.paragraph('Habits', size=3, class='m-0') }}
+    {% call macros.link(modal_id='habit_create') %}{{ macros.add_icon() }}{% endcall %}
+  </div>
+</div>
+
+{% call macros.modal('habit_create') %}
+{{ macros.paragraph('New Habit', size=3, class='text-center m-3') }}
+{% endcall %}
+
+{% endblock %}

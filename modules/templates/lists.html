@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block body %}
+<title>Lists</title>
+<div>
+  <div class="text-center m-3">
+    {{ macros.paragraph('Lists', size=3, class='m-0') }}
+    {% call macros.link(modal_id='list_create') %}{{ macros.add_icon() }}{% endcall %}
+  </div>
+</div>
+
+{% call macros.modal('list_create') %}
+{{ macros.paragraph('New List', size=3, class='text-center m-3') }}
+{% endcall %}
+
+{% endblock %}
