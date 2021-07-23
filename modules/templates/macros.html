@@ -1,10 +1,8 @@
-<!--Title Div-->
 {% macro paragraph(text, class='', size=1) %}
 <!--suppress ALL-->
 <p class="{{ class }}" style="font-size:{{ size }}em">{{ text }}</p>
 {% endmacro %}
 
-<!--Unstyled Anchor Text-->
 {% macro link(href='#', color='black', newtab=false, modal_id='', class='') %}
 <a href="{{ href }}"
    style="text-decoration:none; color:{{ color }};"
@@ -22,7 +20,6 @@
 </a>
 {% endmacro %}
 
-<!--Button-->
 {% macro button(text, bg_color='black', txt_color='white') %}
 <button type="submit"
         class="btn w-100"
@@ -46,14 +43,15 @@
    data-target="{{ modal_id }}"
    {% endif %}
 >
-  {{ text }}
+  <p class="m-0" style="mix-blend-mode:difference; color:orange">{{ text }}</p>
 </a>
 {% endmacro %}
 
-{% macro modal(id, lg=false) %}
+{% macro modal(id, title='', lg=false) %}
 <div class="modal" id="{{ id }}">
   <div class="modal-dialog {% if lg %}modal-lg{% endif %}">
     <div class="modal-content p-3">
+      {% if title %}{{ paragraph(title, class='text-center m-3', size=3) }}{% endif %}
       {{ caller() }}
     </div>
   </div>
@@ -69,14 +67,16 @@
 </div>
 {% endmacro %}
 
-<!--Brand Icon-->
+{% macro input(name, placeholder, class='', value='') %}
+<input type="text" autocomplete="off" class="form-control {{ class }}" name="{{ name }}" placeholder="{{ placeholder }}" value="{{ value }}">
+{% endmacro %}
+
 {% macro brand_icon(size=25, color='white') %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-list-check" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-check-all" viewBox="0 0 16 16">
+  <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992a.252.252 0 0 1 .02-.022zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486-.943 1.179z"/>
 </svg>
 {% endmacro %}
 
-<!--Add Icon-->
 {% macro add_icon(size=25, color='green') %}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-plus-circle" viewBox="0 0 16 16">
   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -84,7 +84,6 @@
 </svg>
 {% endmacro %}
 
-<!--Delete Icon-->
 {% macro delete_icon(size=25, color='red') %}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-x-circle" viewBox="0 0 16 16">
   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -99,90 +98,153 @@
 </svg>
 {% endmacro %}
 
-<!--Folder Ctrl Panel-->
-{% macro folder_ctrl_panel(folder, class='') %}
-<div class="{{ class }}">
-  {% call link(modal_id='task_create', class='mx-1') %}{{ add_icon(size=20) }}{% endcall %}
-  {% call link(modal_id='folder_update_%s' % folder.id, class='mx-1') %}{{ edit_icon(size=20) }}{% endcall %}
-  {% call link(modal_id='folder_delete_%s' % folder.id, class='mx-1') %}{{ delete_icon(size=20) }}{% endcall %}
+{% macro reminder_icon(size=25, color='black') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-alarm" viewBox="0 0 16 16">
+  <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
+  <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
+</svg>
+{% endmacro %}
+
+{% macro folder_card(folder) %}
+<div class="card col-xl-4 border-0 rounded">
+  <div class="card-body m-2 p-3 shadow-sm" style="background-color:{{ folder.color }}; border-radius:10px;">
+    <a class="" style="mix-blend-mode:difference; color:orange" href="#">
+      {{ folder.name }}{{ badge(folder.tasks|count|string, class='mx-2') }}
+    </a>
+    <span class="float-right">
+      {% call link(class='mx-1', modal_id='task_create_%s'%folder.id) %}{{ add_icon(size=20) }}{% endcall %}
+      {% call link(class='mx-1', modal_id='folder_update_%s'%folder.id) %}{{ edit_icon(size=20) }}{% endcall %}
+      {% call link(class='mx-1', modal_id='folder_delete_%s'%folder.id) %}{{ delete_icon(size=20) }}{% endcall %}
+    </span>
+  </div>
+  {% call modal('task_create_%s'%folder.id, title='New Task') %}
+  {{ task_create_form(folder) }}
+  {% endcall %}
+
+  {% call modal('folder_update_%s'%folder.id, title='Edit Folder') %}
+  {{ folder_update_form(folder) }}
+  {% endcall %}
+
+  {% call modal('folder_delete_%s'%folder.id, title='Delete Folder?') %}
+  {% call link(class='btn btn-dark text-light', href=url_for('folder_delete', id_=folder.id)) %}Delete{% endcall %}
+  {% endcall %}
 </div>
-
-{% call modal('task_create') %}
-{{ task_create_form(folder) }}
-{% endcall %}
-
-{% call modal('folder_update_%s' % folder.id) %}
-{{ folder_update_form(folder) }}
-{% endcall %}
-
-{% call modal('folder_delete_%s' % folder.id) %}
-{{ paragraph('Delete?', class='text-center m-3', size=3) }}
-{% call link(class='btn btn-lg', href=url_for('folder_delete', id_=folder.id)) %}Delete{% endcall %}
-{% endcall %}
-
 {% endmacro %}
 
-<!--Sort Filter-->
-{% macro folders_sort_filter() %}
-<div class="list-inline"></div>
-{% endmacro %}
-
-<!--Task Card-->
 {% macro task_card(task) %}
-<div class="card col-4 border-0 p-0">
-  <div class="rounded border card-body m-2">
-    <div class=" d-flex justify-content-between">
-      {% call link(href=url_for('index')) %}{{ paragraph(task.title) }}{% endcall %}
-      <p class="py-2 {{ task.get_priority()[1] }}">{{ task.get_priority()[0] }}</p>
-    </div>
-    <div class="">
-      {{ task.notes }}
-      <span class="{{ task.get_done()[1] }}">{{ task.get_done()[0] }}</span>
-    </div>
-    <div class="">
-      <small>{{ task.date_added.strftime("%m/%d/%Y") }}</small>
+<div class="card col-xl-12 border-0 rounded">
+  <div class="card-body border m-2 p-3 shadow-sm" style="border-radius:10px;">
+    {{ paragraph(task.name, class='font-italic d-inline mr-2') }}
+    {% if task.reminder %}{{ reminder_icon(size=17) }}{% endif %}
+    <div class="float-right">
+      {{ badge(task.folders.name, bg_color=task.folders.color) }}
+      {% call link(class='mx-1', modal_id='task_update_%s'%task.id) %}{{ edit_icon(size=20) }}{% endcall %}
+      {% call link(class='mx-1', modal_id='task_delete_%s'%task.id) %}{{ delete_icon(size=20) }}{% endcall %}
     </div>
   </div>
+  {% call modal('task_update_%s'%task.id, title='Edit Task') %}
+  {{ task_update_form(task) }}
+  {% endcall %}
+
+  {% call modal('task_delete_%s'%task.id, title='Delete Task?') %}
+  {% call link(class='btn btn-dark text-light', href=url_for('task_delete', id_=task.id)) %}Delete{% endcall %}
+  {% endcall %}
 </div>
 {% endmacro %}
 
-<!--Folder List Item-->
-{% macro folder_list_item(folder) %}
-<div class="card col-4 border-0">
-  <div class="card-body shadow-sm m-2 list-inline" style="border-radius:10px; background-color:{{ folder.color }}">
-    {% call link(color='white', href=url_for('folder_items', id_=folder.id), class='list-inline-item') %}{{ paragraph(folder.name, size=1.25, class='m-0') }}{% endcall %}
-    {{ badge(folder.tasks|count|string, class='list-inline-item', pill=true) }}
-    {{ folder_ctrl_panel(folder, class='float-right list-inline-item') }}
+{% macro habit_card(habit) %}
+<div class="card col-xl-12 border-0 rounded">
+  <div class="card-body border m-2 p-3 shadow-sm" style="border-radius:10px;">
+    {{ paragraph(habit.name, class='font-italic d-inline mr-2') }}
+    <div class="float-right">
+      {% call link(class='mx-1', modal_id='habit_update_%s'%habit.id) %}{{ edit_icon(size=20) }}{% endcall %}
+      {% call link(class='mx-1', modal_id='habit_delete_%s'%habit.id) %}{{ delete_icon(size=20) }}{% endcall %}
+    </div>
   </div>
+  {% call modal('habit_update_%s'%habit.id, title='Edit Habit') %}
+  {{ habit_update_form(habit) }}
+  {% endcall %}
+
+  {% call modal('habit_delete_%s'%habit.id, title='Delete Habit?') %}
+  {% call link(class='btn btn-dark text-light', href=url_for('habit_delete', id_=habit.id)) %}Delete{% endcall %}
+  {% endcall %}
 </div>
 {% endmacro %}
 
-{% macro folder_create_form() %}
-<form class="form-group" method="POST" action="{{ url_for('folder_create') }}">
-  <input name="folder_name" type="text" class="form-control mb-2" placeholder="Folder Name" autocomplete="off">
-  <input type="color" name="color" class="form-control form-control-color mb-2">
-  {{ button('Add') }}
-</form>
-{% endmacro %}
-
-{% macro folder_update_form(folder) %}
-<form class="form-group" method="POST" action="{{ url_for('folder_update', id_=folder.id) }}">
-  <input name="folder_name" type="text" class="form-control mb-2" placeholder="Folder Name" autocomplete="off" value="{{ folder.name }}">
-  <input type="color" name="color" class="form-control form-control-color mb-2" value="{{ folder.color }}">
-  {{ button('Edit') }}
-</form>
-{% endmacro %}
-
-<!--Add Task Modal-->
-{% macro task_create_form(folder) %}
-<form class="form-group" method="POST" action="{{ url_for('folder_items', id_=folder.id) }}">
-  <input name="task_title" type="text" class="form-control mb-2" placeholder="Task Title" autocomplete="off">
-  <input name="task_notes" type="text" class="form-control mb-2" placeholder="Notes" autocomplete="off">
-  <select name="priority" class="custom-select mb-2">
+{% macro task_create_form(folder='', class='') %}
+<form class="form-group" method="POST" action="{{ url_for('task_create') }}">
+  {{ input('name', 'Name', class='mb-2') }}
+  <select class="form-control mb-2" name="priority">
     <option value="3">Low</option>
     <option value="2">Medium</option>
     <option value="1">High</option>
   </select>
-  {{ button('Add') }}
+  {{ input('note', 'Note', class='mb-2') }}
+  <select name="folder" class="form-control mb-2">
+    <option>Select</option>
+    {% for i in all_folders %}
+    <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
+    {% endfor %}
+  </select>
+  {{ button('Submit') }}
+</form>
+{% endmacro %}
+
+{% macro task_update_form(task, class='') %}
+<form class="form-group" method="POST" action="{{ url_for('task_update', id_=task.id) }}">
+  {{ input('name', 'Name', class='mb-2', value=task.name) }}
+  <select class="form-control mb-2" name="priority">
+    <option value="3" {% if task.priority==3 %}selected{% endif %}>Low</option>
+    <option value="2" {% if task.priority==2 %}selected{% endif %}>Medium</option>
+    <option value="1" {% if task.priority==1 %}selected{% endif %}>High</option>
+  </select>
+  {{ input('note', 'Note', class='mb-2', value=task.note) }}
+  <select name="folder" class="form-control mb-2">
+    <option>Select</option>
+    {% for i in all_folders %}
+    <option value="{{ i.id }}" {% if task.folder== i.id %}selected{% endif %}>{{ i.name }}</option>
+    {% endfor %}
+  </select>
+  {{ button('Submit') }}
+</form>
+{% endmacro %}
+
+{% macro folder_create_form(class='') %}
+<form class="form-group" method="POST" action="{{ url_for('folder_create') }}">
+  {{ input('name', 'Name', class='mb-2') }}
+  {{ button('Submit') }}
+</form>
+{% endmacro %}
+
+{% macro folder_update_form(folder, class='') %}
+<form class="form-group" method="POST" action="{{ url_for('folder_update', id_=folder.id) }}">
+  {{ input('name', 'Name', class='mb-2', value=folder.name) }}
+  <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ folder.color }}">
+  {{ button('Edit') }}
+</form>
+{% endmacro %}
+
+{% macro habit_create_form(class='') %}
+<form class="form-group" method="POST" action="{{ url_for('habit_create') }}">
+  {{ input('name', 'Name', class='mb-2') }}
+  <select name="frequency" class="form-control mb-2">
+    <option value="Daily">Daily</option>
+    <option value="Weekly">Weekly</option>
+    <option value="Monthly">Monthly</option>
+  </select>
+  {{ button('Submit') }}
+</form>
+{% endmacro %}
+
+{% macro habit_update_form(habit, class='') %}
+<form class="form-group" method="POST" action="{{ url_for('habit_update', id_=habit.id) }}">
+  {{ input('name', 'Name', class='mb-2', value=habit.name) }}
+  <select name="frequency" class="form-control mb-2">
+    <option value="Daily">Daily</option>
+    <option value="Weekly">Weekly</option>
+    <option value="Monthly">Monthly</option>
+  </select>
+  <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ habit.color }}">
+  {{ button('Submit') }}
 </form>
 {% endmacro %}
