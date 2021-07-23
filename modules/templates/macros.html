@@ -248,3 +248,28 @@
   {{ button('Submit') }}
 </form>
 {% endmacro %}
+
+{% macro folders_sort(class='') %}
+<div class="list-inline" style="font-size:0.9em">
+  {{ paragraph('Sort by:', class='list-inline-item') }}
+  {% if order_by != 'name' %}{{ badge('Name', class='list-inline-item', pill=true, bg_color='black', href=url_for('folders', order_by='name')) }}{% endif %}
+  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, bg_color='black', href=url_for('folders', order_by='date_created desc')) }}{% endif %}
+</div>
+{% endmacro %}
+
+{% macro tasks_sort(class='') %}
+<div class="list-inline" style="font-size:0.9em">
+  {{ paragraph('Sort by:', class='list-inline-item') }}
+  {% if order_by != 'priority' %}{{ badge('Priority', class='list-inline-item', pill=true, bg_color='green', href=url_for('tasks', order_by='priority')) }}{% endif %}
+  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, bg_color='green', href=url_for('tasks', order_by='date_created desc')) }}{% endif %}
+  {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true, bg_color='green', href=url_for('tasks', order_by='folders.name')) }}{% endif %}
+</div>
+{% endmacro %}
+
+{% macro lists_sort(class='') %}
+<div class="list-inline" style="font-size:0.9em">
+  {{ paragraph('Sort by:', class='list-inline-item') }}
+  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, bg_color='purple', href=url_for('lists', order_by='date_created desc')) }}{% endif %}
+  {% if order_by != 'date_updated desc' %}{{ badge('Date Updated', class='list-inline-item', pill=true, bg_color='purple', href=url_for('lists', order_by='date_updated desc')) }}{% endif %}
+</div>
+{% endmacro %}
