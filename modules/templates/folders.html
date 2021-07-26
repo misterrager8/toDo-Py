@@ -8,10 +8,18 @@
     {{ macros.paragraph('Folders', size=3, class='m-0') }}
     {% call macros.link(modal_id='folder_create') %}{{ macros.add_icon() }}{% endcall %}
   </div>
+
+  {{ macros.folders_sort(class='mx-2') }}
+  <div class="row">
+    {% for i in folders_ %}
+    {{ macros.folder_card(i) }}
+    {% endfor %}
+  </div>
+
 </div>
 
-{% call macros.modal('folder_create') %}
-{{ macros.paragraph('New Folder', size=3, class='text-center m-3') }}
+{% call macros.modal('folder_create', title='New Folder') %}
+{{ macros.folder_create_form() }}
 {% endcall %}
 
 {% endblock %}

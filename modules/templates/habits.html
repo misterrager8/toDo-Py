@@ -10,8 +10,14 @@
   </div>
 </div>
 
-{% call macros.modal('habit_create') %}
-{{ macros.paragraph('New Habit', size=3, class='text-center m-3') }}
+<div class="row">
+  {% for i in habits_ %}
+  {{ macros.habit_card(i) }}
+  {% endfor %}
+</div>
+
+{% call macros.modal('habit_create', title='New Habit') %}
+{{ macros.habit_create_form() }}
 {% endcall %}
 
 {% endblock %}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% import "macros.html" as macros %}
+{% import "macros.html" as macros with context %}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -10,14 +10,17 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
 </head>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-  <div class="collapse navbar-collapse">
-    <a class="navbar-brand" href="{{ url_for('index') }}">
-      {{ macros.brand_icon() }}
-    </a>
-    <ul class="navbar-nav">
-      <li class="navbar-item">
-      </li>
-    </ul>
+  <a class="navbar-brand" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
+  <button class="navbar-toggler" data-target="#nav_content" data-toggle="collapse" type="button">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="nav_content">
+    <div class="navbar-nav">
+      <a class="navbar-item nav-link" href="{{ url_for('tasks') }}">Tasks</a>
+      <a class="navbar-item nav-link" href="{{ url_for('folders') }}">Folders</a>
+      <a class="navbar-item nav-link" href="{{ url_for('habits') }}">Habits</a>
+      <a class="navbar-item nav-link" href="{{ url_for('lists') }}">Lists</a>
+    </div>
   </div>
 </nav>
 <div class="container">

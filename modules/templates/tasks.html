@@ -9,14 +9,14 @@
     {% call macros.link(modal_id='task_create') %}{{ macros.add_icon() }}{% endcall %}
   </div>
 
+  {{ macros.tasks_sort(class='mx-2') }}
   {% for i in tasks_ %}
-  {{ i }}
+  {{ macros.task_card(i) }}
   {% endfor %}
 
 </div>
 
-{% call macros.modal('task_create') %}
-{{ macros.paragraph('New Task', size=3, class='text-center m-3') }}
+{% call macros.modal('task_create', title='New Task') %}
 {{ macros.task_create_form() }}
 {% endcall %}
 

@@ -1,6 +1,6 @@
-from datetime import date, datetime
+from datetime import date
 
-from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey, text
+from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 from modules import db
@@ -9,107 +9,97 @@ from modules import db
 class Task(db.Model):
     __tablename__ = "tasks"
 
-    title = Column(Text)
-    notes = Column(Text)
-    date_added = Column(Date)
-    priority = Column(Integer)
-    done = Column(Boolean)
-    folder_id = Column(Integer, ForeignKey("folders.id"))
+    name = Column(Text)
+    priority = Column(Integer, default=3)
+    note = Column(Text)
+    done = Column(Boolean, default=False)
+    date_created = Column(Date, default=date.today())
+    date_due = Column(Date)
+    date_done = Column(Date)
+    reminder = Column(Boolean, default=False)
+    folder = Column(Integer, ForeignKey("folders.id"))
+    parent_task = Column(Integer, ForeignKey("tasks.id"))
+    subtasks = relationship("Task")
     id = Column(Integer, primary_key=True)
 
-    def __init__(self,
-                 title: str,
-                 notes: str = "",
-                 date_added: date = datetime.now().date(),
-                 priority: int = 3,
-                 done: bool = False):
-        self.title = title.capitalize()
-        self.notes = notes.capitalize()
-        self.date_added = date_added
-        self.priority = priority
-        self.done = done
-
-    def toggle_done(self, done: bool):
-        self.done = done
-        db.session.commit()
-
-    def get_done(self):
-        if self.done:
-            return ["Done", "badge badge-success"]
-        else:
-            return ["Not Done", "badge badge-secondary"]
+    def __init__(self, **kwargs):
+        super(Task, self).__init__(**kwargs)
 
     def get_priority(self):
         if self.priority == 3:
-            return ["Low", "badge badge-primary"]
+            return ["Low", "yellow"]
         elif self.priority == 2:
-            return ["Medium", "badge badge-warning"]
+            return ["Medium", "orange"]
         elif self.priority == 1:
-            return ["High", "badge badge-danger"]
-
-    def set_note(self, note: str):
-        self.notes = note.capitalize()
-        db.session.commit()
-
-    def set_priority(self, priority: int):
-        self.priority = priority
-        db.session.commit()
+            return ["High", "red"]
 
     def __str__(self):
-        return "%d\t%s" % (self.id, self.title)
+        return "%s" % self.name
 
 
 class Folder(db.Model):
     __tablename__ = "folders"
 
     name = Column(Text)
-    date_created = Column(Date)
     color = Column(Text)
+    date_created = Column(Date, default=date.today())
     tasks = relationship("Task", backref="folders")
-    notes = relationship("Note", backref="folders")
     id = Column(Integer, primary_key=True)
 
-    def __init__(self,
-                 name: str,
-                 date_created: date = datetime.now().date(),
-                 color: str = None):
-        self.name = name.capitalize()
-        self.date_created = date_created
-        self.color = color
-
-    def add_task(self, task: Task):
-        self.tasks.append(task)
-        db.session.commit()
-
-    def get_tasks(self, order_by: str):
-        return db.session.query(Task).order_by(text(order_by)).filter(Task.folder_id == self.id)
+    def __init__(self, **kwargs):
+        super(Folder, self).__init__(**kwargs)
 
     def __str__(self):
-        return "%d\t%s" % (self.id, self.name)
+        return "%s" % self.name
 
 
-class Note(db.Model):
-    __tablename__ = "notes"
+class Habit(db.Model):
+    __tablename__ = "habits"
 
-    title = Column(Text)
-    content = Column(Text)
-    date_created = Column(Date)
-    date_modified = Column(Date)
-    folder_id = Column(Integer, ForeignKey("folders.id"))
+    name = Column(Text)
+    start_date = Column(Date, default=date.today())
+    frequency = Column(Text, default="daily")
+    end_date = Column(Date)
+    reminder = Column(Boolean, default=False)
+    color = Column(Text)
+    days = relationship("Day")
     id = Column(Integer, primary_key=True)
 
-    def __init__(self,
-                 title: str,
-                 content: str,
-                 date_created: date = datetime.now().date(),
-                 date_modified: date = datetime.now().date()):
-        self.title = title.capitalize()
-        self.content = content
-        self.date_created = date_created
-        self.date_modified = date_modified
+    def __init__(self, **kwargs):
+        super(Habit, self).__init__(**kwargs)
 
     def __str__(self):
-        return "%d\t%s" % (self.id, self.title)
+        return "%s" % self.name
+
+
+class List(db.Model):
+    __tablename__ = "lists"
+
+    name = Column(Text)
+    contents = Column(Text)
+    date_created = Column(Date, default=date.today())
+    date_updated = Column(Date)
+    id = Column(Integer, primary_key=True)
+
+    def __init__(self, **kwargs):
+        super(List, self).__init__(**kwargs)
+
+    def __str__(self):
+        return "%s" % self.name
+
+
+class Day(db.Model):
+    __tablename__ = "days"
+
+    habit = Column(Integer, ForeignKey("habits.id"))
+    date = Column(Date, default=date.today())
+    id = Column(Integer, primary_key=True)
+
+    def __init__(self, **kwargs):
+        super(Day, self).__init__(**kwargs)
+
+    def __str__(self):
+        return "%s,%s" % (self.habit, self.date)
 
 
 db.create_all()
