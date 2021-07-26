@@ -30,7 +30,7 @@
 {% endmacro %}
 
 <!--Generic Badge-->
-{% macro badge(text, class='', txt_color='black', bg_color='white', pill=false, newtab=false, modal_id='', href='') %}
+{% macro badge(text, class='', txt_color='white', bg_color='black', pill=false, newtab=false, modal_id='', href='') %}
 <a class="badge {% if pill %}badge-pill{% endif %} {{ class }}"
    {% if href %}href="{{ href }}" {% endif %}
    style="text-decoration:none; color:{{ txt_color }}; background-color:{{ bg_color }};"
@@ -43,7 +43,7 @@
    data-target="{{ modal_id }}"
    {% endif %}
 >
-  <p class="m-0" style="mix-blend-mode:difference; color:orange">{{ text }}</p>
+  {{ text }}
 </a>
 {% endmacro %}
 
@@ -109,7 +109,7 @@
 <div class="card col-xl-4 border-0 rounded">
   <div class="card-body m-2 p-3 shadow-sm" style="background-color:{{ folder.color }}; border-radius:10px;">
     <a class="" style="mix-blend-mode:difference; color:orange" href="#">
-      {{ folder.name }}{{ badge(folder.tasks|count|string, class='mx-2') }}
+      {{ folder.name }}{{ badge(folder.tasks|count|string, class='mx-2', bg_color='white', txt_color='black') }}
     </a>
     <span class="float-right">
       {% call link(class='mx-1', modal_id='task_create_%s'%folder.id) %}{{ add_icon(size=20) }}{% endcall %}
@@ -134,10 +134,11 @@
 {% macro task_card(task) %}
 <div class="card col-xl-12 border-0 rounded">
   <div class="card-body border m-2 p-3 shadow-sm" style="border-radius:10px;">
+    {{ badge(task.get_priority()[0], bg_color=task.get_priority()[1], txt_color='gray', class='mx-2') }}
     {{ paragraph(task.name, class='font-italic d-inline mr-2') }}
     {% if task.reminder %}{{ reminder_icon(size=17) }}{% endif %}
     <div class="float-right">
-      {{ badge(task.folders.name, bg_color=task.folders.color) }}
+      <a class="badge" style="background-color:{{ task.folders.color }}; color:white">{{ task.folders.name }}</a>
       {% call link(class='mx-1', modal_id='task_update_%s'%task.id) %}{{ edit_icon(size=20) }}{% endcall %}
       {% call link(class='mx-1', modal_id='task_delete_%s'%task.id) %}{{ delete_icon(size=20) }}{% endcall %}
     </div>
@@ -261,7 +262,7 @@
 <div class="list-inline" style="font-size:0.9em">
   {{ paragraph('Sort by:', class='list-inline-item') }}
   {% if order_by != 'priority' %}{{ badge('Priority', class='list-inline-item', pill=true, bg_color='green', href=url_for('tasks', order_by='priority')) }}{% endif %}
-  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, bg_color='green', href=url_for('tasks', order_by='date_created desc')) }}{% endif %}
+  {% if order_by != 'tasks.date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, bg_color='green', href=url_for('tasks', order_by='tasks.date_created desc')) }}{% endif %}
   {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true, bg_color='green', href=url_for('tasks', order_by='folders.name')) }}{% endif %}
 </div>
 {% endmacro %}
