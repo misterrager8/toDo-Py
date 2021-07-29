@@ -11,8 +11,12 @@
 </div>
 {{ macros.lists_sort(class='mx-2') }}
 
+{% for i in lists_ %}
+{{ macros.list_item(i) }}
+{% endfor %}
 
 {% call macros.modal('list_create', title='New List') %}
+{{ macros.list_create_form() }}
 {% endcall %}
 
 {% endblock %}
