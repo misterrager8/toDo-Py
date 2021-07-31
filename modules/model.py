@@ -13,7 +13,7 @@ class Task(db.Model):
     priority = Column(Integer, default=3)
     note = Column(Text)
     done = Column(Boolean, default=False)
-    date_created = Column(Date, default=date.today())
+    date_created = Column(Date)
     date_due = Column(Date)
     date_done = Column(Date)
     reminder = Column(Boolean, default=False)
@@ -42,7 +42,7 @@ class Folder(db.Model):
 
     name = Column(Text)
     color = Column(Text)
-    date_created = Column(Date, default=date.today())
+    date_created = Column(Date)
     tasks = relationship("Task", backref="folders")
     id = Column(Integer, primary_key=True)
 
@@ -57,7 +57,7 @@ class Habit(db.Model):
     __tablename__ = "habits"
 
     name = Column(Text)
-    start_date = Column(Date, default=date.today())
+    start_date = Column(Date)
     frequency = Column(Text, default="daily")
     end_date = Column(Date)
     reminder = Column(Boolean, default=False)
@@ -92,7 +92,7 @@ class Day(db.Model):
     __tablename__ = "days"
 
     habit = Column(Integer, ForeignKey("habits.id"))
-    date = Column(Date, default=date.today())
+    date = Column(Date)
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):

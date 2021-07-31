@@ -30,7 +30,8 @@ def task_create():
     db.session.add(Task(name=request.form["name"].title(),
                         priority=int(request.form["priority"]),
                         note=request.form["note"],
-                        folder=int(request.form["folder"])))
+                        folder=int(request.form["folder"]),
+                        date_created=date.today()))
     db.session.commit()
 
     return redirect(url_for("tasks"))
@@ -80,7 +81,8 @@ def folders():
 @app.route("/folder_create", methods=["POST"])
 def folder_create():
     db.session.add(Folder(name=request.form["name"].title(),
-                          color="#{:06x}".format(random.randint(0, 0xFFFFFF))))
+                          color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
+                          date_created=date.today()))
     db.session.commit()
 
     return redirect(url_for("folders"))
@@ -118,7 +120,8 @@ def habits():
 def habit_create():
     db.session.add(Habit(name=request.form["name"].title(),
                          frequency=request.form["frequency"],
-                         color="#{:06x}".format(random.randint(0, 0xFFFFFF))))
+                         color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
+                         start_date=date.today()))
     db.session.commit()
 
     return redirect(url_for("habits"))
@@ -166,8 +169,9 @@ def lists():
 
 @app.route("/list_create")
 def list_create():
-    db.session.add(List(name=request.form["name"],
-                        contents=request.form["contents"]))
+    db.session.add(List(name=request.form["name"].title(),
+                        contents=request.form["contents"].title(),
+                        date_created=date.today()))
     db.session.commit()
 
     return redirect(url_for("lists"))
