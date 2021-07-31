@@ -5,9 +5,9 @@
 {% endmacro %}
 
 <!--link-->
-{% macro link(href='#', style='', newtab=false, modal_id='', class='') %}
+{% macro link(href='#', style='', color='black', newtab=false, modal_id='', class='') %}
 <a href="{{ href }}"
-   style="text-decoration:none; {{ style }}"
+   style="text-decoration:none; color:{{ color }}; {{ style }}"
    class="{{ class }}"
    {% if newtab %}
    target="_blank"
