@@ -1,11 +1,12 @@
 import random
+from datetime import date
 
 from flask import render_template, url_for, request
 from sqlalchemy import text
 from werkzeug.utils import redirect
 
 from modules import app, db
-from modules.model import Task, Folder, Habit, List
+from modules.model import Task, Folder, Habit, List, Day, HabitCalendar
 
 
 @app.context_processor
@@ -113,7 +114,8 @@ def folder_delete():
 
 @app.route("/habits")
 def habits():
-    return render_template("habits.html", habits_=db.session.query(Habit).all())
+    return render_template("habits.html", habits_=db.session.query(Habit).all(),
+                           month=HabitCalendar().formatmonth(date.today().year, date.today().month))
 
 
 @app.route("/habit_create", methods=["POST"])
@@ -156,6 +158,8 @@ def habit_today():
     id_: int = request.args.get("id_")
     _: Habit = db.session.query(Habit).get(id_)
 
+    db.session.add(Day(habit=_.id,
+                       date=date.today()))
     db.session.commit()
 
     return redirect(url_for("habits"))

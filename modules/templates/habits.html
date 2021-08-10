@@ -16,6 +16,8 @@
   {% endfor %}
 </div>
 
+{{ month | safe }}
+
 {% call macros.modal('habit_create', title='New Habit') %}
 {{ macros.habit_create_form() }}
 {% endcall %}
