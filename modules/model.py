@@ -79,12 +79,15 @@ class List(db.Model):
 
     name = Column(Text)
     contents = Column(Text)
-    date_created = Column(Date, default=date.today())
+    date_created = Column(Date)
     date_updated = Column(Date)
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):
         super(List, self).__init__(**kwargs)
+
+    def get_items(self):
+        return self.contents.split("\n")
 
     def __str__(self):
         return "%s" % self.name

@@ -182,7 +182,7 @@ def lists():
     return render_template("lists.html", lists_=db.session.query(List).order_by(text(order_by)).all(), order_by=order_by)
 
 
-@app.route("/list_create")
+@app.route("/list_create", methods=["POST"])
 def list_create():
     db.session.add(List(name=request.form["name"].title(),
                         contents=request.form["contents"].title(),
