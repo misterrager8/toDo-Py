@@ -73,6 +73,17 @@ def task_toggle():
     return redirect(url_for("tasks"))
 
 
+@app.route("/task_clear")
+def task_clear():
+    for i in db.session.query(Task).all():
+        if i.done:
+            db.session.delete(i)
+
+    db.session.commit()
+
+    return redirect(url_for("tasks"))
+
+
 @app.route("/folders")
 def folders():
     order_by = request.args.get("order_by", default="date_created desc")
