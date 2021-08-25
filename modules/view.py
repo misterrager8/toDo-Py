@@ -23,6 +23,13 @@ def index():
                            order_by=order_by)
 
 
+@app.route("/folder")
+def folder():
+    id_: int = request.args.get("id_")
+    _: Folder = db.session.query(Folder).get(id_)
+    return render_template("folder.html", folder=_)
+
+
 @app.route("/tasks")
 def tasks():
     order_by = request.args.get("order_by", default="tasks.date_created desc")

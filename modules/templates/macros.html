@@ -155,7 +155,7 @@
 {% macro folder_card(folder) %}
 <div class="card col-xl-4 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
-    {% call link(modal_id='folder_info_%s'%folder.id, class='font-weight-bold') %}{{ folder.name }}{% endcall %}
+    {% call link(href=url_for('folder', id_=folder.id), class='font-weight-bold') %}{{ folder.name }}{% endcall %}
     <p class="px-2 py-1 font-weight-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.tasks|count|string }}</p>
     <span class="float-right">
       {% call link(class='mx-1', modal_id='task_create_%s'%folder.id) %}{{ add_icon(size=16) }}{% endcall %}
@@ -163,8 +163,6 @@
       {% call link(class='mx-1', modal_id='folder_delete_%s'%folder.id) %}{{ delete_icon(size=16) }}{% endcall %}
     </span>
   </div>
-  {{ folder_info(folder) }}
-
   {% call modal('task_create_%s'%folder.id, title='New Task') %}
   {{ task_create_form(folder) }}
   {% endcall %}
@@ -185,7 +183,7 @@
   <div class="card-body shadow-sm py-2 px-3 my-3" style="border-radius: 10px; border: 5px solid {{ task.get_priority()[1] }}">
     <div class="d-flex justify-content-between border-0">
       {% call link(modal_id='task_info_%s'%task.id, class='font-weight-bold text-truncate') %}{{ task.name }}{% endcall %}
-      {{ badge(task.folders.name, bg_color=task.folders.color, class='m-1' ) }}
+      {{ badge(task.folders.name, href=url_for('folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1' ) }}
     </div>
     <div class="my-3">
       {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y'), class='text-muted font-italic d-inline', size=0.8) }}
@@ -383,14 +381,6 @@
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
   {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('lists', order_by='date_created desc')) }}{% endif %}
   {% if order_by != 'date_updated desc' %}{{ badge('Date Updated', class='list-inline-item', pill=true, href=url_for('lists', order_by='date_updated desc')) }}{% endif %}
-</div>
-{% endmacro %}
-
-<!--Folder Info-->
-{% macro folder_info(folder) %}
-<div>
-  {% call modal('folder_info_%s'%folder.id, title=folder.name) %}
-  {% endcall %}
 </div>
 {% endmacro %}
 
