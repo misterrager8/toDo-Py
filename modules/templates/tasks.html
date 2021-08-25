@@ -3,19 +3,17 @@
 
 {% block body %}
 <title>Tasks</title>
-<div>
-  <div class="text-center m-3">
-    {% call macros.link(modal_id='task_create', class='mx-1') %}{{ macros.add_icon() }}{% endcall %}
-  </div>
-
-  {{ macros.tasks_sort(class='mx-2') }}
-  <div class="row">
-    {% for i in tasks_ %}
-    {{ macros.task_card(i) }}
-    {% endfor %}
-  </div>
-  {{ macros.badge('Delete All', href=url_for('task_clear'), class='float-right', bg_color='white', txt_color='red') }}
+<div class="text-center m-3">
+  {% call macros.link(modal_id='task_create', class='mx-1') %}{{ macros.add_icon() }}{% endcall %}
 </div>
+
+{{ macros.tasks_sort(class='mx-2') }}
+<div class="row">
+  {% for i in tasks_ %}
+  {{ macros.task_card(i) }}
+  {% endfor %}
+</div>
+{{ macros.badge('Delete All', href=url_for('task_clear'), class='mx-2', bg_color='white', txt_color='red') }}
 
 {% call macros.modal('task_create', title='New Task') %}
 {{ macros.task_create_form() }}
