@@ -5,6 +5,6 @@
 <title>Calendar</title>
 <div>
   {{ month | safe }}
-  {{ macros.badge('Delete All', href=url_for('calendar_clear'), class='float-right', bg_color='white', txt_color='red') }}
+  {{ macros.badge('Delete All', href=url_for('calendar_clear'), class='mx-2', bg_color='white', txt_color='red') }}
 </div>
 {% endblock %}
