@@ -186,7 +186,7 @@
       {{ badge(task.folders.name, href=url_for('folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1' ) }}
     </div>
     <div class="my-3">
-      {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y'), class='text-muted font-italic d-inline', size=0.8) }}
+      {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted font-italic d-inline', size=0.8) }}
       {% if task.reminder %}{{ reminder_icon(size=17) }}{% endif %}
     </div>
     <div>

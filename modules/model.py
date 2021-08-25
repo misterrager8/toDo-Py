@@ -2,7 +2,7 @@ import sys
 from calendar import January, month_name, day_abbr, Calendar
 from datetime import date
 
-from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey
+from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from modules import db
@@ -15,9 +15,9 @@ class Task(db.Model):
     priority = Column(Integer, default=3)
     note = Column(Text)
     done = Column(Boolean, default=False)
-    date_created = Column(Date)
+    date_created = Column(DateTime)
     date_due = Column(Date)
-    date_done = Column(Date)
+    date_done = Column(DateTime)
     reminder = Column(Boolean, default=False)
     folder = Column(Integer, ForeignKey("folders.id"))
     parent_task = Column(Integer, ForeignKey("tasks.id"))
@@ -44,7 +44,7 @@ class Folder(db.Model):
 
     name = Column(Text)
     color = Column(Text)
-    date_created = Column(Date)
+    date_created = Column(DateTime)
     tasks = relationship("Task", backref="folders")
     id = Column(Integer, primary_key=True)
 
@@ -59,7 +59,7 @@ class Habit(db.Model):
     __tablename__ = "habits"
 
     name = Column(Text)
-    start_date = Column(Date)
+    start_date = Column(DateTime)
     frequency = Column(Text, default="daily")
     end_date = Column(Date)
     reminder = Column(Boolean, default=False)
@@ -79,8 +79,9 @@ class List(db.Model):
 
     name = Column(Text)
     contents = Column(Text)
-    date_created = Column(Date)
-    date_updated = Column(Date)
+    date_created = Column(DateTime)
+    date_updated = Column(DateTime)
+    color = Column(Text)
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):

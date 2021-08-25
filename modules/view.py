@@ -44,7 +44,7 @@ def task_create():
                         priority=int(request.form["priority"]),
                         note=request.form["note"],
                         folder=int(request.form["folder"]),
-                        date_created=date.today()))
+                        date_created=datetime.datetime.now()))
     db.session.commit()
 
     return redirect(request.referrer)
@@ -82,7 +82,7 @@ def task_toggle():
 
     if not _.done:
         _.done = True
-        _.date_done = date.today()
+        _.date_done = datetime.datetime.now()
     else:
         _.done = False
         _.date_done = None
@@ -103,7 +103,7 @@ def task_clear():
 def folder_create():
     db.session.add(Folder(name=request.form["name"].title(),
                           color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
-                          date_created=date.today()))
+                          date_created=datetime.datetime.now()))
     db.session.commit()
 
     return redirect(request.referrer)
@@ -173,7 +173,7 @@ def habit_create():
     db.session.add(Habit(name=request.form["name"].title(),
                          frequency=request.form["frequency"],
                          color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
-                         start_date=date.today()))
+                         start_date=datetime.datetime.now()))
     db.session.commit()
 
     return redirect(request.referrer)
@@ -247,8 +247,8 @@ def lists():
 def list_create():
     db.session.add(List(name=request.form["name"].title(),
                         contents=request.form["contents"].title(),
-                        date_created=date.today(),
-                        date_updated=date.today()))
+                        date_created=datetime.datetime.now(),
+                        date_updated=datetime.datetime.now()))
     db.session.commit()
 
     return redirect(request.referrer)
@@ -261,7 +261,7 @@ def list_update():
 
     _.name = request.form["name"]
     _.contents = request.form["contents"]
-    _.date_updated = date.today()
+    _.date_updated = datetime.datetime.now()
     db.session.commit()
 
     return redirect(request.referrer)
