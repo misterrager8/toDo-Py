@@ -64,7 +64,7 @@ class Habit(db.Model):
     end_date = Column(Date)
     reminder = Column(Boolean, default=False)
     color = Column(Text)
-    days = relationship("Day", backref="habits")
+    days = relationship("Day", backref="habits", cascade="all, delete")
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):

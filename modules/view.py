@@ -1,3 +1,4 @@
+import datetime
 import random
 from datetime import date
 
@@ -17,13 +18,17 @@ def inject_all():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    order_by = request.args.get("order_by", default="date_created desc")
+    return render_template("index.html", folders_=db.session.query(Folder).order_by(text(order_by)).all(),
+                           order_by=order_by)
 
 
 @app.route("/tasks")
 def tasks():
     order_by = request.args.get("order_by", default="tasks.date_created desc")
-    return render_template("tasks.html", tasks_=db.session.query(Task).join(Folder).order_by(text(order_by)).all(), order_by=order_by)
+    return render_template("tasks.html",
+                           tasks_=db.session.query(Task).join(Folder).order_by(Task.done, text(order_by)).all(),
+                           order_by=order_by)
 
 
 @app.route("/task_create", methods=["POST"])
@@ -35,7 +40,7 @@ def task_create():
                         date_created=date.today()))
     db.session.commit()
 
-    return redirect(url_for("tasks"))
+    return redirect(request.referrer)
 
 
 @app.route("/task_update", methods=["POST"])
@@ -68,6 +73,12 @@ def task_toggle():
     id_: int = request.args.get("id_")
     _: Task = db.session.query(Task).get(id_)
 
+    if not _.done:
+        _.done = True
+        _.date_done = date.today()
+    else:
+        _.done = False
+        _.date_done = None
     db.session.commit()
 
     return redirect(url_for("tasks"))
@@ -75,19 +86,10 @@ def task_toggle():
 
 @app.route("/task_clear")
 def task_clear():
-    for i in db.session.query(Task).all():
-        if i.done:
-            db.session.delete(i)
-
+    db.session.execute("TRUNCATE TABLE tasks")
     db.session.commit()
 
     return redirect(url_for("tasks"))
-
-
-@app.route("/folders")
-def folders():
-    order_by = request.args.get("order_by", default="date_created desc")
-    return render_template("folders.html", folders_=db.session.query(Folder).order_by(text(order_by)).all(), order_by=order_by)
 
 
 @app.route("/folder_create", methods=["POST"])
@@ -97,7 +99,7 @@ def folder_create():
                           date_created=date.today()))
     db.session.commit()
 
-    return redirect(url_for("folders"))
+    return redirect(request.referrer)
 
 
 @app.route("/folder_update", methods=["POST"])
@@ -109,7 +111,7 @@ def folder_update():
     _.color = request.form["color"]
     db.session.commit()
 
-    return redirect(url_for("folders"))
+    return redirect(url_for("index"))
 
 
 @app.route("/folder_delete")
@@ -120,13 +122,43 @@ def folder_delete():
     db.session.delete(_)
     db.session.commit()
 
-    return redirect(url_for("folders"))
+    return redirect(url_for("index"))
+
+
+@app.route("/folder_clear")
+def folder_clear():
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 0")
+    db.session.execute("TRUNCATE TABLE folders")
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
+    db.session.commit()
+
+    return redirect(url_for("index"))
 
 
 @app.route("/habits")
 def habits():
-    return render_template("habits.html", habits_=db.session.query(Habit).all(),
-                           month=HabitCalendar().formatmonth(date.today().year, date.today().month))
+    current_date = date.today()
+    return render_template("habits.html",
+                           habits_=db.session.query(Habit).all(),
+                           month=HabitCalendar().formatmonth(current_date.year, current_date.month))
+
+
+@app.route("/calendar")
+def calendar():
+    current_date = date.today()
+    return render_template("calendar.html",
+                           habits_=db.session.query(Habit).all(),
+                           month=HabitCalendar().formatmonth(current_date.year, current_date.month))
+
+
+@app.route("/calendar_clear")
+def calendar_clear():
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 0")
+    db.session.execute("TRUNCATE TABLE days")
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
+    db.session.commit()
+
+    return redirect(url_for("calendar"))
 
 
 @app.route("/habit_create", methods=["POST"])
@@ -137,7 +169,7 @@ def habit_create():
                          start_date=date.today()))
     db.session.commit()
 
-    return redirect(url_for("habits"))
+    return redirect(request.referrer)
 
 
 @app.route("/habit_update", methods=["POST"])
@@ -169,8 +201,29 @@ def habit_today():
     id_: int = request.args.get("id_")
     _: Habit = db.session.query(Habit).get(id_)
 
-    db.session.add(Day(habit=_.id,
-                       date=date.today()))
+    week = [date.today() + datetime.timedelta(days=i) for i in
+            range(0 - date.today().weekday(), 7 - date.today().weekday())]
+    month = HabitCalendar().itermonthdates(int(date.today().year), int(date.today().month))
+
+    if _.frequency == "Daily":
+        db.session.add(Day(habit=_.id, date=date.today()))
+    if _.frequency == "Weekly":
+        for i in week:
+            db.session.add(Day(habit=_.id, date=i))
+    if _.frequency == "Monthly":
+        for i in month:
+            db.session.add(Day(habit=_.id, date=i))
+
+    db.session.commit()
+
+    return redirect(url_for("habits"))
+
+
+@app.route("/habit_clear")
+def habit_clear():
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 0")
+    db.session.execute("TRUNCATE TABLE habits")
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
     db.session.commit()
 
     return redirect(url_for("habits"))
@@ -179,17 +232,19 @@ def habit_today():
 @app.route("/lists")
 def lists():
     order_by = request.args.get("order_by", default="date_created desc")
-    return render_template("lists.html", lists_=db.session.query(List).order_by(text(order_by)).all(), order_by=order_by)
+    return render_template("lists.html", lists_=db.session.query(List).order_by(text(order_by)).all(),
+                           order_by=order_by)
 
 
 @app.route("/list_create", methods=["POST"])
 def list_create():
     db.session.add(List(name=request.form["name"].title(),
                         contents=request.form["contents"].title(),
-                        date_created=date.today()))
+                        date_created=date.today(),
+                        date_updated=date.today()))
     db.session.commit()
 
-    return redirect(url_for("lists"))
+    return redirect(request.referrer)
 
 
 @app.route("/list_update", methods=["POST"])
@@ -199,6 +254,7 @@ def list_update():
 
     _.name = request.form["name"]
     _.contents = request.form["contents"]
+    _.date_updated = date.today()
     db.session.commit()
 
     return redirect(url_for("lists"))
@@ -210,6 +266,14 @@ def list_delete():
     _: List = db.session.query(List).get(id_)
 
     db.session.delete(_)
+    db.session.commit()
+
+    return redirect(url_for("lists"))
+
+
+@app.route("/list_clear")
+def list_clear():
+    db.session.execute("TRUNCATE TABLE lists")
     db.session.commit()
 
     return redirect(url_for("lists"))

@@ -5,16 +5,16 @@
 <title>Tasks</title>
 <div>
   <div class="text-center m-3">
-    {{ macros.paragraph('Tasks', size=3, class='m-0') }}
     {% call macros.link(modal_id='task_create', class='mx-1') %}{{ macros.add_icon() }}{% endcall %}
-    {% call macros.link(href=url_for('task_clear'), class='mx-1', tooltip='Clear completed') %}{{ macros.clear_icon() }}{% endcall %}
   </div>
 
   {{ macros.tasks_sort(class='mx-2') }}
-  {% for i in tasks_ %}
-  {{ macros.task_card(i) }}
-  {% endfor %}
-
+  <div class="row">
+    {% for i in tasks_ %}
+    {{ macros.task_card(i) }}
+    {% endfor %}
+  </div>
+  {{ macros.badge('Delete All', href=url_for('task_clear'), class='float-right', bg_color='white', txt_color='red') }}
 </div>
 
 {% call macros.modal('task_create', title='New Task') %}

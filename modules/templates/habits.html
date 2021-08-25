@@ -3,11 +3,8 @@
 
 {% block body %}
 <title>Habits</title>
-<div>
-  <div class="text-center m-3">
-    {{ macros.paragraph('Habits', size=3, class='m-0') }}
-    {% call macros.link(modal_id='habit_create') %}{{ macros.add_icon() }}{% endcall %}
-  </div>
+<div class="text-center m-3">
+  {% call macros.link(modal_id='habit_create') %}{{ macros.add_icon() }}{% endcall %}
 </div>
 
 <div class="row">
@@ -15,8 +12,7 @@
   {{ macros.habit_card(i) }}
   {% endfor %}
 </div>
-
-{{ month | safe }}
+{{ macros.badge('Delete All', href=url_for('habit_clear'), class='float-right', bg_color='white', txt_color='red') }}
 
 {% call macros.modal('habit_create', title='New Habit') %}
 {{ macros.habit_create_form() }}
