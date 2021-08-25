@@ -61,7 +61,7 @@ def task_update():
     _.folder = int(request.form["folder"])
     db.session.commit()
 
-    return redirect(url_for("tasks"))
+    return redirect(request.referrer)
 
 
 @app.route("/task_delete")
@@ -88,7 +88,7 @@ def task_toggle():
         _.date_done = None
     db.session.commit()
 
-    return redirect(url_for("tasks"))
+    return redirect(request.referrer)
 
 
 @app.route("/task_clear")
@@ -96,7 +96,7 @@ def task_clear():
     db.session.execute("TRUNCATE TABLE tasks")
     db.session.commit()
 
-    return redirect(url_for("tasks"))
+    return redirect(request.referrer)
 
 
 @app.route("/folder_create", methods=["POST"])
@@ -118,7 +118,7 @@ def folder_update():
     _.color = request.form["color"]
     db.session.commit()
 
-    return redirect(url_for("index"))
+    return redirect(request.referrer)
 
 
 @app.route("/folder_delete")
@@ -139,7 +139,7 @@ def folder_clear():
     db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
     db.session.commit()
 
-    return redirect(url_for("index"))
+    return redirect(request.referrer)
 
 
 @app.route("/habits")
@@ -189,7 +189,7 @@ def habit_update():
     _.color = request.form["color"]
     db.session.commit()
 
-    return redirect(url_for("habits"))
+    return redirect(request.referrer)
 
 
 @app.route("/habit_delete")
@@ -264,7 +264,7 @@ def list_update():
     _.date_updated = date.today()
     db.session.commit()
 
-    return redirect(url_for("lists"))
+    return redirect(request.referrer)
 
 
 @app.route("/list_delete")
