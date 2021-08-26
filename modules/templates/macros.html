@@ -156,7 +156,7 @@
 <div class="card col-xl-4 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
     {% call link(href=url_for('folder', id_=folder.id), class='font-weight-bold') %}{{ folder.name }}{% endcall %}
-    <p class="px-2 py-1 font-weight-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.tasks|count|string }}</p>
+    <p class="px-2 py-1 font-weight-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.get_undone_count() }}</p>
     <span class="float-right">
       {% call link(class='mx-1', modal_id='task_create_%s'%folder.id) %}{{ add_icon(size=16) }}{% endcall %}
       {% call link(class='mx-1', modal_id='folder_update_%s'%folder.id) %}{{ edit_icon(size=16) }}{% endcall %}

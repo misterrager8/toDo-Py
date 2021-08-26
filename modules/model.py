@@ -45,11 +45,17 @@ class Folder(db.Model):
     name = Column(Text)
     color = Column(Text)
     date_created = Column(DateTime)
-    tasks = relationship("Task", backref="folders")
+    tasks = relationship("Task", backref="folders", lazy="dynamic")
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):
         super(Folder, self).__init__(**kwargs)
+
+    def get_tasks(self):
+        return self.tasks.order_by(Task.done, Task.date_created.desc())
+
+    def get_undone_count(self) -> int:
+        return self.tasks.filter(Task.done == False).count()
 
     def __str__(self):
         return "%s" % self.name
