@@ -209,16 +209,18 @@
 
 <!--List card-->
 {% macro list_item(list) %}
-<div class="list-group-item list-group-item-action border-0" style="border-radius:10px;">
-  {% call link(modal_id='list_info_%s'%list.id) %}{{ list.name }}{% endcall %}
-  {% if order_by == 'date_created desc' %}
-  {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted font-italic', size=0.8) }}
-  {% elif order_by == 'date_updated desc' %}
-  {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted font-italic', size=0.8) }}
-  {% endif %}
-  <div class="float-right">
-    {% call link(modal_id='list_update_%s'%list.id, class='mx-1') %}{{ edit_icon(size=20) }}{% endcall %}
-    {% call link(modal_id='list_delete_%s'%list.id, class='mx-1') %}{{ delete_icon(size=20) }}{% endcall %}
+<div class="card col-12 border-0">
+  <div class="card-body my-2" style="border-radius:10px; border: 5px solid {{ list.color }}">
+    {% call link(modal_id='list_info_%s'%list.id) %}{{ list.name }}{% endcall %}
+    {% if order_by == 'date_created desc' %}
+    {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted font-italic', size=0.8) }}
+    {% elif order_by == 'date_updated desc' %}
+    {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted font-italic', size=0.8) }}
+    {% endif %}
+    <div class="float-right">
+      {% call link(modal_id='list_update_%s'%list.id, class='mx-1') %}{{ edit_icon(size=20) }}{% endcall %}
+      {% call link(modal_id='list_delete_%s'%list.id, class='mx-1') %}{{ delete_icon(size=20) }}{% endcall %}
+    </div>
   </div>
 </div>
 <div>

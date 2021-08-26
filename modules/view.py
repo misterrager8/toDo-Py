@@ -248,7 +248,8 @@ def list_create():
     db.session.add(List(name=request.form["name"].title(),
                         contents=request.form["contents"].title(),
                         date_created=datetime.datetime.now(),
-                        date_updated=datetime.datetime.now()))
+                        date_updated=datetime.datetime.now(),
+                        color="#{:06x}".format(random.randint(0, 0xFFFFFF))))
     db.session.commit()
 
     return redirect(request.referrer)
