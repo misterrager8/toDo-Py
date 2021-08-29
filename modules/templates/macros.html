@@ -258,20 +258,22 @@
 
 <!--Task create form-->
 {% macro task_create_form(folder='', class='') %}
-<form class="form-group" method="POST" action="{{ url_for('task_create') }}">
-  {{ input('name', 'Name', class='mb-2') }}
-  <select class="form-control mb-2" name="priority">
-    <option value="3">Low</option>
-    <option value="2">Medium</option>
-    <option value="1">High</option>
-  </select>
-  <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="10"></textarea>
-  <select name="folder" class="form-control mb-2">
-    <option>Select</option>
-    {% for i in all_folders %}
-    <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
-    {% endfor %}
-  </select>
+<form class="form-group" method="POST" action="{{ url_for('task_create') }}" id="form_">
+  <div class="input-group" id="input_">
+    {{ input('name', 'Name', class='w-50 mb-2') }}
+    <select class="form-control input-group-append" name="priority">
+      <option value="3">Low</option>
+      <option value="2">Medium</option>
+      <option value="1">High</option>
+    </select>
+    <select name="folder" class="form-control input-group-append">
+      <option>Select</option>
+      {% for i in all_folders %}
+      <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <a href="#" class="btn btn-success mb-2 w-100" onclick="addInput()" id="add_button">+</a>
   {{ button('Submit') }}
 </form>
 {% endmacro %}

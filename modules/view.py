@@ -40,11 +40,17 @@ def tasks():
 
 @app.route("/task_create", methods=["POST"])
 def task_create():
-    db.session.add(Task(name=request.form["name"].title(),
-                        priority=int(request.form["priority"]),
-                        note=request.form["note"],
-                        folder=int(request.form["folder"]),
-                        date_created=datetime.datetime.now()))
+    names = request.form.getlist("name")
+    priorities = request.form.getlist("priority")
+    folders = request.form.getlist("folder")
+
+    for idx, i in enumerate(names):
+        _ = Task(name=names[idx],
+                 priority=int(priorities[idx]),
+                 folder=int(folders[idx]),
+                 date_created=datetime.datetime.now())
+        db.session.add(_)
+
     db.session.commit()
 
     return redirect(request.referrer)
