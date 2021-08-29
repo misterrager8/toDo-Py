@@ -59,7 +59,7 @@
 <!--Modal-->
 {% macro modal(id, title='', lg=false) %}
 <div class="modal" id="{{ id }}">
-  <div class="modal-dialog {% if lg %}modal-lg{% endif %}">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content p-3">
       {% if title %}{{ paragraph(title, class='text-center m-3', size=3) }}{% endif %}
       {{ caller() }}
