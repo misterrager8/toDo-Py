@@ -107,9 +107,11 @@ def task_clear():
 
 @app.route("/folder_create", methods=["POST"])
 def folder_create():
-    db.session.add(Folder(name=request.form["name"].title(),
-                          color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
-                          date_created=datetime.datetime.now()))
+    names = request.form.getlist("name")
+    for idx, i in enumerate(names):
+        db.session.add(Folder(name=names[idx].title(),
+                              color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
+                              date_created=datetime.datetime.now()))
     db.session.commit()
 
     return redirect(request.referrer)
