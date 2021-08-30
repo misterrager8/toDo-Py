@@ -151,6 +151,13 @@
 </svg>
 {% endmacro %}
 
+<!--More icon-->
+{% macro more_icon(size=25, color='black', tooltip='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-list-nested" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M4.5 11.5A.5.5 0 0 1 5 11h10a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 1 3h10a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5z"/>
+</svg>
+{% endmacro %}
+
 <!--Folder card-->
 {% macro folder_card(folder) %}
 <div class="card col-xl-4 border-0 rounded">
@@ -182,20 +189,34 @@
 <div class="card col-xl-3 border-0">
   <div class="card-body shadow-sm py-2 px-3 my-3" style="border-radius: 10px; border: 5px solid {{ task.get_priority()[1] }}">
     <div class="d-flex justify-content-between border-0">
-      {% call link(modal_id='task_info_%s'%task.id, class='font-weight-bold text-truncate') %}{{ task.name }}{% endcall %}
+      <a href="#" data-toggle="collapse" data-target="#collapse-{{ task.id }}" class="font-weight-bold text-truncate" style="text-decoration:none; color:black;">{{ task.name }}</a>
       {{ badge(task.folders.name, href=url_for('folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1' ) }}
     </div>
-    <div class="my-3">
+    <div class="my-3 collapse" id="collapse-{{ task.id }}">
       {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted font-italic d-inline', size=0.8) }}
-      {% if task.reminder %}{{ reminder_icon(size=17) }}{% endif %}
+      {% if task.get_subtasks_count() > 0 %}
+      <a class="progress" href="{{ url_for('task', id_=task.id) }}">
+        <div class="progress-bar" role="progressbar" style="width:{{ task.get_subtasks_progress() }}%"></div>
+      </a>
+      {{ paragraph('%s subtask(s)' % task.get_subtasks_count(), size=0.75, class='font-italic') }}
+      {% endif %}
     </div>
     <div>
       {% call link(href=url_for('task_toggle', id_=task.id)) %}{{ check_icon(task.done, size=16) }}{% endcall %}
+      {% if task.reminder %}
+      <div class="d-inline mx-1">{{ reminder_icon(size=16) }}</div>
+      {% endif %}
+      {% if task.get_subtasks_count() > 0 %}
+      <div class="d-inline mx-1">{{ more_icon(size=16) }}</div>
+      {% endif %}
       {% call link(class='float-right mx-1', modal_id='task_delete_%s'%task.id) %}{{ delete_icon(size=16) }}{% endcall %}
       {% call link(class='float-right mx-1', modal_id='task_update_%s'%task.id) %}{{ edit_icon(size=16) }}{% endcall %}
+      {% call link(class='float-right mx-1', modal_id='subtask_create_%s'%task.id) %}{{ add_icon(size=16) }}{% endcall %}
     </div>
   </div>
-  {{ task_info(task) }}
+  {% call modal('subtask_create_%s'%task.id, title='New Task') %}
+  {{ subtask_create_form(task) }}
+  {% endcall %}
 
   {% call modal('task_update_%s'%task.id, title='Edit Task') %}
   {{ task_update_form(task) }}
@@ -274,6 +295,14 @@
     </select>
   </div>
   <a href="#" class="btn btn-success mb-2 w-100" onclick="addInput()" id="add_button">+</a>
+  {{ button('Submit') }}
+</form>
+{% endmacro %}
+
+<!--Subtask create form-->
+{% macro subtask_create_form(task, class='') %}
+<form class="form-group" method="POST" action="{{ url_for('subtask_create', id_=task.id) }}">
+  {{ input('name', 'Name', class='w-100 mb-2') }}
   {{ button('Submit') }}
 </form>
 {% endmacro %}

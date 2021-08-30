@@ -10,7 +10,7 @@
 
 <div class="row">
   {% for i in folder.get_tasks() %}
-  {{ macros.task_card(i) }}
+  {% if not i.get_parent_task() %}{{ macros.task_card(i) }}{% endif %}
   {% endfor %}
 </div>
 

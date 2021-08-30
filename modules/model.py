@@ -21,11 +21,23 @@ class Task(db.Model):
     reminder = Column(Boolean, default=False)
     folder = Column(Integer, ForeignKey("folders.id"))
     parent_task = Column(Integer, ForeignKey("tasks.id"))
-    subtasks = relationship("Task")
+    subtasks = relationship("Task", lazy="dynamic")
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):
         super(Task, self).__init__(**kwargs)
+
+    def get_parent_task(self):
+        return db.session.query(Task).get(self.parent_task)
+
+    def get_subtasks_count(self):
+        return self.subtasks.count()
+
+    def get_subtasks_progress(self):
+        done = self.subtasks.filter(Task.done == True).count()
+        total = self.get_subtasks_count()
+        perc = (done / total) * 100
+        return perc
 
     def get_priority(self):
         if self.priority == 3:

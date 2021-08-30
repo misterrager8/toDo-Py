@@ -38,6 +38,13 @@ def tasks():
                            order_by=order_by)
 
 
+@app.route("/task")
+def task():
+    id_: int = request.args.get("id_")
+    _: Task = db.session.query(Task).get(id_)
+    return render_template("task.html", task=_)
+
+
 @app.route("/task_create", methods=["POST"])
 def task_create():
     names = request.form.getlist("name")
@@ -45,12 +52,27 @@ def task_create():
     folders = request.form.getlist("folder")
 
     for idx, i in enumerate(names):
-        _ = Task(name=names[idx],
+        _ = Task(name=names[idx].title(),
                  priority=int(priorities[idx]),
                  folder=int(folders[idx]),
                  date_created=datetime.datetime.now())
         db.session.add(_)
 
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+
+@app.route("/subtask_create", methods=["POST"])
+def subtask_create():
+    id_: int = request.args.get("id_")
+    _: Task = db.session.query(Task).get(id_)
+
+    name = request.form["name"].title()
+    _.subtasks.append(Task(name=name,
+                           date_created=datetime.datetime.now(),
+                           priority=_.priority,
+                           folder=_.folder))
     db.session.commit()
 
     return redirect(request.referrer)
