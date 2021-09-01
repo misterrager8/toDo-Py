@@ -316,7 +316,7 @@
     <option value="2" {% if task.priority==2 %}selected{% endif %}>Medium</option>
     <option value="1" {% if task.priority==1 %}selected{% endif %}>High</option>
   </select>
-  <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="10">{{ task.note }}</textarea>
+  <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="5">{{ task.note }}</textarea>
   <select name="folder" class="form-control mb-2">
     <option>Select</option>
     {% for i in all_folders %}
