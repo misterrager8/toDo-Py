@@ -1,0 +1,9 @@
+.link, .link:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dropdown-custom {
+    border-radius: 10px;
+    padding: 1rem;
+}
