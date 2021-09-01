@@ -68,16 +68,6 @@
 </div>
 {% endmacro %}
 
-<!--Dropdown-->
-{% macro dropdown(text, class='') %}
-<div class="dropdown {{ class }}">
-  <a href="#" data-toggle="dropdown">{{ text }}</a>
-  <div class="dropdown-menu">
-    {{ caller() }}
-  </div>
-</div>
-{% endmacro %}
-
 <!--Input-->
 {% macro input(name, placeholder, class='', value='') %}
 <input type="text" autocomplete="off" class="form-control {{ class }}" name="{{ name }}" placeholder="{{ placeholder }}" value="{{ value }}">
