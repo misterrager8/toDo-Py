@@ -38,13 +38,6 @@ def tasks():
                            order_by=order_by)
 
 
-@app.route("/task")
-def task():
-    id_: int = request.args.get("id_")
-    _: Task = db.session.query(Task).get(id_)
-    return render_template("task.html", task=_)
-
-
 @app.route("/task_create", methods=["POST"])
 def task_create():
     names = request.form.getlist("name")
