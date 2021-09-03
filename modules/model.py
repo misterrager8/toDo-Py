@@ -31,11 +31,11 @@ class Task(db.Model):
         return db.session.query(Task).get(self.parent_task)
 
     def get_subtasks_count(self):
-        return self.subtasks.count()
+        return self.subtasks.filter(Task.done == False).count()
 
     def get_subtasks_progress(self):
         done = self.subtasks.filter(Task.done == True).count()
-        total = self.get_subtasks_count()
+        total = self.subtasks.count()
         perc = (done / total) * 100
         return perc
 
