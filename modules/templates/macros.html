@@ -198,6 +198,7 @@
           <div>
             {% call link(href=url_for('task_toggle', id_=i.id)) %}{{ check_icon(i.done, size=16) }}{% endcall %}
             {{ paragraph(i.name, class='d-inline', size=0.9) }}
+            {% call link(href=url_for('task_delete', id_=i.id)) %}{{ delete_icon(size=16) }}{% endcall %}
           </div>
           {% endfor %}
         </div>
