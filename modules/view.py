@@ -41,12 +41,10 @@ def tasks():
 @app.route("/task_create", methods=["POST"])
 def task_create():
     names = request.form.getlist("name")
-    priorities = request.form.getlist("priority")
     folders = request.form.getlist("folder")
 
     for idx, i in enumerate(names):
         _ = Task(name=names[idx].title(),
-                 priority=int(priorities[idx]),
                  folder=int(folders[idx]),
                  date_created=datetime.datetime.now())
         db.session.add(_)
@@ -64,7 +62,6 @@ def subtask_create():
     name = request.form["name"].title()
     _.subtasks.append(Task(name=name,
                            date_created=datetime.datetime.now(),
-                           priority=_.priority,
                            folder=_.folder))
     db.session.commit()
 
@@ -77,7 +74,6 @@ def task_update():
     _: Task = db.session.query(Task).get(id_)
 
     _.name = request.form["name"]
-    _.priority = int(request.form["priority"])
     _.note = request.form["note"]
     _.folder = int(request.form["folder"])
     db.session.commit()

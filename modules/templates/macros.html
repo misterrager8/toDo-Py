@@ -170,7 +170,7 @@
 <!--Task card-->
 {% macro task_card(task) %}
 <div class="card col-xl-3 border-0">
-  <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.get_priority()[1] }}">
+  <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}">
     <div class="d-flex justify-content-between">
       <div class="dropdown">
         <a href="" data-toggle="dropdown" data-target="task-info-{{ task.id }}" class="link font-weight-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
@@ -283,11 +283,6 @@
 <form class="form-group" method="POST" action="{{ url_for('task_create') }}" id="form_">
   <div class="input-group" id="input_">
     {{ input('name', 'Name', class='w-50 mb-2') }}
-    <select class="form-control input-group-append" name="priority">
-      <option value="3">Low</option>
-      <option value="2">Medium</option>
-      <option value="1">High</option>
-    </select>
     <select name="folder" class="form-control input-group-append">
       <option>Select</option>
       {% for i in all_folders %}
@@ -312,11 +307,6 @@
 {% macro task_update_form(task, class='') %}
 <form class="form-group" method="POST" action="{{ url_for('task_update', id_=task.id) }}">
   {{ input('name', 'Name', class='mb-2', value=task.name) }}
-  <select class="form-control mb-2" name="priority">
-    <option value="3" {% if task.priority==3 %}selected{% endif %}>Low</option>
-    <option value="2" {% if task.priority==2 %}selected{% endif %}>Medium</option>
-    <option value="1" {% if task.priority==1 %}selected{% endif %}>High</option>
-  </select>
   <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="5">{{ task.note }}</textarea>
   <select name="folder" class="form-control mb-2">
     <option>Select</option>
@@ -405,7 +395,6 @@
 {% macro tasks_sort(class='') %}
 <div class="list-inline {{ class }}">
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
-  {% if order_by != 'priority' %}{{ badge('Priority', class='list-inline-item', pill=true, href=url_for('tasks', order_by='priority')) }}{% endif %}
   {% if order_by != 'tasks.date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('tasks', order_by='tasks.date_created desc')) }}{% endif %}
   {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true, href=url_for('tasks', order_by='folders.name')) }}{% endif %}
 </div>

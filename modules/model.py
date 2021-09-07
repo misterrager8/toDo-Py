@@ -12,7 +12,6 @@ class Task(db.Model):
     __tablename__ = "tasks"
 
     name = Column(Text)
-    priority = Column(Integer, default=3)
     note = Column(Text)
     done = Column(Boolean, default=False)
     date_created = Column(DateTime)
@@ -38,14 +37,6 @@ class Task(db.Model):
         total = self.subtasks.count()
         perc = (done / total) * 100
         return perc
-
-    def get_priority(self):
-        if self.priority == 3:
-            return ["Low", "yellow"]
-        elif self.priority == 2:
-            return ["Medium", "orange"]
-        elif self.priority == 1:
-            return ["High", "red"]
 
     def __str__(self):
         return "%s" % self.name
