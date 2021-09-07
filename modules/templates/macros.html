@@ -395,6 +395,7 @@
 <div class="list-inline {{ class }}">
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
   {% if order_by != 'name' %}{{ badge('Name', class='list-inline-item', pill=true, href=url_for('index', order_by='name')) }}{% endif %}
+  {% if order_by != 'color' %}{{ badge('Color', class='list-inline-item', pill=true, href=url_for('index', order_by='color')) }}{% endif %}
   {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('index', order_by='date_created desc')) }}{% endif %}
 </div>
 {% endmacro %}
