@@ -176,6 +176,7 @@
         <a href="" data-toggle="dropdown" data-target="task-info-{{ task.id }}" class="link font-weight-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
         <div class="dropdown-menu dropdown-custom" id="task-info-{{ task.id }}" style="width:300px">
           {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted font-italic d-inline', size=0.8) }}
+          {% if task.done %}{{ paragraph('Done %s' % task.date_done.strftime('%B %d, %Y %I:%M %p'), class='font-italic text-success', size=0.8) }}{% endif %}
           {% if task.note %}{{ paragraph(task.note, class='font-italic') }}{% endif %}
         </div>
       </div>
