@@ -398,6 +398,11 @@
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
   {% if order_by != 'tasks.date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('tasks', order_by='tasks.date_created desc')) }}{% endif %}
   {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true, href=url_for('tasks', order_by='folders.name')) }}{% endif %}
+  {% if session['hide_completed'] == true %}
+  {{ badge('Show Completed', class='list-inline-item float-right', pill=true, href=url_for('hide_toggle')) }}
+  {% else %}
+  {{ badge('Hide Completed', class='list-inline-item float-right', pill=true, href=url_for('hide_toggle')) }}
+  {% endif %}
 </div>
 {% endmacro %}
 

@@ -14,4 +14,6 @@ db_name = os.getenv("db")
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://{db_user}:{db_passwd}@{db_host}/{db_name}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+app.secret_key = os.getenv("secret_key")
+
 db = SQLAlchemy(app)

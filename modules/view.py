@@ -2,7 +2,7 @@ import datetime
 import random
 from datetime import date
 
-from flask import render_template, url_for, request
+from flask import render_template, url_for, request, session
 from sqlalchemy import text
 from werkzeug.utils import redirect
 
@@ -33,8 +33,13 @@ def folder():
 @app.route("/tasks")
 def tasks():
     order_by = request.args.get("order_by", default="tasks.date_created desc")
+    if session.get("hide_completed") is True:
+        tasks_ = db.session.query(Task).join(Folder).filter(Task.done == False).order_by(text(order_by)).all()
+    else:
+        tasks_ = db.session.query(Task).join(Folder).order_by(Task.done, text(order_by)).all()
+
     return render_template("tasks.html",
-                           tasks_=db.session.query(Task).join(Folder).order_by(Task.done, text(order_by)).all(),
+                           tasks_=tasks_,
                            order_by=order_by)
 
 
@@ -104,6 +109,16 @@ def task_toggle():
         _.done = False
         _.date_done = None
     db.session.commit()
+
+    return redirect(request.referrer)
+
+
+@app.route("/hide_toggle")
+def hide_toggle():
+    if bool(session.get("hide_completed")) is True:
+        session["hide_completed"] = False
+    else:
+        session["hide_completed"] = True
 
     return redirect(request.referrer)
 
