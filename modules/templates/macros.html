@@ -170,7 +170,7 @@
 <!--Task card-->
 {% macro task_card(task) %}
 <div class="card col-xl-3 border-0">
-  <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}">
+  <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
     <div class="d-flex justify-content-between">
       <div class="dropdown">
         <a href="" data-toggle="dropdown" data-target="task-info-{{ task.id }}" class="link font-weight-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
