@@ -9,10 +9,11 @@
 
 {{ macros.tasks_sort(class='mx-2') }}
 <div class="row">
-  {% for i in tasks_ %}
-  {% if not i.get_parent_task() %}{{ macros.task_card(i) }}{% endif %}
+  {% for i in tasks_.items %}
+  {{ macros.task_card(i) }}
   {% endfor %}
 </div>
+{{ macros.tasks_paginate() }}
 {{ macros.badge('Delete All', href=url_for('tasks.task_clear'), class='mx-2', bg_color='white', txt_color='red') }}
 
 {% call macros.modal('task_create', title='New Task') %}
