@@ -13,7 +13,7 @@
   {{ macros.folder_card(i) }}
   {% endfor %}
 </div>
-{{ macros.badge('Delete All', href=url_for('folder_clear'), class='mx-2',  bg_color='white', txt_color='red') }}
+{{ macros.badge('Delete All', href=url_for('folders.folder_clear'), class='mx-2',  bg_color='white', txt_color='red') }}
 
 
 {% call macros.modal('folder_create', title='New Folder') %}

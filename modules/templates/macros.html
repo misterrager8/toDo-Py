@@ -145,7 +145,8 @@
 {% macro folder_card(folder) %}
 <div class="card col-xl-4 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
-    {% call link(href=url_for('folder', id_=folder.id), class='font-weight-bold') %}{{ folder.name }}{% endcall %}
+    {% call link(href=url_for('folders.folder', id_=folder.id), class='font-weight-bold') %}{{ folder.name }}{%
+    endcall %}
     <p class="px-2 py-1 font-weight-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.get_undone_count() }}</p>
     <span class="float-right">
       {% call link(class='mx-1', modal_id='task_create_%s'%folder.id) %}{{ add_icon(size=16) }}{% endcall %}
@@ -162,7 +163,8 @@
   {% endcall %}
 
   {% call modal('folder_delete_%s'%folder.id, title='Delete Folder?') %}
-  {% call link(class='btn btn-dark text-light', href=url_for('folder_delete', id_=folder.id)) %}Delete{% endcall %}
+  {% call link(class='btn btn-dark text-light', href=url_for('folders.folder_delete', id_=folder.id)) %}Delete{%
+  endcall %}
   {% endcall %}
 </div>
 {% endmacro %}
@@ -180,10 +182,12 @@
           {% if task.note %}{{ paragraph(task.note, class='font-italic') }}{% endif %}
         </div>
       </div>
-      {{ badge(task.folders.name, href=url_for('folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1 text-truncate') }}
+      {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color,
+      class='m-1 text-truncate') }}
     </div>
     <div>
-      {% call link(href=url_for('task_toggle', id_=task.id), class='') %}{{ check_icon(task.done, size=16) }}{% endcall %}
+      {% call link(href=url_for('tasks.task_toggle', id_=task.id), class='') %}{{ check_icon(task.done, size=16) }}{%
+      endcall %}
       {% if task.reminder %}
       <div class="d-inline mx-1">{{ reminder_icon(size=16) }}</div>
       {% endif %}
@@ -196,9 +200,9 @@
           </div>
           {% for i in task.subtasks | sort(attribute='done') %}
           <div>
-            {% call link(href=url_for('task_toggle', id_=i.id)) %}{{ check_icon(i.done, size=16) }}{% endcall %}
+            {% call link(href=url_for('tasks.task_toggle', id_=i.id)) %}{{ check_icon(i.done, size=16) }}{% endcall %}
             {{ paragraph(i.name, class='d-inline', size=0.9) }}
-            {% call link(href=url_for('task_delete', id_=i.id)) %}{{ delete_icon(size=16) }}{% endcall %}
+            {% call link(href=url_for('tasks.task_delete', id_=i.id)) %}{{ delete_icon(size=16) }}{% endcall %}
           </div>
           {% endfor %}
         </div>
@@ -208,7 +212,7 @@
       <div class="dropdown d-inline">
         <a href="" data-toggle="dropdown" data-target="task-delete-{{ task.id }}" class="float-right mx-1">{{ delete_icon(size=16) }}</a>
         <div class="dropdown-menu dropdown-custom" id="task-delete-{{ task.id }}">
-          <a href="{{ url_for('task_delete', id_=task.id) }}" class="btn btn-danger w-100">Delete</a>
+          <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100">Delete</a>
         </div>
       </div>
       <!--Update-->
@@ -249,7 +253,8 @@
 <div>
   {{ list_info(list) }}
   {% call modal('list_update_%s'%list.id) %}{{ list_update_form(list) }}{% endcall %}
-  {% call modal('list_delete_%s'%list.id, title='Delete?') %}{% call link(href=url_for('list_delete', id_=list.id), class='btn btn-danger', color='white') %}Delete{% endcall %}{% endcall %}
+  {% call modal('list_delete_%s'%list.id, title='Delete?') %}{% call link(href=url_for('lists.list_delete',
+  id_=list.id), class='btn btn-danger', color='white') %}Delete{% endcall %}{% endcall %}
 </div>
 {% endmacro %}
 
@@ -262,7 +267,7 @@
     {% if habit.reminder %}{{ reminder_icon(size=17) }}{% endif %}
     {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline font-italic text-muted', size=0.8) }}
     <div class="float-right">
-      {% call link(class='mx-1', href=url_for('habit_today', id_=habit.id)) %}{{ calendar_icon(size=20, color='green') }}{% endcall %}
+      {% call link(class='mx-1', href='#') %}{{ calendar_icon(size=20, color='green') }}{% endcall %}
       {% call link(class='mx-1', modal_id='habit_update_%s'%habit.id) %}{{ edit_icon(size=20) }}{% endcall %}
       {% call link(class='mx-1', modal_id='habit_delete_%s'%habit.id) %}{{ delete_icon(size=20) }}{% endcall %}
     </div>
@@ -274,14 +279,14 @@
   {% endcall %}
 
   {% call modal('habit_delete_%s'%habit.id, title='Delete Habit?') %}
-  {% call link(class='btn btn-dark text-light', href=url_for('habit_delete', id_=habit.id)) %}Delete{% endcall %}
+  {% call link(class='btn btn-dark text-light', href=url_for('habits.habit_delete', id_=habit.id)) %}Delete{% endcall %}
   {% endcall %}
 </div>
 {% endmacro %}
 
 <!--Task create form-->
 {% macro task_create_form(folder='', class='') %}
-<form class="form-group" method="POST" action="{{ url_for('task_create') }}" id="form_">
+<form class="form-group" method="POST" action="{{ url_for('tasks.task_create') }}" id="form_">
   <div class="input-group" id="input_">
     {{ input('name', 'Name', class='w-50 mb-2') }}
     <select name="folder" class="form-control input-group-append">
@@ -306,7 +311,7 @@
 
 <!--Task update form-->
 {% macro task_update_form(task, class='') %}
-<form class="form-group" method="POST" action="{{ url_for('task_update', id_=task.id) }}">
+<form class="form-group" method="POST" action="{{ url_for('tasks.task_update', id_=task.id) }}">
   {{ input('name', 'Name', class='mb-2', value=task.name) }}
   <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="5">{{ task.note }}</textarea>
   <select name="folder" class="form-control mb-2">
@@ -321,7 +326,7 @@
 
 <!--Folder create form-->
 {% macro folder_create_form(class='') %}
-<form class="form-group" method="POST" action="{{ url_for('folder_create') }}" id="form_2">
+<form class="form-group" method="POST" action="{{ url_for('folders.folder_create') }}" id="form_2">
   <div id="input_2">{{ input('name', 'Name', class='mb-2') }}</div>
   <a href="#" onclick="addInput2()" class="btn btn-success mb-2 w-100" id="add_button_2">+</a>
   {{ button('Submit') }}
@@ -330,7 +335,7 @@
 
 <!--Folder update form-->
 {% macro folder_update_form(folder, class='') %}
-<form class="form-group" method="POST" action="{{ url_for('folder_update', id_=folder.id) }}">
+<form class="form-group" method="POST" action="{{ url_for('folders.folder_update', id_=folder.id) }}">
   {{ input('name', 'Name', class='mb-2', value=folder.name) }}
   <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ folder.color }}">
   {{ button('Edit') }}
@@ -339,7 +344,7 @@
 
 <!--Habit create form-->
 {% macro habit_create_form(class='') %}
-<form class="form-group" method="POST" action="{{ url_for('habit_create') }}">
+<form class="form-group" method="POST" action="{{ url_for('habits.habit_create') }}">
   {{ input('name', 'Name', class='mb-2') }}
   <select name="frequency" class="form-control mb-2">
     <option value="Daily">Daily</option>
@@ -352,7 +357,7 @@
 
 <!--Habit update form-->
 {% macro habit_update_form(habit, class='') %}
-<form class="form-group" method="POST" action="{{ url_for('habit_update', id_=habit.id) }}">
+<form class="form-group" method="POST" action="{{ url_for('habits.habit_update', id_=habit.id) }}">
   {{ input('name', 'Name', class='mb-2', value=habit.name) }}
   <select name="frequency" class="form-control mb-2">
     <option value="Daily">Daily</option>
@@ -366,7 +371,7 @@
 
 <!--List create form-->
 {% macro list_create_form(class='') %}
-<form class="form-group" method="POST" action="{{ url_for('list_create') }}">
+<form class="form-group" method="POST" action="{{ url_for('lists.list_create') }}">
   {{ input('name', 'Name', class='mb-2') }}
   <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10"></textarea>
   {{ button('Submit') }}
@@ -375,7 +380,7 @@
 
 <!--List update form-->
 {% macro list_update_form(list, class='') %}
-<form class="form-group" method="POST" action="{{ url_for('list_update', id_=list.id) }}">
+<form class="form-group" method="POST" action="{{ url_for('lists.list_update', id_=list.id) }}">
   {{ input('name', 'Name', class='mb-2', value=list.name) }}
   <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10">{{ list.contents }}</textarea>
   {{ button('Edit') }}
@@ -396,12 +401,14 @@
 {% macro tasks_sort(class='') %}
 <div class="list-inline {{ class }}">
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
-  {% if order_by != 'tasks.date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('tasks', order_by='tasks.date_created desc')) }}{% endif %}
-  {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true, href=url_for('tasks', order_by='folders.name')) }}{% endif %}
+  {% if order_by != 'tasks.date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true,
+  href=url_for('tasks.tasks_', order_by='tasks.date_created desc')) }}{% endif %}
+  {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true,
+  href=url_for('tasks.tasks_', order_by='folders.name')) }}{% endif %}
   {% if session['hide_completed'] == true %}
-  {{ badge('Show Completed', class='list-inline-item float-right', pill=true, href=url_for('hide_toggle')) }}
+  {{ badge('Show Completed', class='list-inline-item float-right', pill=true, href=url_for('tasks.hide_toggle')) }}
   {% else %}
-  {{ badge('Hide Completed', class='list-inline-item float-right', pill=true, href=url_for('hide_toggle')) }}
+  {{ badge('Hide Completed', class='list-inline-item float-right', pill=true, href=url_for('tasks.hide_toggle')) }}
   {% endif %}
 </div>
 {% endmacro %}
@@ -410,8 +417,8 @@
 {% macro lists_sort(class='') %}
 <div class="list-inline {{ class }}">
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
-  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('lists', order_by='date_created desc')) }}{% endif %}
-  {% if order_by != 'date_updated desc' %}{{ badge('Date Updated', class='list-inline-item', pill=true, href=url_for('lists', order_by='date_updated desc')) }}{% endif %}
+  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_created desc')) }}{% endif %}
+  {% if order_by != 'date_updated desc' %}{{ badge('Date Updated', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_updated desc')) }}{% endif %}
 </div>
 {% endmacro %}
 

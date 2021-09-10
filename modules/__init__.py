@@ -17,3 +17,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv("secret_key")
 
 db = SQLAlchemy(app)
+
+from modules.views.habits import habits
+from modules.views.lists import lists
+from modules.views.tasks import tasks
+from modules.views.folders import folders
+
+app.register_blueprint(folders)
+app.register_blueprint(tasks)
+app.register_blueprint(lists)
+app.register_blueprint(habits)

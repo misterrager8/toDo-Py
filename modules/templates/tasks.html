@@ -13,7 +13,7 @@
   {% if not i.get_parent_task() %}{{ macros.task_card(i) }}{% endif %}
   {% endfor %}
 </div>
-{{ macros.badge('Delete All', href=url_for('task_clear'), class='mx-2', bg_color='white', txt_color='red') }}
+{{ macros.badge('Delete All', href=url_for('tasks.task_clear'), class='mx-2', bg_color='white', txt_color='red') }}
 
 {% call macros.modal('task_create', title='New Task') %}
 {{ macros.task_create_form() }}

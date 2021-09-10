@@ -12,7 +12,7 @@
   {{ macros.habit_card(i) }}
   {% endfor %}
 </div>
-{{ macros.badge('Delete All', href=url_for('habit_clear'), class='mx-2', bg_color='white', txt_color='red') }}
+{{ macros.badge('Delete All', href=url_for('habits.habit_clear'), class='mx-2', bg_color='white', txt_color='red') }}
 
 {% call macros.modal('habit_create', title='New Habit') %}
 {{ macros.habit_create_form() }}
