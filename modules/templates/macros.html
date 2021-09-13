@@ -189,7 +189,12 @@
       {% call link(href=url_for('tasks.task_toggle', id_=task.id), class='') %}{{ check_icon(task.done, size=16) }}{%
       endcall %}
       {% if task.reminder %}
-      <div class="d-inline mx-1">{{ reminder_icon(size=16) }}</div>
+      <div class="dropdown d-inline">
+        <a href="" data-toggle="dropdown" data-target="task-reminder-{{ task.id }}" class="mx-1">{{ reminder_icon(size=16) }}</a>
+        <div class="dropdown-menu dropdown-custom" id="task-reminder-{{ task.id }}" style="width:300px">
+          {{ task.date_due.strftime('%B %d, %Y') }}
+        </div>
+      </div>
       {% endif %}
       {% if task.get_subtasks_count() > 0 %}
       <div class="dropdown d-inline">
@@ -296,7 +301,12 @@
       {% endfor %}
     </select>
   </div>
-  <a href="#" class="btn btn-success mb-2 w-100" onclick="addInput()" id="add_button">+</a>
+  <div class="form-check mb-2">
+    <input onclick="examp()" type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True" id="remind_check">
+    <label class="form-check-label">Remind Me!</label>
+  </div>
+  <input type="date" id="date_select" class="form-control mb-2" style="display: none" name="date_due">
+  <a href="#" class="btn btn-success mb-2 w-100" onclick="" id="add_button">+</a>
   {{ button('Submit') }}
 </form>
 {% endmacro %}
@@ -320,6 +330,11 @@
     <option value="{{ i.id }}" {% if task.folder== i.id %}selected{% endif %}>{{ i.name }}</option>
     {% endfor %}
   </select>
+  <div class="form-check mb-2">
+    <input onclick="examp()" type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True" id="remind_check">
+    <label class="form-check-label">Remind Me!</label>
+  </div>
+  <input type="date" id="date_select" class="form-control mb-2" style="display: none" name="date_due">
   {{ button('Submit') }}
 </form>
 {% endmacro %}
