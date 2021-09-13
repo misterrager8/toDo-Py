@@ -2,11 +2,11 @@ import datetime
 import random
 from datetime import date
 
-from flask import render_template, url_for, request, Blueprint
+from flask import render_template, request, Blueprint
 from werkzeug.utils import redirect
 
 from modules import db
-from modules.model import Habit, HabitCalendar
+from modules.model import Habit, HabitCalendar, Day
 
 habits = Blueprint("habits", __name__)
 
@@ -23,7 +23,10 @@ def habits_():
 def habit():
     id_: int = request.args.get("id_")
     _: Habit = db.session.query(Habit).get(id_)
-    return render_template("habit.html", habit=_)
+
+    days = db.session.query(Day).filter(Day.habit == _.id)
+
+    return render_template("habit.html", habit=_, days=days)
 
 
 @habits.route("/habit_create", methods=["POST"])
@@ -58,7 +61,7 @@ def habit_delete():
     db.session.delete(_)
     db.session.commit()
 
-    return redirect(url_for("habits"))
+    return redirect(request.referrer)
 
 
 @habits.route("/habit_clear")
@@ -68,4 +71,48 @@ def habit_clear():
     db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
     db.session.commit()
 
-    return redirect(url_for("habits"))
+    return redirect(request.referrer)
+
+
+@habits.route("/habit_today")
+def habit_today():
+    id_: int = request.args.get("id_")
+    _: Habit = db.session.query(Habit).get(id_)
+
+    week = [date.today() + datetime.timedelta(days=i) for i in
+            range(0 - date.today().weekday(), 7 - date.today().weekday())]
+    month = HabitCalendar().itermonthdates(int(date.today().year), int(date.today().month))
+
+    if _.frequency == "Daily":
+        db.session.add(Day(habit=_.id, date=date.today()))
+    if _.frequency == "Weekly":
+        for i in week:
+            db.session.add(Day(habit=_.id, date=i))
+    if _.frequency == "Monthly":
+        for i in month:
+            db.session.add(Day(habit=_.id, date=i))
+
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+
+@habits.route("/day_delete")
+def day_delete():
+    id_: int = request.args.get("id_")
+    _: Day = db.session.query(Day).get(id_)
+
+    db.session.delete(_)
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+
+@habits.route("/calendar_clear")
+def calendar_clear():
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 0")
+    db.session.execute("TRUNCATE TABLE days")
+    db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
+    db.session.commit()
+
+    return redirect(request.referrer)

@@ -128,8 +128,8 @@
 {% endmacro %}
 
 <!--Circle icon-->
-{% macro circle_icon(size=25, color='black', tooltip='') %}
-<svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill" viewBox="0 0 16 16">
+{% macro circle_icon(size=25, color='black', tooltip='', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill {{ class }}" viewBox="0 0 16 16">
   <circle cx="8" cy="8" r="8"/>
 </svg>
 {% endmacro %}
@@ -268,17 +268,16 @@
 <div class="card col-xl-6 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border-radius:10px; border:5px solid {{ habit.color }}">
     {{ circle_icon(size=20, color=habit.color) }}
-    {% call link(class='font-weight-bold d-inline mx-2', style='color:black', modal_id='habit_info_%s'%habit.id) %}{{ habit.name }}{% endcall %}
+    {% call link(class='font-weight-bold d-inline mx-2', style='color:black', href=url_for('habits.habit',
+    id_=habit.id)) %}{{ habit.name }}{% endcall %}
     {% if habit.reminder %}{{ reminder_icon(size=17) }}{% endif %}
     {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline font-italic text-muted', size=0.8) }}
     <div class="float-right">
-      {% call link(class='mx-1', href='#') %}{{ calendar_icon(size=20, color='green') }}{% endcall %}
+      {% call link(class='mx-1', href=url_for('habits.habit_today', id_=habit.id)) %}{{ calendar_icon(size=20, color='green') }}{% endcall %}
       {% call link(class='mx-1', modal_id='habit_update_%s'%habit.id) %}{{ edit_icon(size=20) }}{% endcall %}
       {% call link(class='mx-1', modal_id='habit_delete_%s'%habit.id) %}{{ delete_icon(size=20) }}{% endcall %}
     </div>
   </div>
-  {{ habit_info(habit) }}
-
   {% call modal('habit_update_%s'%habit.id, title='Edit Habit') %}
   {{ habit_update_form(habit) }}
   {% endcall %}
@@ -286,6 +285,16 @@
   {% call modal('habit_delete_%s'%habit.id, title='Delete Habit?') %}
   {% call link(class='btn btn-dark text-light', href=url_for('habits.habit_delete', id_=habit.id)) %}Delete{% endcall %}
   {% endcall %}
+</div>
+{% endmacro %}
+
+{% macro day_item(day, class='') %}
+<div class="card col-12 border-0">
+  <div class="card-body border rounded shadow-sm m-2">
+    {{ circle_icon(size=20, color=day.habits.color, class='m-0') }}
+    {{ paragraph(day.date.strftime('%B %d, %Y'), class='font-italic d-inline mx-2') }}
+    <a href="{{ url_for('habits.day_delete', id_=day.id) }}" class="float-right">{{ delete_icon(size=20) }}</a>
+  </div>
 </div>
 {% endmacro %}
 
@@ -434,25 +443,6 @@
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
   {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_created desc')) }}{% endif %}
   {% if order_by != 'date_updated desc' %}{{ badge('Date Updated', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_updated desc')) }}{% endif %}
-</div>
-{% endmacro %}
-
-<!--Task Info-->
-{% macro task_info(task) %}
-<div>
-  {% call modal('task_info_%s'%task.id, title=task.name) %}
-  {{ paragraph(task.note) }}
-  {% endcall %}
-</div>
-{% endmacro %}
-
-
-<!--Habit Info-->
-{% macro habit_info(habit) %}
-<div>
-  {% call modal('habit_info_%s'%habit.id, title=habit.name) %}
-  {{ paragraph(habit.frequency, size=0.8, class='font-italic text-center') }}
-  {% endcall %}
 </div>
 {% endmacro %}
 

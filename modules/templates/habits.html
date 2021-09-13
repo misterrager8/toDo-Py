@@ -12,6 +12,10 @@
   {{ macros.habit_card(i) }}
   {% endfor %}
 </div>
+
+{{ month | safe }}
+
+{{ macros.badge('Clear Calendar', href=url_for('habits.calendar_clear'), class='mx-2', bg_color='white', txt_color='orange') }}
 {{ macros.badge('Delete All', href=url_for('habits.habit_clear'), class='mx-2', bg_color='white', txt_color='red') }}
 
 {% call macros.modal('habit_create', title='New Habit') %}
