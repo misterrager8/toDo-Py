@@ -196,7 +196,7 @@
         </div>
       </div>
       {% endif %}
-      {% if task.get_subtasks_count() > 0 %}
+      {% if task.subtasks.count() > 0 %}
       <div class="dropdown d-inline">
         <a href="#" data-toggle="dropdown" data-target="task-progress-{{ task.id }}" class="badge badge-dark badge-pill">{{ task.get_subtasks_count() }}</a>
         <div class="dropdown-menu dropdown-custom" style="width:300px">

@@ -26,9 +26,6 @@ class Task(db.Model):
     def __init__(self, **kwargs):
         super(Task, self).__init__(**kwargs)
 
-    def get_parent_task(self):
-        return db.session.query(Task).get(self.parent_task)
-
     def get_subtasks_count(self):
         return self.subtasks.filter(Task.done == False).count()
 
@@ -55,10 +52,10 @@ class Folder(db.Model):
         super(Folder, self).__init__(**kwargs)
 
     def get_tasks(self):
-        return self.tasks.order_by(Task.done, Task.date_created.desc())
+        return self.tasks.order_by(Task.done, Task.date_created.desc()).filter(Task.parent_task == None)
 
     def get_undone_count(self) -> int:
-        return self.tasks.filter(Task.done == False).count()
+        return self.tasks.filter(Task.parent_task == None, Task.done == False).count()
 
     def __str__(self):
         return "%s" % self.name
