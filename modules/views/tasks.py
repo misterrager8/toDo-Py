@@ -1,6 +1,6 @@
 import datetime
 
-from flask import render_template, url_for, request, session, Blueprint
+from flask import render_template, request, session, Blueprint
 from sqlalchemy import text
 from werkzeug.utils import redirect
 
@@ -82,7 +82,7 @@ def task_delete():
     db.session.delete(_)
     db.session.commit()
 
-    return redirect(url_for("tasks"))
+    return redirect(request.referrer)
 
 
 @tasks.route("/task_toggle")

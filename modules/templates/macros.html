@@ -322,7 +322,7 @@
 
 <!--Subtask create form-->
 {% macro subtask_create_form(task, class='') %}
-<form class="form-group" method="POST" action="{{ url_for('subtask_create', id_=task.id) }}">
+<form class="form-group" method="POST" action="{{ url_for('tasks.subtask_create', id_=task.id) }}">
   {{ input('name', 'Name', class='w-100 mb-2') }}
   {{ button('Submit') }}
 </form>
