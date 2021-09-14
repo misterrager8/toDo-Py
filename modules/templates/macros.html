@@ -300,8 +300,8 @@
 
 <!--Task create form-->
 {% macro task_create_form(folder='', class='') %}
-<form class="form-group" method="POST" action="{{ url_for('tasks.task_create') }}" id="form_">
-  <div class="input-group" id="input_">
+<form class="form-group" method="POST" action="{{ url_for('tasks.task_create') }}">
+  <div class="input-group">
     {{ input('name', 'Name', class='w-50 mb-2') }}
     <select name="folder" class="form-control input-group-append">
       <option>Select</option>
@@ -311,11 +311,10 @@
     </select>
   </div>
   <div class="form-check mb-2">
-    <input onclick="examp()" type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True" id="remind_check">
+    <input onclick="examp()" type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True">
     <label class="form-check-label">Remind Me!</label>
   </div>
-  <input type="date" id="date_select" class="form-control mb-2" style="display: none" name="date_due">
-  <a href="#" class="btn btn-success mb-2 w-100" onclick="" id="add_button">+</a>
+  <input type="date" class="form-control mb-2" style="display: none" name="date_due">
   {{ button('Submit') }}
 </form>
 {% endmacro %}
@@ -340,19 +339,18 @@
     {% endfor %}
   </select>
   <div class="form-check mb-2">
-    <input onclick="examp()" type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True" id="remind_check">
+    <input type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True">
     <label class="form-check-label">Remind Me!</label>
   </div>
-  <input type="date" id="date_select" class="form-control mb-2" style="display: none" name="date_due">
+  <input type="date" class="form-control mb-2" name="date_due">
   {{ button('Submit') }}
 </form>
 {% endmacro %}
 
 <!--Folder create form-->
 {% macro folder_create_form(class='') %}
-<form class="form-group" method="POST" action="{{ url_for('folders.folder_create') }}" id="form_2">
-  <div id="input_2">{{ input('name', 'Name', class='mb-2') }}</div>
-  <a href="#" onclick="addInput2()" class="btn btn-success mb-2 w-100" id="add_button_2">+</a>
+<form class="form-group" method="POST" action="{{ url_for('folders.folder_create') }}">
+  {{ input('name', 'Name', class='mb-2') }}
   {{ button('Submit') }}
 </form>
 {% endmacro %}
