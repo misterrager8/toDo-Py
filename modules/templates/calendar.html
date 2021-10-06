@@ -3,8 +3,9 @@
 
 {% block body %}
 <title>Calendar</title>
+{% if calendar_view != 'month' %}<a href="{{ url_for('calendar', calendar_view='month') }}" class="link badge">View Last Month</a>{% endif %}
+{% if calendar_view != 'week' %}<a href="{{ url_for('calendar', calendar_view='week') }}" class="link badge">View Last Week</a>{% endif %}
 <div>
-  {{ month | safe }}
-  {{ macros.badge('Delete All', href=url_for('calendar_clear'), class='mx-2', bg_color='white', txt_color='red') }}
+  {{ cal | safe }}
 </div>
 {% endblock %}

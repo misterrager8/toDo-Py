@@ -1,10 +1,9 @@
-from datetime import date
-
 from flask import request, render_template
 from sqlalchemy import text
 
 from modules import db, app
-from modules.model import Folder, Habit, HabitCalendar
+from modules.calendar import Calendar
+from modules.model import Folder, Day
 
 
 @app.context_processor
@@ -22,7 +21,12 @@ def index():
 
 @app.route("/calendar")
 def calendar():
-    current_date = date.today()
-    return render_template("calendar.html",
-                           habits_=db.session.query(Habit).all(),
-                           month=HabitCalendar().formatmonth(current_date.year, current_date.month))
+    calendar_view = request.args.get("calendar_view", default="week")
+    _ = Calendar().format_month() if calendar_view == "month" else Calendar().format_week()
+    return render_template("calendar.html", cal=_, calendar_view=calendar_view)
+
+
+@app.route("/day")
+def day():
+    day_date = request.args.get("day_date")
+    return render_template("day.html", day_date=day_date, items=db.session.query(Day).filter(Day.date == day_date))

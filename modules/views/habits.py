@@ -6,17 +6,15 @@ from flask import render_template, request, Blueprint
 from werkzeug.utils import redirect
 
 from modules import db
-from modules.model import Habit, HabitCalendar, Day
+from modules.calendar import Calendar
+from modules.model import Habit, Day
 
 habits = Blueprint("habits", __name__)
 
 
 @habits.route("/habits")
 def habits_():
-    current_date = date.today()
-    return render_template("habits.html",
-                           habits_=db.session.query(Habit).all(),
-                           month=HabitCalendar().formatmonth(current_date.year, current_date.month))
+    return render_template("habits.html", habits_=db.session.query(Habit).all(), month=Calendar().format_month())
 
 
 @habits.route("/habit")
@@ -79,17 +77,13 @@ def habit_today():
     id_: int = request.args.get("id_")
     _: Habit = db.session.query(Habit).get(id_)
 
-    week = [date.today() + datetime.timedelta(days=i) for i in
-            range(0 - date.today().weekday(), 7 - date.today().weekday())]
-    month = HabitCalendar().itermonthdates(int(date.today().year), int(date.today().month))
-
     if _.frequency == "Daily":
         db.session.add(Day(habit=_.id, date=date.today()))
     if _.frequency == "Weekly":
-        for i in week:
+        for i in Calendar().get_last_week():
             db.session.add(Day(habit=_.id, date=i))
     if _.frequency == "Monthly":
-        for i in month:
+        for i in Calendar().get_last_month():
             db.session.add(Day(habit=_.id, date=i))
 
     db.session.commit()
