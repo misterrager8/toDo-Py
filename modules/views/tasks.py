@@ -27,18 +27,15 @@ def tasks_(page=1):
 
 @tasks.route("/task_create", methods=["POST"])
 def task_create():
-    name = request.form["name"]
+    names = request.form.getlist("name")
     folder = request.form["folder"]
-    reminder: bool = request.form.get("reminder") is not None
-    date_due = request.form["date_due"] if reminder else None
 
-    _ = Task(name=name.title(),
-             folder=int(folder),
-             reminder=reminder,
-             date_due=date_due,
-             date_created=datetime.datetime.now())
+    for i in names:
+        _ = Task(name=i.title(),
+                 folder=int(folder),
+                 date_created=datetime.datetime.now())
+        db.session.add(_)
 
-    db.session.add(_)
     db.session.commit()
 
     return redirect(request.referrer)
@@ -49,10 +46,11 @@ def subtask_create():
     id_: int = request.args.get("id_")
     _: Task = db.session.query(Task).get(id_)
 
-    name = request.form["name"].title()
-    _.subtasks.append(Task(name=name,
-                           date_created=datetime.datetime.now(),
-                           folder=_.folder))
+    names = request.form.getlist("name")
+    for i in names:
+        _.subtasks.append(Task(name=i.title(),
+                               date_created=datetime.datetime.now(),
+                               folder=_.folder))
     db.session.commit()
 
     return redirect(request.referrer)

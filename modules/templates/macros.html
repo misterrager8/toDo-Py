@@ -302,19 +302,15 @@
 {% macro task_create_form(folder='', class='') %}
 <form class="form-group" method="POST" action="{{ url_for('tasks.task_create') }}">
   <div class="input-group">
-    {{ input('name', 'Name', class='w-50 mb-2') }}
-    <select name="folder" class="form-control input-group-append">
-      <option>Select</option>
-      {% for i in all_folders %}
-      <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
-      {% endfor %}
-    </select>
+    {{ input('name', 'Name', class='mb-2 w-75') }}
+    <button type="button" class="btn btn-success mb-2" onclick="addInput(this)">+</button>
   </div>
-  <div class="form-check mb-2">
-    <input onclick="examp()" type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True">
-    <label class="form-check-label">Remind Me!</label>
-  </div>
-  <input type="date" class="form-control mb-2" style="display: none" name="date_due">
+  <select name="folder" class="form-control mb-2">
+    <option>Select</option>
+    {% for i in all_folders %}
+    <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
+    {% endfor %}
+  </select>
   {{ button('Submit') }}
 </form>
 {% endmacro %}
@@ -322,7 +318,10 @@
 <!--Subtask create form-->
 {% macro subtask_create_form(task, class='') %}
 <form class="form-group" method="POST" action="{{ url_for('tasks.subtask_create', id_=task.id) }}">
-  {{ input('name', 'Name', class='w-100 mb-2') }}
+  <div class="input-group">
+    {{ input('name', 'Name', class='w-75 mb-2') }}
+    <button type="button" class="btn btn-success mb-2" onclick="addInput(this)">+</button>
+  </div>
   {{ button('Submit') }}
 </form>
 {% endmacro %}
@@ -350,7 +349,10 @@
 <!--Folder create form-->
 {% macro folder_create_form(class='') %}
 <form class="form-group" method="POST" action="{{ url_for('folders.folder_create') }}">
-  {{ input('name', 'Name', class='mb-2') }}
+  <div class="input-group">
+    {{ input('name', 'Name', class='w-75 mb-2') }}
+    <button type="button" class="btn btn-success mb-2" onclick="addInput(this)">+</button>
+  </div>
   {{ button('Submit') }}
 </form>
 {% endmacro %}
