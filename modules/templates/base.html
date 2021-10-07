@@ -3,30 +3,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet">
-  <script crossorigin="anonymous" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script crossorigin="anonymous" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-kQtW33rZJAHjgefvhyyzcGF3C5TFyBQBA13V1RKPf4uH+bwyzQxZ6CmMZHmNBEfJ" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </head>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-  <div class="collapse navbar-collapse" id="nav_content">
+  <div class="container-fluid">
     <a class="navbar-brand" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
-    <button class="navbar-toggler" data-target="#nav_content" data-toggle="collapse" type="button">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <ul class="navbar-nav mr-auto">
-      <li class="navbar-item"><a href="{{ url_for('tasks.tasks_') }}" class="nav-link">Tasks</a></li>
-      <li class="navbar-item"><a href="{{ url_for('habits.habits_') }}" class="nav-link">Habits</a></li>
-      <li class="navbar-item"><a href="{{ url_for('lists.lists_') }}" class="nav-link">Lists</a></li>
-      <li class="navbar-item"><a href="{{ url_for('calendar') }}" class="nav-link">Calendar</a></li>
-    </ul>
-    <div class="ml-auto navbar-nav dropdown">
-      <a href="#" class="navbar-item nav-link" data-toggle="dropdown">{{ macros.user_icon() }}</a>
-      <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" href="#">Log In</a>
-        <a class="dropdown-item" href="#">Sign Up</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a href="{{ url_for('tasks.tasks_') }}" class="nav-link">Tasks</a></li>
+        <li class="nav-item"><a href="{{ url_for('habits.habits_') }}" class="nav-link">Habits</a></li>
+        <li class="nav-item"><a href="{{ url_for('lists.lists_') }}" class="nav-link">Lists</a></li>
+        <li class="nav-item"><a href="{{ url_for('calendar') }}" class="nav-link">Calendar</a></li>
+      </ul>
+      <div class="ms-auto navbar-nav dropdown">
+        <a href="#" class="nav-item nav-link" data-bs-toggle="dropdown">{{ macros.user_icon() }}</a>
+        <div class="dropdown-menu dropdown-menu-end">
+          <a class="dropdown-item" href="#">Log In</a>
+          <a class="dropdown-item" href="#">Sign Up</a>
+        </div>
       </div>
     </div>
   </div>

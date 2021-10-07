@@ -22,7 +22,7 @@ class Calendar:
     def format_day(day: datetime.date):
         x = ''
         for i in db.session.query(Day).filter(Day.date == day):
-            x += '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="%s" class="bi bi-circle-fill mr-1" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>' % i.habits.color
+            x += '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="%s" class="bi bi-circle-fill me-1" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8"/></svg>' % i.habits.color
 
         return '<div class="card day border-0"><div class="card-body m-2 bg-light rounded shadow-sm"><a href="/day?day_date=%s" class="link">%s\n%s</a></div></div>' % (
             day, day.strftime("%-m/%-d"), x)

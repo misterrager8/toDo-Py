@@ -15,8 +15,8 @@
    {% endif %}
 
    {% if modal_id %}
-   data-toggle="modal"
-   data-target="#{{ modal_id }}"
+   data-bs-toggle="modal"
+   data-bs-target="#{{ modal_id }}"
    {% endif %}
 >
   {{ caller() }}
@@ -35,7 +35,7 @@
 
 <!--Generic Badge-->
 {% macro badge(text, class='', bg_color='black', txt_color='white', pill=false, newtab=false, modal_id='', href='', tooltip='') %}
-<a class="badge {% if pill %}badge-pill{% endif %} {{ class }}"
+<a class="badge {% if pill %}rounded-pill{% endif %} {{ class }}"
    {% if href %}href="{{ href }}" {% endif %}
    title="{{ tooltip }}"
    style="
@@ -48,8 +48,8 @@
    {% endif %}
 
    {% if modal_id %}
-   data-toggle="modal"
-   data-target="{{ modal_id }}"
+   data-bs-toggle="modal"
+   data-bs-target="{{ modal_id }}"
    {% endif %}
 >
   {{ text }}
@@ -145,10 +145,10 @@
 {% macro folder_card(folder) %}
 <div class="card col-xl-4 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
-    {% call link(href=url_for('folders.folder', id_=folder.id), class='font-weight-bold') %}{{ folder.name }}{%
+    {% call link(href=url_for('folders.folder', id_=folder.id), class='fw-bold') %}{{ folder.name }}{%
     endcall %}
-    <p class="px-2 py-1 font-weight-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.get_undone_count() }}</p>
-    <span class="float-right">
+    <p class="px-2 py-1 fw-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.get_undone_count() }}</p>
+    <span class="float-end">
       {% call link(class='mx-1', modal_id='task_create_%s'%folder.id) %}{{ add_icon(size=16) }}{% endcall %}
       {% call link(class='mx-1', modal_id='folder_update_%s'%folder.id) %}{{ edit_icon(size=16) }}{% endcall %}
       {% call link(class='mx-1', modal_id='folder_delete_%s'%folder.id) %}{{ delete_icon(size=16) }}{% endcall %}
@@ -175,11 +175,11 @@
   <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
     <div class="d-flex justify-content-between">
       <div class="dropdown">
-        <a href="" data-toggle="dropdown" data-target="task-info-{{ task.id }}" class="link font-weight-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
+        <a href="" data-bs-toggle="dropdown" data-bs-target="task-info-{{ task.id }}" class="link fw-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
         <div class="dropdown-menu dropdown-custom" id="task-info-{{ task.id }}" style="width:300px">
-          {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted font-italic d-inline', size=0.8) }}
-          {% if task.done %}{{ paragraph('Done %s' % task.date_done.strftime('%B %d, %Y %I:%M %p'), class='font-italic text-success', size=0.8) }}{% endif %}
-          {% if task.note %}{{ paragraph(task.note, class='font-italic') }}{% endif %}
+          {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted fst-italic d-inline', size=0.8) }}
+          {% if task.done %}{{ paragraph('Done %s' % task.date_done.strftime('%B %d, %Y %I:%M %p'), class='fst-italic text-success', size=0.8) }}{% endif %}
+          {% if task.note %}{{ paragraph(task.note, class='fst-italic') }}{% endif %}
         </div>
       </div>
       {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color,
@@ -190,7 +190,7 @@
       endcall %}
       {% if task.reminder %}
       <div class="dropdown d-inline">
-        <a href="" data-toggle="dropdown" data-target="task-reminder-{{ task.id }}" class="mx-1">{{ reminder_icon(size=16) }}</a>
+        <a href="" data-bs-toggle="dropdown" data-bs-target="task-reminder-{{ task.id }}" class="mx-1">{{ reminder_icon(size=16) }}</a>
         <div class="dropdown-menu dropdown-custom" id="task-reminder-{{ task.id }}" style="width:300px">
           {{ task.date_due.strftime('%B %d, %Y') }}
         </div>
@@ -198,7 +198,7 @@
       {% endif %}
       {% if task.subtasks.count() > 0 %}
       <div class="dropdown d-inline">
-        <a href="#" data-toggle="dropdown" data-target="task-progress-{{ task.id }}" class="badge badge-dark badge-pill">{{ task.get_subtasks_count() }}</a>
+        <a href="#" data-bs-toggle="dropdown" data-bs-target="task-progress-{{ task.id }}" class="badge badge-dark rounded-pill">{{ task.get_subtasks_count() }}</a>
         <div class="dropdown-menu dropdown-custom" style="width:300px">
           <div class="progress mb-3">
             <div class="progress-bar" role="progressbar" style="width:{{ task.get_subtasks_progress() }}%"></div>
@@ -215,21 +215,21 @@
       {% endif %}
       <!--Delete-->
       <div class="dropdown d-inline">
-        <a href="" data-toggle="dropdown" data-target="task-delete-{{ task.id }}" class="float-right mx-1">{{ delete_icon(size=16) }}</a>
+        <a href="" data-bs-toggle="dropdown" data-bs-target="task-delete-{{ task.id }}" class="float-end mx-1">{{ delete_icon(size=16) }}</a>
         <div class="dropdown-menu dropdown-custom" id="task-delete-{{ task.id }}">
           <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100">Delete</a>
         </div>
       </div>
       <!--Update-->
       <div class="dropdown d-inline">
-        <a href="" data-toggle="dropdown" data-target="task-update-{{ task.id }}" class="float-right mx-1">{{ edit_icon(size=16) }}</a>
+        <a href="" data-bs-toggle="dropdown" data-bs-target="task-update-{{ task.id }}" class="float-end mx-1">{{ edit_icon(size=16) }}</a>
         <div class="dropdown-menu dropdown-custom" id="task-update-{{ task.id }}" style="width:400px">
           {{ task_update_form(task) }}
         </div>
       </div>
       <!--Subtask Create-->
       <div class="dropdown d-inline">
-        <a href="" data-toggle="dropdown" data-target="subtask-create-{{ task.id }}" class="float-right mx-1">{{ add_icon(size=16) }}</a>
+        <a href="" data-bs-toggle="dropdown" data-bs-target="subtask-create-{{ task.id }}" class="float-end mx-1">{{ add_icon(size=16) }}</a>
         <div class="dropdown-menu dropdown-custom" id="subtask-create-{{ task.id }}" style="width:300px">
           {{ subtask_create_form(task) }}
         </div>
@@ -245,11 +245,11 @@
   <div class="card-body my-2" style="border-radius:10px; border: 5px solid {{ list.color }}">
     {% call link(modal_id='list_info_%s'%list.id) %}{{ list.name }}{% endcall %}
     {% if order_by == 'date_created desc' %}
-    {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted font-italic', size=0.8) }}
+    {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% elif order_by == 'date_updated desc' %}
-    {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted font-italic', size=0.8) }}
+    {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% endif %}
-    <div class="float-right">
+    <div class="float-end">
       {% call link(modal_id='list_update_%s'%list.id, class='mx-1') %}{{ edit_icon(size=20) }}{% endcall %}
       {% call link(modal_id='list_delete_%s'%list.id, class='mx-1') %}{{ delete_icon(size=20) }}{% endcall %}
     </div>
@@ -268,11 +268,11 @@
 <div class="card col-xl-6 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border-radius:10px; border:5px solid {{ habit.color }}">
     {{ circle_icon(size=20, color=habit.color) }}
-    {% call link(class='font-weight-bold d-inline mx-2', style='color:black', href=url_for('habits.habit',
+    {% call link(class='fw-bold d-inline mx-2', style='color:black', href=url_for('habits.habit',
     id_=habit.id)) %}{{ habit.name }}{% endcall %}
     {% if habit.reminder %}{{ reminder_icon(size=17) }}{% endif %}
-    {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline font-italic text-muted', size=0.8) }}
-    <div class="float-right">
+    {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline fst-italic text-muted', size=0.8) }}
+    <div class="float-end">
       {% call link(class='mx-1', href=url_for('habits.habit_today', id_=habit.id)) %}{{ calendar_icon(size=20, color='green') }}{% endcall %}
       {% call link(class='mx-1', modal_id='habit_update_%s'%habit.id) %}{{ edit_icon(size=20) }}{% endcall %}
       {% call link(class='mx-1', modal_id='habit_delete_%s'%habit.id) %}{{ delete_icon(size=20) }}{% endcall %}
@@ -292,8 +292,8 @@
 <div class="card col-12 border-0">
   <div class="card-body border rounded shadow-sm m-2">
     {{ circle_icon(size=20, color=day.habits.color, class='m-0') }}
-    {{ paragraph(day.date.strftime('%B %d, %Y'), class='font-italic d-inline mx-2') }}
-    <a href="{{ url_for('habits.day_delete', id_=day.id) }}" class="float-right">{{ delete_icon(size=20) }}</a>
+    {{ paragraph(day.date.strftime('%B %d, %Y'), class='fst-italic d-inline mx-2') }}
+    <a href="{{ url_for('habits.day_delete', id_=day.id) }}" class="float-end">{{ delete_icon(size=20) }}</a>
   </div>
 </div>
 {% endmacro %}
@@ -430,9 +430,9 @@
   {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true,
   href=url_for('tasks.tasks_', order_by='folders.name')) }}{% endif %}
   {% if session['hide_completed'] == true %}
-  {{ badge('Show Completed', class='list-inline-item float-right', pill=true, href=url_for('tasks.hide_toggle')) }}
+  {{ badge('Show Completed', class='list-inline-item float-end', pill=true, href=url_for('tasks.hide_toggle')) }}
   {% else %}
-  {{ badge('Hide Completed', class='list-inline-item float-right', pill=true, href=url_for('tasks.hide_toggle')) }}
+  {{ badge('Hide Completed', class='list-inline-item float-end', pill=true, href=url_for('tasks.hide_toggle')) }}
   {% endif %}
 </div>
 {% endmacro %}
