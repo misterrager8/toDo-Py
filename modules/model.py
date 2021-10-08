@@ -33,6 +33,12 @@ class Task(db.Model):
         perc = (done / total) * 100
         return perc
 
+    def toggle_done(self):
+        self.date_done = None if self.done else datetime.date.today()
+        self.done = not self.done
+
+        db.session.commit()
+
     def __str__(self):
         return "%s" % self.name
 

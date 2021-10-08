@@ -87,10 +87,7 @@ def task_toggle():
 
 @tasks.route("/hide_toggle")
 def hide_toggle():
-    if bool(session.get("hide_completed")) is True:
-        session["hide_completed"] = False
-    else:
-        session["hide_completed"] = True
+    session["hide_completed"] = False if bool(session.get("hide_completed")) is True else True
 
     return redirect(request.referrer)
 
