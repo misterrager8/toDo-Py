@@ -174,31 +174,15 @@
 <div class="card col-xl-3 border-0">
   <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
     <div class="d-flex justify-content-between">
-      <div class="dropdown">
-        <a href="" data-bs-toggle="dropdown" data-bs-target="task-info-{{ task.id }}" class="link fw-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
-        <div class="dropdown-menu dropdown-custom" id="task-info-{{ task.id }}" style="width:300px">
-          {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted fst-italic d-inline', size=0.8) }}
-          {% if task.done %}{{ paragraph('Done %s' % task.date_done.strftime('%B %d, %Y %I:%M %p'), class='fst-italic text-success', size=0.8) }}{% endif %}
-          {% if task.note %}{{ paragraph(task.note, class='fst-italic') }}{% endif %}
-        </div>
-      </div>
-      {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color,
-      class='m-1 text-truncate') }}
+      <a href="#" data-bs-toggle="modal" data-bs-target="#task-info-{{ task.id }}" class="link fw-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
+      {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1 text-truncate') }}
     </div>
     <div>
-      {% call link(href=url_for('tasks.task_toggle', id_=task.id), class='') %}{{ check_icon(task.done, size=16) }}{%
-      endcall %}
-      {% if task.reminder %}
-      <div class="dropdown d-inline">
-        <a href="" data-bs-toggle="dropdown" data-bs-target="task-reminder-{{ task.id }}" class="mx-1">{{ reminder_icon(size=16) }}</a>
-        <div class="dropdown-menu dropdown-custom" id="task-reminder-{{ task.id }}" style="width:300px">
-          {{ task.date_due.strftime('%B %d, %Y') }}
-        </div>
-      </div>
-      {% endif %}
+      {% call link(href=url_for('tasks.task_toggle', id_=task.id), class='') %}{{ check_icon(task.done, size=16) }}{% endcall %}
+      {% if task.reminder %}{{ reminder_icon(size=16) }}{% endif %}
       {% if task.subtasks.count() > 0 %}
       <div class="dropdown d-inline">
-        <a href="#" data-bs-toggle="dropdown" data-bs-target="task-progress-{{ task.id }}" class="badge badge-dark rounded-pill">{{ task.get_subtasks_count() }}</a>
+        <a href="#" data-bs-toggle="dropdown" data-bs-target="task-progress-{{ task.id }}" class="badge bg-dark link rounded-pill" style="color:white">{{ task.get_subtasks_count() }}</a>
         <div class="dropdown-menu dropdown-custom" style="width:300px">
           <div class="progress mb-3">
             <div class="progress-bar" role="progressbar" style="width:{{ task.get_subtasks_progress() }}%"></div>
@@ -213,29 +197,28 @@
         </div>
       </div>
       {% endif %}
-      <!--Delete-->
-      <div class="dropdown d-inline">
-        <a href="" data-bs-toggle="dropdown" data-bs-target="task-delete-{{ task.id }}" class="float-end mx-1">{{ delete_icon(size=16) }}</a>
-        <div class="dropdown-menu dropdown-custom" id="task-delete-{{ task.id }}">
-          <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100">Delete</a>
-        </div>
-      </div>
-      <!--Update-->
-      <div class="dropdown d-inline">
-        <a href="" data-bs-toggle="dropdown" data-bs-target="task-update-{{ task.id }}" class="float-end mx-1">{{ edit_icon(size=16) }}</a>
-        <div class="dropdown-menu dropdown-custom" id="task-update-{{ task.id }}" style="width:400px">
-          {{ task_update_form(task) }}
-        </div>
-      </div>
-      <!--Subtask Create-->
-      <div class="dropdown d-inline">
-        <a href="" data-bs-toggle="dropdown" data-bs-target="subtask-create-{{ task.id }}" class="float-end mx-1">{{ add_icon(size=16) }}</a>
-        <div class="dropdown-menu dropdown-custom" id="subtask-create-{{ task.id }}" style="width:300px">
-          {{ subtask_create_form(task) }}
-        </div>
-      </div>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#task-delete-{{ task.id }}" class="float-end mx-1">{{ delete_icon(size=16) }}</a>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#task-update-{{ task.id }}" class="float-end mx-1">{{ edit_icon(size=16) }}</a>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#subtask-create-{{ task.id }}" class="float-end mx-1">{{ add_icon(size=16) }}</a>
     </div>
   </div>
+  {% call modal('task-info-%s' % task.id, title=task.name) %}
+  {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted fst-italic d-inline', size=0.8) }}
+  {% if task.done %}{{ paragraph('Done %s' % task.date_done.strftime('%B %d, %Y %I:%M %p'), class='fst-italic text-success', size=0.8) }}{% endif %}
+  {% if task.note %}{{ paragraph(task.note, class='fst-italic') }}{% endif %}
+  {% endcall %}
+
+  {% call modal('task-delete-%s' % task.id, title='Delete?') %}
+  <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100">Delete</a>
+  {% endcall %}
+
+  {% call modal('task-update-%s' % task.id) %}
+  {{ task_update_form(task) }}
+  {% endcall %}
+
+  {% call modal('subtask-create-%s' % task.id) %}
+  {{ subtask_create_form(task) }}
+  {% endcall %}
 </div>
 {% endmacro %}
 
