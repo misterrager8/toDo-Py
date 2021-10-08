@@ -271,7 +271,7 @@
 </div>
 {% endmacro %}
 
-{% macro day_item(day, class='') %}
+{% macro day_item(day) %}
 <div class="card col-12 border-0">
   <div class="card-body border rounded shadow-sm m-2">
     {{ circle_icon(size=20, color=day.habits.color, class='m-0') }}
@@ -282,7 +282,7 @@
 {% endmacro %}
 
 <!--Task create form-->
-{% macro task_create_form(folder='', class='') %}
+{% macro task_create_form(folder='') %}
 <form class="form-group" method="POST" action="{{ url_for('tasks.task_create') }}">
   <div class="input-group">
     {{ input('name', 'Name', class='mb-2 w-75') }}
@@ -299,7 +299,7 @@
 {% endmacro %}
 
 <!--Subtask create form-->
-{% macro subtask_create_form(task, class='') %}
+{% macro subtask_create_form(task) %}
 <form class="form-group" method="POST" action="{{ url_for('tasks.subtask_create', id_=task.id) }}">
   <div class="input-group">
     {{ input('name', 'Name', class='w-75 mb-2') }}
@@ -310,7 +310,7 @@
 {% endmacro %}
 
 <!--Task update form-->
-{% macro task_update_form(task, class='') %}
+{% macro task_update_form(task) %}
 <form class="form-group" method="POST" action="{{ url_for('tasks.task_update', id_=task.id) }}">
   {{ input('name', 'Name', class='mb-2', value=task.name) }}
   <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="5">{{ task.note }}</textarea>
@@ -330,7 +330,7 @@
 {% endmacro %}
 
 <!--Folder create form-->
-{% macro folder_create_form(class='') %}
+{% macro folder_create_form() %}
 <form class="form-group" method="POST" action="{{ url_for('folders.folder_create') }}">
   <div class="input-group">
     {{ input('name', 'Name', class='w-75 mb-2') }}
@@ -341,7 +341,7 @@
 {% endmacro %}
 
 <!--Folder update form-->
-{% macro folder_update_form(folder, class='') %}
+{% macro folder_update_form(folder) %}
 <form class="form-group" method="POST" action="{{ url_for('folders.folder_update', id_=folder.id) }}">
   {{ input('name', 'Name', class='mb-2', value=folder.name) }}
   <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ folder.color }}">
@@ -350,7 +350,7 @@
 {% endmacro %}
 
 <!--Habit create form-->
-{% macro habit_create_form(class='') %}
+{% macro habit_create_form() %}
 <form class="form-group" method="POST" action="{{ url_for('habits.habit_create') }}">
   {{ input('name', 'Name', class='mb-2') }}
   <select name="frequency" class="form-control mb-2">
@@ -363,7 +363,7 @@
 {% endmacro %}
 
 <!--Habit update form-->
-{% macro habit_update_form(habit, class='') %}
+{% macro habit_update_form(habit) %}
 <form class="form-group" method="POST" action="{{ url_for('habits.habit_update', id_=habit.id) }}">
   {{ input('name', 'Name', class='mb-2', value=habit.name) }}
   <select name="frequency" class="form-control mb-2">
@@ -377,7 +377,7 @@
 {% endmacro %}
 
 <!--List create form-->
-{% macro list_create_form(class='') %}
+{% macro list_create_form() %}
 <form class="form-group" method="POST" action="{{ url_for('lists.list_create') }}">
   {{ input('name', 'Name', class='mb-2') }}
   <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10"></textarea>
@@ -386,7 +386,7 @@
 {% endmacro %}
 
 <!--List update form-->
-{% macro list_update_form(list, class='') %}
+{% macro list_update_form(list) %}
 <form class="form-group" method="POST" action="{{ url_for('lists.list_update', id_=list.id) }}">
   {{ input('name', 'Name', class='mb-2', value=list.name) }}
   <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10">{{ list.contents }}</textarea>
