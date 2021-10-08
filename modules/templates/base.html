@@ -10,7 +10,18 @@
 </head>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
+    <div class="btn-group">
+      <a class="navbar-brand px-0" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
+      <button type="button" class="btn dropdown-toggle dropdown-toggle-split ps-0" data-bs-toggle="dropdown" style="color:white"></button>
+      <ul class="dropdown-menu">
+        {% for i in all_folders %}
+        <li><a class="dropdown-item" href="{{ url_for('folders.folder', id_=i.id) }}">
+          {{ macros.circle_icon(size=10, color=i.color, class='me-1') }}
+          {{ i.name }}
+        </a></li>
+        {% endfor %}
+      </ul>
+    </div>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a href="{{ url_for('tasks.tasks_') }}" class="nav-link">Tasks</a></li>
