@@ -5,9 +5,11 @@ from sqlalchemy import text
 from werkzeug.utils import redirect
 
 from modules import db
+from modules.ctrla import Database
 from modules.model import Task, Folder
 
 tasks = Blueprint("tasks", __name__)
+database = Database()
 
 
 @tasks.route("/tasks")
@@ -31,35 +33,30 @@ def task_create():
     folder = request.form["folder"]
 
     for i in names:
-        _ = Task(name=i.title(),
-                 folder=int(folder),
-                 date_created=datetime.datetime.now())
-        db.session.add(_)
-
-    db.session.commit()
+        database.create(Task(name=i.title(),
+                             folder=int(folder),
+                             date_created=datetime.datetime.now()))
 
     return redirect(request.referrer)
 
 
 @tasks.route("/subtask_create", methods=["POST"])
 def subtask_create():
-    id_: int = request.args.get("id_")
-    _: Task = db.session.query(Task).get(id_)
+    _: Task = database.get(Task, request.args.get("id_"))
 
     names = request.form.getlist("name")
     for i in names:
-        _.subtasks.append(Task(name=i.title(),
-                               date_created=datetime.datetime.now(),
-                               folder=_.folder))
-    db.session.commit()
+        database.create(Task(name=i.title(),
+                             date_created=datetime.datetime.now(),
+                             folder=_.folder,
+                             parent_task=_.id))
 
     return redirect(request.referrer)
 
 
 @tasks.route("/task_update", methods=["POST"])
 def task_update():
-    id_: int = request.args.get("id_")
-    _: Task = db.session.query(Task).get(id_)
+    _: Task = database.get(Task, request.args.get("id_"))
 
     _.name = request.form["name"]
     _.note = request.form["note"]
@@ -74,27 +71,16 @@ def task_update():
 
 @tasks.route("/task_delete")
 def task_delete():
-    id_: int = request.args.get("id_")
-    _: Task = db.session.query(Task).get(id_)
-
-    db.session.delete(_)
-    db.session.commit()
+    _: Task = database.get(Task, request.args.get("id_"))
+    database.delete(_)
 
     return redirect(request.referrer)
 
 
 @tasks.route("/task_toggle")
 def task_toggle():
-    id_: int = request.args.get("id_")
-    _: Task = db.session.query(Task).get(id_)
-
-    if not _.done:
-        _.done = True
-        _.date_done = datetime.datetime.now()
-    else:
-        _.done = False
-        _.date_done = None
-    db.session.commit()
+    _: Task = database.get(Task, request.args.get("id_"))
+    _.toggle_done()
 
     return redirect(request.referrer)
 
@@ -111,7 +97,6 @@ def hide_toggle():
 
 @tasks.route("/task_clear")
 def task_clear():
-    db.session.execute("TRUNCATE TABLE tasks")
-    db.session.commit()
+    database.execute_stmt("TRUNCATE TABLE tasks")
 
     return redirect(request.referrer)

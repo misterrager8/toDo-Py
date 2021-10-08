@@ -5,15 +5,16 @@ from flask import render_template, url_for, request, Blueprint
 from werkzeug.utils import redirect
 
 from modules import db
+from modules.ctrla import Database
 from modules.model import Folder
 
 folders = Blueprint("folders", __name__)
+database = Database()
 
 
 @folders.route("/folder")
 def folder():
-    id_: int = request.args.get("id_")
-    _: Folder = db.session.query(Folder).get(id_)
+    _: Folder = database.get(Folder, request.args.get("id_"))
     return render_template("folder.html", folder=_)
 
 
@@ -21,18 +22,16 @@ def folder():
 def folder_create():
     names = request.form.getlist("name")
     for idx, i in enumerate(names):
-        db.session.add(Folder(name=names[idx].title(),
-                              color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
-                              date_created=datetime.datetime.now()))
-    db.session.commit()
+        database.create(Folder(name=names[idx].title(),
+                               color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
+                               date_created=datetime.datetime.now()))
 
     return redirect(request.referrer)
 
 
 @folders.route("/folder_update", methods=["POST"])
 def folder_update():
-    id_: int = request.args.get("id_")
-    _: Folder = db.session.query(Folder).get(id_)
+    _: Folder = database.get(Folder, request.args.get("id_"))
 
     _.name = request.form["name"]
     _.color = request.form["color"]
@@ -43,11 +42,8 @@ def folder_update():
 
 @folders.route("/folder_delete")
 def folder_delete():
-    id_: int = request.args.get("id_")
-    _: Folder = db.session.query(Folder).get(id_)
-
-    db.session.delete(_)
-    db.session.commit()
+    _: Folder = database.get(Folder, request.args.get("id_"))
+    database.delete(_)
 
     return redirect(url_for("index"))
 
