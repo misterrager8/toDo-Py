@@ -4,7 +4,7 @@
 {% block body %}
 <title>Tasks</title>
 <div class="text-center m-3">
-  {% call macros.link(modal_id='task_create', class='mx-1') %}{{ macros.add_icon() }}{% endcall %}
+  <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#task_create">{{ macros.add_icon() }}</a>
 </div>
 
 {{ macros.tasks_sort(class='mx-2') }}

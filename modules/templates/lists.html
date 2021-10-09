@@ -5,7 +5,7 @@
 <title>Lists</title>
 <div>
   <div class="text-center m-3">
-    {% call macros.link(modal_id='list_create') %}{{ macros.add_icon() }}{% endcall %}
+    <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#list_create">{{ macros.add_icon() }}</a>
   </div>
 </div>
 {{ macros.lists_sort(class='mx-2') }}

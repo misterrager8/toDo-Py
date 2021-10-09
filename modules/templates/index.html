@@ -4,7 +4,7 @@
 {% block body %}
 <title>Home</title>
 <div class="text-center m-3">
-  {% call macros.link(modal_id='folder_create') %}{{ macros.add_icon() }}{% endcall %}
+  <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#folder_create">{{ macros.add_icon() }}</a>
 </div>
 
 {{ macros.folders_sort(class='mx-2') }}

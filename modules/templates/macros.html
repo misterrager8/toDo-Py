@@ -4,25 +4,6 @@
 <p class="m-0 {{ class }}" style="font-size:{{ size }}em">{{ text }}</p>
 {% endmacro %}
 
-<!--Link-->
-{% macro link(href='#', style='', color='black', newtab=false, modal_id='', class='', tooltip='') %}
-<a href="{{ href }}"
-   style="text-decoration:none; color:{{ color }}; {{ style }}"
-   class="{{ class }}"
-   title="{{ tooltip }}"
-   {% if newtab %}
-   target="_blank"
-   {% endif %}
-
-   {% if modal_id %}
-   data-bs-toggle="modal"
-   data-bs-target="#{{ modal_id }}"
-   {% endif %}
->
-  {{ caller() }}
-</a>
-{% endmacro %}
-
 <!--Button-->
 {% macro button(text) %}
 <button type="submit"
@@ -151,13 +132,12 @@
 {% macro folder_card(folder) %}
 <div class="card col-xl-4 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
-    {% call link(href=url_for('folders.folder', id_=folder.id), class='fw-bold') %}{{ folder.name }}{%
-    endcall %}
+    <a href="{{ url_for('folders.folder', id_=folder.id) }}" class="link fw-bold">{{ folder.name }}</a>
     <p class="px-2 py-1 fw-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.get_undone_count() }}</p>
     <span class="float-end">
-      {% call link(class='mx-1', modal_id='task_create_%s'%folder.id) %}{{ add_icon(size=16) }}{% endcall %}
-      {% call link(class='mx-1', modal_id='folder_update_%s'%folder.id) %}{{ edit_icon(size=16) }}{% endcall %}
-      {% call link(class='mx-1', modal_id='folder_delete_%s'%folder.id) %}{{ delete_icon(size=16) }}{% endcall %}
+      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#task_create_{{ folder.id }}">{{ add_icon(size=16) }}</a>
+      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#folder_update_{{ folder.id }}">{{ edit_icon(size=16) }}</a>
+      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#folder_delete_{{ folder.id }}">{{ delete_icon(size=16) }}</a>
     </span>
   </div>
   {% call modal('task_create_%s'%folder.id, title='New Task') %}
@@ -169,7 +149,7 @@
   {% endcall %}
 
   {% call modal('folder_delete_%s'%folder.id, title='Delete Folder?') %}
-  {% call link(class='btn btn-danger', href=url_for('folders.folder_delete', id_=folder.id)) %}Delete{% endcall %}
+  <a href="{{ url_for('folders.folder_delete', id_=folder.id) }}" class="btn btn-danger">Delete</a>
   {% endcall %}
 </div>
 {% endmacro %}
@@ -183,7 +163,7 @@
       {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1 text-truncate') }}
     </div>
     <div>
-      {% call link(href=url_for('tasks.task_toggle', id_=task.id), class='') %}{{ check_icon(task.done, size=16) }}{% endcall %}
+      <a href="{{ url_for('tasks.task_toggle', id_=task.id) }}" class="link">{{ check_icon(task.done, size=16) }}</a>
       {% if task.reminder %}{{ reminder_icon(size=16) }}{% endif %}
       {% if task.subtasks.count() > 0 %}
       <div class="dropdown d-inline">
@@ -193,10 +173,10 @@
             <div class="progress-bar" role="progressbar" style="width:{{ task.get_subtasks_progress() }}%"></div>
           </div>
           {% for i in task.subtasks | sort(attribute='done') %}
-          <div>
-            {% call link(href=url_for('tasks.task_toggle', id_=i.id)) %}{{ check_icon(i.done, size=16) }}{% endcall %}
+          <div class="list-group-item-action">
+            <a href="{{ url_for('tasks.task_toggle', id_=i.id) }}" class="link">{{ check_icon(i.done, size=16) }}</a>
             {{ paragraph(i.name, class='d-inline', size=0.9) }}
-            {% call link(href=url_for('tasks.task_delete', id_=i.id)) %}{{ delete_icon(size=16) }}{% endcall %}
+            <a href="{{ url_for('tasks.task_delete', id_=i.id) }}" class="link float-end">{{ delete_icon(size=16) }}</a>
           </div>
           {% endfor %}
         </div>
@@ -231,15 +211,15 @@
 {% macro list_item(list) %}
 <div class="card col-12 border-0">
   <div class="card-body my-2" style="border-radius:10px; border: 5px solid {{ list.color }}">
-    {% call link(modal_id='list_info_%s'%list.id) %}{{ list.name }}{% endcall %}
+    <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#list_info_{{ list.id }}">{{ list.name }}</a>
     {% if order_by == 'date_created desc' %}
     {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% elif order_by == 'date_updated desc' %}
     {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% endif %}
     <div class="float-end">
-      {% call link(modal_id='list_update_%s'%list.id, class='mx-1') %}{{ edit_icon(size=20) }}{% endcall %}
-      {% call link(modal_id='list_delete_%s'%list.id, class='mx-1') %}{{ delete_icon(size=20) }}{% endcall %}
+      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#list_update_{{ list.id }}">{{ edit_icon(size=20) }}</a>
+      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#list_delete_{{ list.id }}">{{ delete_icon(size=20) }}</a>
     </div>
   </div>
 </div>
@@ -247,7 +227,7 @@
   {{ list_info(list) }}
   {% call modal('list_update_%s'%list.id) %}{{ list_update_form(list) }}{% endcall %}
   {% call modal('list_delete_%s'%list.id, title='Delete?') %}
-  {% call link(href=url_for('lists.list_delete', id_=list.id), class='btn btn-danger') %}Delete{% endcall %}
+  <a href="{{ url_for('lists.list_delete', id_=list.id) }}" class="btn btn-danger">Delete</a>
   {% endcall %}
 </div>
 {% endmacro %}
@@ -257,14 +237,13 @@
 <div class="card col-xl-6 border-0 rounded">
   <div class="card-body my-3 p-3 shadow-sm" style="border-radius:10px; border:5px solid {{ habit.color }}">
     {{ circle_icon(size=20, color=habit.color) }}
-    {% call link(class='fw-bold d-inline mx-2', style='color:black', href=url_for('habits.habit',
-    id_=habit.id)) %}{{ habit.name }}{% endcall %}
+    <a href="{{ url_for('habits.habit', id_=habit.id) }}" class="link fw-bold d-inline mx-2">{{ habit.name }}</a>
     {% if habit.reminder %}{{ reminder_icon(size=17) }}{% endif %}
     {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline fst-italic text-muted', size=0.8) }}
     <div class="float-end">
-      {% call link(class='mx-1', href=url_for('habits.habit_today', id_=habit.id)) %}{{ calendar_icon(size=20, color='green') }}{% endcall %}
-      {% call link(class='mx-1', modal_id='habit_update_%s'%habit.id) %}{{ edit_icon(size=20) }}{% endcall %}
-      {% call link(class='mx-1', modal_id='habit_delete_%s'%habit.id) %}{{ delete_icon(size=20) }}{% endcall %}
+      <a href="{{ url_for('habits.habit_today', id_=habit.id) }}" class="link mx-1">{{ calendar_icon(size=20, color='green') }}</a>
+      <a href="" class="link mx-1" data-bs-toggle="modal" data-bs-target="#habit_update_{{ habit.id }}">{{ edit_icon(size=20) }}</a>
+      <a href="" class="link mx-1" data-bs-toggle="modal" data-bs-target="#habit_delete_{{ habit.id }}">{{ delete_icon(size=20) }}</a>
     </div>
   </div>
   {% call modal('habit_update_%s'%habit.id, title='Edit Habit') %}
@@ -272,7 +251,7 @@
   {% endcall %}
 
   {% call modal('habit_delete_%s'%habit.id, title='Delete Habit?') %}
-  {% call link(class='btn btn-danger', href=url_for('habits.habit_delete', id_=habit.id)) %}Delete{% endcall %}
+  <a href="{{ url_for('habits.habit_delete', id_=habit.id) }}" class="btn btn-danger">Delete</a>
   {% endcall %}
 </div>
 {% endmacro %}
