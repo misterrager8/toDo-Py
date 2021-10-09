@@ -24,10 +24,9 @@
 {% endmacro %}
 
 <!--Button-->
-{% macro button(text, bg_color='black', txt_color='white') %}
+{% macro button(text) %}
 <button type="submit"
-        class="btn w-100"
-        style="background-color:{{ bg_color }}; color:{{ txt_color }}"
+        class="btn btn-custom w-100"
 >
   {{ text }}
 </button>
@@ -141,6 +140,13 @@
 </svg>
 {% endmacro %}
 
+<!--Theme icon-->
+{% macro theme_icon(size=20, color='white', tooltip='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-palette-fill" viewBox="0 0 16 16">
+  <path d="M12.433 10.07C14.133 10.585 16 11.15 16 8a8 8 0 1 0-8 8c1.996 0 1.826-1.504 1.649-3.08-.124-1.101-.252-2.237.351-2.92.465-.527 1.42-.237 2.433.07zM8 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4.5 3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+</svg>
+{% endmacro %}
+
 <!--Folder card-->
 {% macro folder_card(folder) %}
 <div class="card col-xl-4 border-0 rounded">
@@ -163,8 +169,7 @@
   {% endcall %}
 
   {% call modal('folder_delete_%s'%folder.id, title='Delete Folder?') %}
-  {% call link(class='btn btn-dark text-light', href=url_for('folders.folder_delete', id_=folder.id)) %}Delete{%
-  endcall %}
+  {% call link(class='btn btn-danger', href=url_for('folders.folder_delete', id_=folder.id)) %}Delete{% endcall %}
   {% endcall %}
 </div>
 {% endmacro %}
@@ -241,8 +246,9 @@
 <div>
   {{ list_info(list) }}
   {% call modal('list_update_%s'%list.id) %}{{ list_update_form(list) }}{% endcall %}
-  {% call modal('list_delete_%s'%list.id, title='Delete?') %}{% call link(href=url_for('lists.list_delete',
-  id_=list.id), class='btn btn-danger', color='white') %}Delete{% endcall %}{% endcall %}
+  {% call modal('list_delete_%s'%list.id, title='Delete?') %}
+  {% call link(href=url_for('lists.list_delete', id_=list.id), class='btn btn-danger') %}Delete{% endcall %}
+  {% endcall %}
 </div>
 {% endmacro %}
 
@@ -266,7 +272,7 @@
   {% endcall %}
 
   {% call modal('habit_delete_%s'%habit.id, title='Delete Habit?') %}
-  {% call link(class='btn btn-dark text-light', href=url_for('habits.habit_delete', id_=habit.id)) %}Delete{% endcall %}
+  {% call link(class='btn btn-danger', href=url_for('habits.habit_delete', id_=habit.id)) %}Delete{% endcall %}
   {% endcall %}
 </div>
 {% endmacro %}

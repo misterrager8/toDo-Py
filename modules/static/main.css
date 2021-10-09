@@ -1,3 +1,30 @@
+:root {
+    --primary-bg-color: #044759;
+    --secondary-bg-color: #1b92b3;
+    --navbar-font-color: #e0f8ff;
+}
+
+.other-theme {
+    --primary-bg-color: #873200;
+    --secondary-bg-color: #ff7a2b;
+    --navbar-font-color: #ffe2d1;
+}
+
+.navbar {
+    background-color: var(--primary-bg-color);
+    color: var(--navbar-font-color);
+}
+
+.btn-custom {
+    background-color: var(--secondary-bg-color);
+    color: white;
+}
+
+.badge-custom {
+    background-color: var(--secondary-bg-color);
+    color: white;
+}
+
 .link, .link:hover {
     color: inherit;
     text-decoration: none;
