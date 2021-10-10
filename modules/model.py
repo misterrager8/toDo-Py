@@ -80,6 +80,10 @@ class Habit(db.Model):
     def __init__(self, **kwargs):
         super(Habit, self).__init__(**kwargs)
 
+    def add_day(self, date: datetime.date):
+        db.session.add(Day(habit=self.id, date=date))
+        db.session.commit()
+
     def __str__(self):
         return "%s" % self.name
 

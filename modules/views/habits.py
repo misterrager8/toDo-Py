@@ -80,6 +80,13 @@ def habit_today():
         for i in Calendar().get_last_month():
             database.create(Day(habit=_.id, date=i))
 
+
+@habits.route("/day_create")
+def day_create():
+    _: Habit = database.get(Habit, request.args.get("id_"))
+    date_ = request.args.get("date_")
+    _.add_day(date_)
+
     return redirect(request.referrer)
 
 

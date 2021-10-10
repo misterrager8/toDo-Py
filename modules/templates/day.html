@@ -3,7 +3,10 @@
 
 {% block body %}
 <title>{{ day_date }}</title>
-{{ macros.paragraph(day_date, size=2, class='text-center m-3') }}
+<div class="text-center m-3">
+  {{ macros.paragraph(day_date, size=2) }}
+  <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#day_create">{{ macros.add_icon() }}</a>
+</div>
 
 {% for i in items %}
 <div class="list-group-item list-group-item-action border-0 rounded">
@@ -13,4 +16,12 @@
   </a>
 </div>
 {% endfor %}
+
+{% call macros.modal('day_create', title='Day') %}
+{% for i in habits %}
+<a href="{{ url_for('habits.day_create', id_=i.id, date_=day_date) }}" class="link">{{ i.name }}</a>
+{% endfor %}
+
+{% endcall %}
+
 {% endblock %}

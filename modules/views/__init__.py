@@ -2,7 +2,7 @@ from flask import request, render_template
 
 from modules import db, app
 from modules.ctrla import Calendar, Database
-from modules.model import Folder, Day
+from modules.model import Folder, Day, Habit
 
 database = Database()
 
@@ -29,4 +29,7 @@ def calendar():
 @app.route("/day")
 def day():
     day_date = request.args.get("day_date")
-    return render_template("day.html", day_date=day_date, items=db.session.query(Day).filter(Day.date == day_date))
+    return render_template("day.html",
+                           day_date=day_date,
+                           items=db.session.query(Day).filter(Day.date == day_date),
+                           habits=db.session.query(Habit).all())
