@@ -34,7 +34,7 @@ class Task(db.Model):
         return perc
 
     def toggle_done(self):
-        self.date_done = None if self.done else datetime.date.today()
+        self.date_done = None if self.done else datetime.datetime.now()
         self.done = not self.done
 
         db.session.commit()

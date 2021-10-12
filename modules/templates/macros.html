@@ -159,7 +159,7 @@
 <div class="card col-xl-4 border-0" style="position:relative;">
   <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
     <div class="d-flex justify-content-between">
-      <a class="link fw-bold text-truncate" style="font-size:0.9em" onclick="expandCard(this, 'task_info_'+{{ task.id }})">{{ task.name }}</a>
+      <a class="link fw-bold text-truncate" style="font-size:0.9em" onclick="expandCard(this, 'task_info_'+{{ task.id }})" data-bs-toggle="tooltip" title="{{ task.name }}">{{ task.name }}</a>
       {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1 text-truncate') }}
     </div>
     <div id="task_info_{{ task.id }}" style="display:none">
@@ -189,8 +189,10 @@
       {% endif %}
 
       <a class="float-end mx-1" onclick="expandCard(this, 'task_delete_'+{{ task.id }})">{{ delete_icon(size=16) }}</a>
+      {% if not task.done %}
       <a class="float-end mx-1" onclick="expandCard(this, 'task_update_'+{{ task.id }})">{{ edit_icon(size=16) }}</a>
       <a class="float-end mx-1" onclick="expandCard(this, 'subtask_create_'+{{ task.id }})">{{ add_icon(size=16) }}</a>
+      {% endif %}
     </div>
     <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100 mt-3" id="task_delete_{{ task.id }}" style="display:none;">Delete</a>
     <div id="task_update_{{ task.id }}" style="display:none" class="mt-3">{{ task_update_form(task) }}</div>
@@ -290,7 +292,7 @@
 {% macro task_update_form(task) %}
 <form class="form-group" method="POST" action="{{ url_for('tasks.task_update', id_=task.id) }}">
   {{ input('name', 'Name', class='mb-2', value=task.name) }}
-  <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="5">{{ task.note }}</textarea>
+  <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="2">{% if task.note %}{{ task.note }}{% endif %}</textarea>
   <select name="folder" class="form-control mb-2">
     <option>Select</option>
     {% for i in all_folders %}
