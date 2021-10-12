@@ -3,21 +3,18 @@
 
 {% block body %}
 <title>Tasks</title>
-<div class="text-center m-3">
-  <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#task_create">{{ macros.add_icon() }}</a>
+<div class="text-center my-3">
+  <a class="link" onclick="$('#task_create').fadeToggle();">{{ macros.add_icon() }}</a>
+  <div id="task_create" style="display:none" class="col-6 offset-3 mt-3">{{ macros.task_create_form() }}</div>
 </div>
 
 {{ macros.tasks_sort(class='mx-2') }}
-<div class="row">
+<div class="row" data-masonry>
   {% for i in tasks_.items %}
   {{ macros.task_card(i) }}
   {% endfor %}
 </div>
 {{ macros.tasks_paginate() }}
 {{ macros.badge('Delete All', href=url_for('tasks.task_clear'), class='mx-2', bg_color='white', txt_color='red') }}
-
-{% call macros.modal('task_create', title='New Task') %}
-{{ macros.task_create_form() }}
-{% endcall %}
 
 {% endblock %}

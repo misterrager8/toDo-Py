@@ -40,3 +40,7 @@
     display: inline-block;
     font-size: 0.9em;
 }
+
+a:hover {
+    cursor: pointer;
+}

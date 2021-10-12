@@ -10,3 +10,12 @@ function changeTheme() {
         document.getElementById("site-content").classList.add("other-theme");
     }
 }
+
+function expandCard(elem, id) {
+    $('#' + id).fadeToggle();
+    if ($('#' + id).css('display') == 'none') {
+        $(elem).parent().parent().parent().css('z-index', 1);
+    } else {
+        $(elem).parent().parent().parent().css('z-index', 2);
+    }
+}

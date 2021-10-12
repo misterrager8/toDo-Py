@@ -156,11 +156,16 @@
 
 <!--Task card-->
 {% macro task_card(task) %}
-<div class="card col-xl-3 border-0">
+<div class="card col-xl-4 border-0" style="position:relative;">
   <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
     <div class="d-flex justify-content-between">
-      <a href="#" data-bs-toggle="modal" data-bs-target="#task-info-{{ task.id }}" class="link fw-bold text-truncate" style="font-size:0.9em">{{ task.name }}</a>
+      <a class="link fw-bold text-truncate" style="font-size:0.9em" onclick="expandCard(this, 'task_info_'+{{ task.id }})">{{ task.name }}</a>
       {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1 text-truncate') }}
+    </div>
+    <div id="task_info_{{ task.id }}" style="display:none">
+      {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted fst-italic d-inline', size=0.8) }}
+      {% if task.done %}{{ paragraph('Done %s' % task.date_done.strftime('%B %d, %Y %I:%M %p'), class='fst-italic text-success', size=0.8) }}{% endif %}
+      {% if task.note %}{{ paragraph(task.note, class='fst-italic') }}{% endif %}
     </div>
     <div>
       <a href="{{ url_for('tasks.task_toggle', id_=task.id) }}" class="link">{{ check_icon(task.done, size=16) }}</a>
@@ -182,28 +187,15 @@
         </div>
       </div>
       {% endif %}
-      <a href="#" data-bs-toggle="modal" data-bs-target="#task-delete-{{ task.id }}" class="float-end mx-1">{{ delete_icon(size=16) }}</a>
-      <a href="#" data-bs-toggle="modal" data-bs-target="#task-update-{{ task.id }}" class="float-end mx-1">{{ edit_icon(size=16) }}</a>
-      <a href="#" data-bs-toggle="modal" data-bs-target="#subtask-create-{{ task.id }}" class="float-end mx-1">{{ add_icon(size=16) }}</a>
+
+      <a class="float-end mx-1" onclick="expandCard(this, 'task_delete_'+{{ task.id }})">{{ delete_icon(size=16) }}</a>
+      <a class="float-end mx-1" onclick="expandCard(this, 'task_update_'+{{ task.id }})">{{ edit_icon(size=16) }}</a>
+      <a class="float-end mx-1" onclick="expandCard(this, 'subtask_create_'+{{ task.id }})">{{ add_icon(size=16) }}</a>
     </div>
+    <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100 mt-3" id="task_delete_{{ task.id }}" style="display:none;">Delete</a>
+    <div id="task_update_{{ task.id }}" style="display:none" class="mt-3">{{ task_update_form(task) }}</div>
+    <div id="subtask_create_{{ task.id }}" style="display:none" class="mt-3">{{ subtask_create_form(task) }}</div>
   </div>
-  {% call modal('task-info-%s' % task.id, title=task.name) %}
-  {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted fst-italic d-inline', size=0.8) }}
-  {% if task.done %}{{ paragraph('Done %s' % task.date_done.strftime('%B %d, %Y %I:%M %p'), class='fst-italic text-success', size=0.8) }}{% endif %}
-  {% if task.note %}{{ paragraph(task.note, class='fst-italic') }}{% endif %}
-  {% endcall %}
-
-  {% call modal('task-delete-%s' % task.id, title='Delete?') %}
-  <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100">Delete</a>
-  {% endcall %}
-
-  {% call modal('task-update-%s' % task.id) %}
-  {{ task_update_form(task) }}
-  {% endcall %}
-
-  {% call modal('subtask-create-%s' % task.id) %}
-  {{ subtask_create_form(task) }}
-  {% endcall %}
 </div>
 {% endmacro %}
 
