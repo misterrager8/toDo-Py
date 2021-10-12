@@ -14,9 +14,4 @@
   {{ macros.task_card(i) }}
   {% endfor %}
 </div>
-
-{% call macros.modal('task_create', title='New Task') %}
-{{ macros.task_create_form(folder) }}
-{% endcall %}
-
 {% endblock %}

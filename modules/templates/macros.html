@@ -135,22 +135,14 @@
     <a href="{{ url_for('folders.folder', id_=folder.id) }}" class="link fw-bold">{{ folder.name }}</a>
     <p class="px-2 py-1 fw-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.get_undone_count() }}</p>
     <span class="float-end">
-      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#task_create_{{ folder.id }}">{{ add_icon(size=16) }}</a>
-      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#folder_update_{{ folder.id }}">{{ edit_icon(size=16) }}</a>
-      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#folder_delete_{{ folder.id }}">{{ delete_icon(size=16) }}</a>
+      <a class="link mx-1" onclick="expandCard(this, 'taskCreate' + {{ folder.id }})">{{ add_icon(size=16) }}</a>
+      <a class="link mx-1" onclick="expandCard(this, 'folderUpdate' + {{ folder.id }})">{{ edit_icon(size=16) }}</a>
+      <a class="link mx-1" onclick="expandCard(this, 'folderDelete' + {{ folder.id }})">{{ delete_icon(size=16) }}</a>
     </span>
+    <div id="taskCreate{{ folder.id }}" style="display:none" class="mt-3">{{ task_create_form(folder) }}</div>
+    <div id="folderUpdate{{ folder.id }}" style="display:none" class="mt-3">{{ folder_update_form(folder) }}</div>
+    <div id="folderDelete{{ folder.id }}" style="display:none" class="mt-3"><a href="{{ url_for('folders.folder_delete', id_=folder.id) }}" class="btn btn-danger w-100">Delete</a></div>
   </div>
-  {% call modal('task_create_%s'%folder.id, title='New Task') %}
-  {{ task_create_form(folder) }}
-  {% endcall %}
-
-  {% call modal('folder_update_%s'%folder.id, title='Edit Folder') %}
-  {{ folder_update_form(folder) }}
-  {% endcall %}
-
-  {% call modal('folder_delete_%s'%folder.id, title='Delete Folder?') %}
-  <a href="{{ url_for('folders.folder_delete', id_=folder.id) }}" class="btn btn-danger">Delete</a>
-  {% endcall %}
 </div>
 {% endmacro %}
 
@@ -204,25 +196,26 @@
 {% macro list_item(list) %}
 <div class="card col-12 border-0">
   <div class="card-body my-2" style="border-radius:10px; border: 5px solid {{ list.color }}">
-    <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#list_info_{{ list.id }}">{{ list.name }}</a>
+    <a class="link" onclick="expandCard(this, 'listInfo' + {{ list.id }})">{{ list.name }}</a>
     {% if order_by == 'date_created desc' %}
     {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% elif order_by == 'date_updated desc' %}
     {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% endif %}
     <div class="float-end">
-      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#list_update_{{ list.id }}">{{ edit_icon(size=20) }}</a>
-      <a href="#" class="link mx-1" data-bs-toggle="modal" data-bs-target="#list_delete_{{ list.id }}">{{ delete_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandCard(this, 'listUpdate' + {{ list.id }})">{{ edit_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandCard(this, 'listDelete' + {{ list.id }})">{{ delete_icon(size=20) }}</a>
     </div>
+    <div id="listInfo{{ list.id }}" style="display:none" class="mt-3">
+      {% for i in list.get_items() %}
+      <div>{{ '%s. '%loop.index }}{{ i }}</div>
+      {% endfor %}
+    </div>
+    <div id="listUpdate{{ list.id }}" style="display:none" class="mt-3">{{ list_update_form(list) }}</div>
+    <div id="listDelete{{ list.id }}" style="display:none" class="mt-3"><a href="{{ url_for('lists.list_delete', id_=list.id) }}" class="btn btn-danger w-100">Delete</a></div>
   </div>
 </div>
-<div>
-  {{ list_info(list) }}
-  {% call modal('list_update_%s'%list.id) %}{{ list_update_form(list) }}{% endcall %}
-  {% call modal('list_delete_%s'%list.id, title='Delete?') %}
-  <a href="{{ url_for('lists.list_delete', id_=list.id) }}" class="btn btn-danger">Delete</a>
-  {% endcall %}
-</div>
+
 {% endmacro %}
 
 <!--Habit card-->
@@ -235,17 +228,12 @@
     {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline fst-italic text-muted', size=0.8) }}
     <div class="float-end">
       <a href="{{ url_for('habits.habit_today', id_=habit.id) }}" class="link mx-1">{{ calendar_icon(size=20, color='green') }}</a>
-      <a href="" class="link mx-1" data-bs-toggle="modal" data-bs-target="#habit_update_{{ habit.id }}">{{ edit_icon(size=20) }}</a>
-      <a href="" class="link mx-1" data-bs-toggle="modal" data-bs-target="#habit_delete_{{ habit.id }}">{{ delete_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandCard(this, 'habitUpdate' + {{ habit.id }})">{{ edit_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandCard(this, 'habitDelete' + {{ habit.id }})">{{ delete_icon(size=20) }}</a>
     </div>
+    <div id="habitUpdate{{ habit.id }}" style="display:none" class="mt-3">{{ habit_update_form(habit) }}</div>
+    <div id="habitDelete{{ habit.id }}" style="display:none" class="mt-3"><a href="{{ url_for('habits.habit_delete', id_=habit.id) }}" class="btn btn-danger w-100">Delete</a></div>
   </div>
-  {% call modal('habit_update_%s'%habit.id, title='Edit Habit') %}
-  {{ habit_update_form(habit) }}
-  {% endcall %}
-
-  {% call modal('habit_delete_%s'%habit.id, title='Delete Habit?') %}
-  <a href="{{ url_for('habits.habit_delete', id_=habit.id) }}" class="btn btn-danger">Delete</a>
-  {% endcall %}
 </div>
 {% endmacro %}
 
@@ -404,17 +392,6 @@
   {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
   {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_created desc')) }}{% endif %}
   {% if order_by != 'date_updated desc' %}{{ badge('Date Updated', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_updated desc')) }}{% endif %}
-</div>
-{% endmacro %}
-
-<!--List Info-->
-{% macro list_info(list) %}
-<div>
-  {% call modal('list_info_%s'%list.id, title=list.name) %}
-  {% for i in list.get_items() %}
-  <div>{{ '%s. '%loop.index }}{{ i }}</div>
-  {% endfor %}
-  {% endcall %}
 </div>
 {% endmacro %}
 

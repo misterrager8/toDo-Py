@@ -5,7 +5,12 @@
 <title>{{ day_date }}</title>
 <div class="text-center m-3">
   {{ macros.paragraph(day_date, size=2) }}
-  <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#day_create">{{ macros.add_icon() }}</a>
+  <a class="link" onclick="expandCard(this, 'dayCreate')">{{ macros.add_icon() }}</a>
+  <div class="col-6 offset-3 mt-3" style="display:none" id="dayCreate">
+    {% for i in habits %}
+    <div><a href="{{ url_for('habits.day_create', id_=i.id, date_=day_date) }}" class="link">{{ macros.circle_icon(size=20, color=i.color, class='m-0') }}{{ i.name }}</a></div>
+    {% endfor %}
+  </div>
 </div>
 
 {% for i in items %}
@@ -17,11 +22,5 @@
 </div>
 {% endfor %}
 
-{% call macros.modal('day_create', title='Day') %}
-{% for i in habits %}
-<a href="{{ url_for('habits.day_create', id_=i.id, date_=day_date) }}" class="link">{{ i.name }}</a>
-{% endfor %}
-
-{% endcall %}
 
 {% endblock %}

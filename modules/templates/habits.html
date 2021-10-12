@@ -4,10 +4,11 @@
 {% block body %}
 <title>Habits</title>
 <div class="text-center m-3">
-  <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#habit_create">{{ macros.add_icon() }}</a>
+  <a class="link" onclick="expandCard(this, 'habitCreate')">{{ macros.add_icon() }}</a>
+  <div class="col-6 offset-3 mt-3" id="habitCreate" style="display:none">{{ macros.habit_create_form() }}</div>
 </div>
 
-<div class="row">
+<div class="row" data-masonry>
   {% for i in habits_ %}
   {{ macros.habit_card(i) }}
   {% endfor %}
@@ -17,9 +18,5 @@
 
 {{ macros.badge('Clear Calendar', href=url_for('habits.calendar_clear'), class='mx-2', bg_color='white', txt_color='orange') }}
 {{ macros.badge('Delete All', href=url_for('habits.habit_clear'), class='mx-2', bg_color='white', txt_color='red') }}
-
-{% call macros.modal('habit_create', title='New Habit') %}
-{{ macros.habit_create_form() }}
-{% endcall %}
 
 {% endblock %}

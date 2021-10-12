@@ -4,20 +4,19 @@
 {% block body %}
 <title>Home</title>
 <div class="text-center m-3">
-  <a href="#" class="link" data-bs-toggle="modal" data-bs-target="#folder_create">{{ macros.add_icon() }}</a>
+  <a href="#" class="link " onclick="$('#folder_create').fadeToggle()">{{ macros.add_icon() }}</a>
+  <div style="display:none" id="folder_create" class="col-6 offset-3 mt-3">
+    {{ macros.folder_create_form() }}
+  </div>
 </div>
 
 {{ macros.folders_sort(class='mx-2') }}
-<div class="row">
+<div class="row" data-masonry="">
   {% for i in folders_ %}
   {{ macros.folder_card(i) }}
   {% endfor %}
 </div>
 {{ macros.badge('Delete All', href=url_for('folders.folder_clear'), class='mx-2',  bg_color='white', txt_color='red') }}
 
-
-{% call macros.modal('folder_create', title='New Folder') %}
-{{ macros.folder_create_form() }}
-{% endcall %}
 
 {% endblock %}
