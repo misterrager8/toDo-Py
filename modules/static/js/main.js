@@ -1,6 +1,8 @@
 function addInput(elem) {
     var nput = elem.previousElementSibling.cloneNode();
+    nput.value = null;
     elem.parentNode.insertBefore(nput, elem);
+    nput.focus();
 }
 
 function changeTheme() {
