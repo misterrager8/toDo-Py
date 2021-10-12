@@ -19,3 +19,11 @@ function expandCard(elem, id) {
         $(elem).parent().parent().parent().css('z-index', 2);
     }
 }
+
+function checkBox(elem, id) {
+    if ($(elem).is(':checked')) {
+        $('#' + id).show();
+    } else {
+        $('#' + id).hide();
+    }
+}

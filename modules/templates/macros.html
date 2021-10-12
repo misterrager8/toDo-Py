@@ -300,10 +300,10 @@
     {% endfor %}
   </select>
   <div class="form-check mb-2">
-    <input type="checkbox" autocomplete="off" class="form-check-input" name="reminder" value="True">
-    <label class="form-check-label">Remind Me!</label>
+    <input type="checkbox" autocomplete="off" class="form-check-input" name="reminder" {% if task.reminder %}checked{% endif %} id="reminderCheck" onclick="checkBox(this, 'dateDue'+{{ task.id }})">
+    <label class="form-check-label" for="reminderCheck">Remind Me!</label>
   </div>
-  <input type="date" class="form-control mb-2" name="date_due">
+  <input type="date" class="form-control mb-2" name="date_due" value="{{ task.date_due }}" id="dateDue{{ task.id }}" style="{% if not task.reminder %}display:none{% endif %}">
   {{ button('Submit') }}
 </form>
 {% endmacro %}
