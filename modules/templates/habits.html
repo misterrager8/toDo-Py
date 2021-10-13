@@ -4,7 +4,7 @@
 {% block body %}
 <title>Habits</title>
 <div class="text-center m-3">
-  <a class="link" onclick="expandCard(this, 'habitCreate')">{{ macros.add_icon() }}</a>
+  <a class="link" onclick="expandDiv(this.id, 'habitCreate')">{{ macros.add_icon() }}</a>
   <div class="col-6 offset-3 mt-3" id="habitCreate" style="display:none">{{ macros.habit_create_form() }}</div>
 </div>
 

@@ -107,25 +107,34 @@
 
 <!--Folder card-->
 {% macro folder_card(folder) %}
-<div class="card col-xl-4 border-0 rounded">
+<div class="card col-xl-4 border-0 rounded" style="position:relative" id="folder{{ folder.id }}">
   <div class="card-body my-3 p-3 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
     <a href="{{ url_for('folders.folder', id_=folder.id) }}" class="link fw-bold">{{ folder.name }}</a>
-    <p class="px-2 py-1 fw-bold d-inline mx-1" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;">{{ folder.get_undone_count() }}</p>
+    <a class="px-2 py-1 fw-bold d-inline mx-1 link" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;" onclick="expandDiv('folder' + {{ folder.id }}, 'tasks' + {{ folder.id }})">{{ folder.get_undone_count() }}</a>
     <span class="float-end">
-      <a class="link mx-1" onclick="expandCard(this, 'taskCreate' + {{ folder.id }})">{{ add_icon(size=16) }}</a>
-      <a class="link mx-1" onclick="expandCard(this, 'folderUpdate' + {{ folder.id }})">{{ edit_icon(size=16) }}</a>
-      <a class="link mx-1" onclick="expandCard(this, 'folderDelete' + {{ folder.id }})">{{ delete_icon(size=16) }}</a>
+      <a class="link mx-1" onclick="expandDiv('folder' + {{ folder.id }}, 'taskCreate' + {{ folder.id }})">{{ add_icon(size=16) }}</a>
+      <a class="link mx-1" onclick="expandDiv('folder' + {{ folder.id }}, 'folderUpdate' + {{ folder.id }})">{{ edit_icon(size=16) }}</a>
+      <a class="link mx-1" onclick="expandDiv('folder' + {{ folder.id }}, 'folderDelete' + {{ folder.id }})">{{ delete_icon(size=16) }}</a>
     </span>
     <div id="taskCreate{{ folder.id }}" style="display:none" class="mt-3">{{ task_create_form(folder) }}</div>
     <div id="folderUpdate{{ folder.id }}" style="display:none" class="mt-3">{{ folder_update_form(folder) }}</div>
     <div id="folderDelete{{ folder.id }}" style="display:none" class="mt-3"><a href="{{ url_for('folders.folder_delete', id_=folder.id) }}" class="btn btn-danger w-100">Delete</a></div>
+    <div class="mt-3" id="tasks{{ folder.id }}" style="display:none">
+      {% for i in folder.get_tasks() | sort(attribute='done') %}
+      <div class="list-group-item-action">
+        <a href="{{ url_for('tasks.task_toggle', id_=i.id) }}" class="link">{{ check_icon(i.done, size=16) }}</a>
+        {{ paragraph(i.name, class='d-inline', size=0.9) }}
+        <a href="{{ url_for('tasks.task_delete', id_=i.id) }}" class="link float-end">{{ delete_icon(size=16) }}</a>
+      </div>
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endmacro %}
 
 <!--Task card-->
 {% macro task_card(task) %}
-<div class="card col-xl-4 border-0" style="position:relative;">
+<div class="card col-xl-4 border-0" style="position:relative;" id="taskCard{{ task.id }}">
   <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
     <div class="d-flex justify-content-between">
       <a class="link fw-bold text-truncate" style="font-size:0.9em" onclick="expandDiv('taskCard' + {{ task.id }}, 'task_info_'+{{ task.id }})" data-bs-toggle="tooltip" title="{{ task.name }}">{{ task.name }}</a>
@@ -140,12 +149,12 @@
       <a href="{{ url_for('tasks.task_toggle', id_=task.id) }}" class="link">{{ check_icon(task.done, size=16) }}</a>
       {% if task.reminder %}{{ reminder_icon(size=16) }}{% endif %}
       {% if task.subtasks.count() > 0 %}
-      <a class="badge bg-dark link rounded-pill" style="color:white" onclick="expandCard(this, 'subtasks_'+{{ task.id }})">{{ task.get_subtasks_count() }}</a>
+      <a class="badge bg-dark link rounded-pill" style="color:white" onclick="expandDiv('taskCard' + {{ task.id }}, 'subtasks_'+{{ task.id }})">{{ task.get_subtasks_count() }}</a>
       {% endif %}
-      <a class="float-end mx-1" onclick="expandCard(this, 'task_delete_'+{{ task.id }})">{{ delete_icon(size=16) }}</a>
+      <a class="float-end mx-1" onclick="expandDiv('taskCard' + {{ task.id }}, 'task_delete_'+{{ task.id }})">{{ delete_icon(size=16) }}</a>
       {% if not task.done %}
-      <a class="float-end mx-1" onclick="expandCard(this, 'task_update_'+{{ task.id }})">{{ edit_icon(size=16) }}</a>
-      <a class="float-end mx-1" onclick="expandCard(this, 'subtask_create_'+{{ task.id }})">{{ add_icon(size=16) }}</a>
+      <a class="float-end mx-1" onclick="expandDiv('taskCard' + {{ task.id }}, 'task_update_'+{{ task.id }})">{{ edit_icon(size=16) }}</a>
+      <a class="float-end mx-1" onclick="expandDiv('taskCard' + {{ task.id }}, 'subtask_create_'+{{ task.id }})">{{ add_icon(size=16) }}</a>
       {% endif %}
     </div>
     <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100 mt-3" id="task_delete_{{ task.id }}" style="display:none;">Delete</a>
@@ -171,17 +180,17 @@
 
 <!--List card-->
 {% macro list_item(list) %}
-<div class="card col-12 border-0">
+<div class="card col-12 border-0" id="list{{ list.id }}">
   <div class="card-body my-2" style="border-radius:10px; border: 5px solid {{ list.color }}">
-    <a class="link" onclick="expandCard(this, 'listInfo' + {{ list.id }})">{{ list.name }}</a>
+    <a class="link" onclick="expandDiv('list' + {{ list.id }}, 'listInfo' + {{ list.id }})">{{ list.name }}</a>
     {% if order_by == 'date_created desc' %}
     {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% elif order_by == 'date_updated desc' %}
     {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
     {% endif %}
     <div class="float-end">
-      <a class="link mx-1" onclick="expandCard(this, 'listUpdate' + {{ list.id }})">{{ edit_icon(size=20) }}</a>
-      <a class="link mx-1" onclick="expandCard(this, 'listDelete' + {{ list.id }})">{{ delete_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandDiv('list' + {{ list.id }}, 'listUpdate' + {{ list.id }})">{{ edit_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandDiv('list' + {{ list.id }}, 'listDelete' + {{ list.id }})">{{ delete_icon(size=20) }}</a>
     </div>
     <div id="listInfo{{ list.id }}" style="display:none" class="mt-3">
       {% for i in list.get_items() %}
@@ -197,7 +206,7 @@
 
 <!--Habit card-->
 {% macro habit_card(habit) %}
-<div class="card col-xl-6 border-0 rounded">
+<div class="card col-xl-6 border-0 rounded" id="habit{{ habit.id }}">
   <div class="card-body my-3 p-3 shadow-sm" style="border-radius:10px; border:5px solid {{ habit.color }}">
     {{ circle_icon(size=20, color=habit.color) }}
     <a href="{{ url_for('habits.habit', id_=habit.id) }}" class="link fw-bold d-inline mx-2">{{ habit.name }}</a>
@@ -205,8 +214,8 @@
     {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline fst-italic text-muted', size=0.8) }}
     <div class="float-end">
       <a href="{{ url_for('habits.habit_today', id_=habit.id) }}" class="link mx-1">{{ calendar_icon(size=20, color='green') }}</a>
-      <a class="link mx-1" onclick="expandCard(this, 'habitUpdate' + {{ habit.id }})">{{ edit_icon(size=20) }}</a>
-      <a class="link mx-1" onclick="expandCard(this, 'habitDelete' + {{ habit.id }})">{{ delete_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandDiv('habit' + {{ habit.id }}, 'habitUpdate' + {{ habit.id }})">{{ edit_icon(size=20) }}</a>
+      <a class="link mx-1" onclick="expandDiv('habit' + {{ habit.id }}, 'habitDelete' + {{ habit.id }})">{{ delete_icon(size=20) }}</a>
     </div>
     <div id="habitUpdate{{ habit.id }}" style="display:none" class="mt-3">{{ habit_update_form(habit) }}</div>
     <div id="habitDelete{{ habit.id }}" style="display:none" class="mt-3"><a href="{{ url_for('habits.habit_delete', id_=habit.id) }}" class="btn btn-danger w-100">Delete</a></div>
@@ -264,7 +273,7 @@
     {% endfor %}
   </select>
   <div class="form-check mb-2">
-    <input type="checkbox" autocomplete="off" class="form-check-input" name="reminder" {% if task.reminder %}checked{% endif %} id="reminderCheck" onclick="checkBox(this, 'dateDue'+{{ task.id }})">
+    <input type="checkbox" autocomplete="off" class="form-check-input" name="reminder" {% if task.reminder %}checked{% endif %} id="reminderCheck" onclick="checkBox(this.id, 'dateDue'+{{ task.id }})">
     <label class="form-check-label" for="reminderCheck">Remind Me!</label>
   </div>
   <input type="date" class="form-control mb-2" name="date_due" value="{{ task.date_due }}" id="dateDue{{ task.id }}" style="{% if not task.reminder %}display:none{% endif %}">
