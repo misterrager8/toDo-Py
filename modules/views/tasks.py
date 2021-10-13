@@ -90,10 +90,3 @@ def hide_toggle():
     session["hide_completed"] = False if bool(session.get("hide_completed")) is True else True
 
     return redirect(request.referrer)
-
-
-@tasks.route("/task_clear")
-def task_clear():
-    database.execute_stmt("TRUNCATE TABLE tasks")
-
-    return redirect(request.referrer)

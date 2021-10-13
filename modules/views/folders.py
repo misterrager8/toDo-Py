@@ -46,13 +46,3 @@ def folder_delete():
     database.delete(_)
 
     return redirect(url_for("index"))
-
-
-@folders.route("/folder_clear")
-def folder_clear():
-    db.session.execute("SET FOREIGN_KEY_CHECKS = 0")
-    db.session.execute("TRUNCATE TABLE folders")
-    db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
-    db.session.commit()
-
-    return redirect(request.referrer)

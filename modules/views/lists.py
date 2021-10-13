@@ -47,10 +47,3 @@ def list_delete():
     database.delete(_)
 
     return redirect(url_for("lists"))
-
-
-@lists.route("/list_clear")
-def list_clear():
-    database.execute_stmt("TRUNCATE TABLE lists")
-
-    return redirect(url_for("lists"))

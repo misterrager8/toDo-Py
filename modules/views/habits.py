@@ -57,16 +57,6 @@ def habit_delete():
     return redirect(request.referrer)
 
 
-@habits.route("/habit_clear")
-def habit_clear():
-    db.session.execute("SET FOREIGN_KEY_CHECKS = 0")
-    db.session.execute("TRUNCATE TABLE habits")
-    db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
-    db.session.commit()
-
-    return redirect(request.referrer)
-
-
 @habits.route("/habit_today")
 def habit_today():
     _: Habit = database.get(Habit, request.args.get("id_"))
@@ -94,15 +84,5 @@ def day_create():
 def day_delete():
     _: Day = database.get(Day, request.args.get("id_"))
     database.delete(_)
-
-    return redirect(request.referrer)
-
-
-@habits.route("/calendar_clear")
-def calendar_clear():
-    db.session.execute("SET FOREIGN_KEY_CHECKS = 0")
-    db.session.execute("TRUNCATE TABLE days")
-    db.session.execute("SET FOREIGN_KEY_CHECKS = 1")
-    db.session.commit()
 
     return redirect(request.referrer)

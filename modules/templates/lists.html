@@ -12,6 +12,5 @@
 {% for i in lists_ %}
 {{ macros.list_item(i) }}
 {% endfor %}
-{{ macros.badge('Delete All', href=url_for('lists.list_clear'), class='mx-2', bg_color='white', txt_color='red') }}
 
 {% endblock %}
