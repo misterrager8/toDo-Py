@@ -13,29 +13,6 @@
 </button>
 {% endmacro %}
 
-<!--Generic Badge-->
-{% macro badge(text, class='', bg_color='black', txt_color='white', pill=false, newtab=false, modal_id='', href='', tooltip='') %}
-<a class="badge {% if pill %}rounded-pill{% endif %} {{ class }}"
-   {% if href %}href="{{ href }}" {% endif %}
-   title="{{ tooltip }}"
-   style="
-   text-decoration:none;
-   color:{{ txt_color }};
-   background-color:{{ bg_color }};
-   font-size:0.75em;"
-   {% if newtab %}
-   target="_blank"
-   {% endif %}
-
-   {% if modal_id %}
-   data-bs-toggle="modal"
-   data-bs-target="{{ modal_id }}"
-   {% endif %}
->
-  {{ text }}
-</a>
-{% endmacro %}
-
 <!--Modal-->
 {% macro modal(id, title='', lg=false) %}
 <div class="modal" id="{{ id }}">
@@ -151,8 +128,8 @@
 <div class="card col-xl-4 border-0" style="position:relative;">
   <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
     <div class="d-flex justify-content-between">
-      <a class="link fw-bold text-truncate" style="font-size:0.9em" onclick="expandCard(this, 'task_info_'+{{ task.id }})" data-bs-toggle="tooltip" title="{{ task.name }}">{{ task.name }}</a>
-      {{ badge(task.folders.name, href=url_for('folders.folder', id_=task.folders.id), bg_color=task.folders.color, class='m-1 text-truncate') }}
+      <a class="link fw-bold text-truncate" style="font-size:0.9em" onclick="expandDiv('taskCard' + {{ task.id }}, 'task_info_'+{{ task.id }})" data-bs-toggle="tooltip" title="{{ task.name }}">{{ task.name }}</a>
+      <a href="{{ url_for('folders.folder', id_=task.folders.id) }}" class="badge text-truncate link mb-1" style="color:white; background-color:{{ task.folders.color }}">{{ task.folders.name }}</a>
     </div>
     <div id="task_info_{{ task.id }}" style="display:none">
       {{ paragraph('Added %s' % task.date_created.strftime('%B %d, %Y %I:%M %p'), class='text-muted fst-italic d-inline', size=0.8) }}
@@ -361,37 +338,41 @@
 {% endmacro %}
 
 <!--Folders Sort-->
-{% macro folders_sort(class='') %}
-<div class="list-inline {{ class }}">
-  {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
-  {% if order_by != 'name' %}{{ badge('Name', class='list-inline-item', pill=true, href=url_for('index', order_by='name')) }}{% endif %}
-  {% if order_by != 'color' %}{{ badge('Color', class='list-inline-item', pill=true, href=url_for('index', order_by='color')) }}{% endif %}
-  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('index', order_by='date_created desc')) }}{% endif %}
+{% macro folders_sort() %}
+<div class="list-inline" onclick="$('#sortMenu').fadeToggle()">
+  <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
+  <div class="list-inline-item" style="display:none" id="sortMenu">
+    {% if order_by != 'name' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='name') }}">Name</a>{% endif %}
+    {% if order_by != 'color' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='color') }}">Color</a>{% endif %}
+    {% if order_by != 'date_created desc' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='date_created desc') }}">Date Created</a>{% endif %}
+  </div>
 </div>
 {% endmacro %}
 
 <!--Tasks Sort-->
-{% macro tasks_sort(class='') %}
-<div class="list-inline {{ class }}">
-  {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
-  {% if order_by != 'tasks.date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true,
-  href=url_for('tasks.tasks_', order_by='tasks.date_created desc')) }}{% endif %}
-  {% if order_by != 'folders.name' %}{{ badge('Folder', class='list-inline-item', pill=true,
-  href=url_for('tasks.tasks_', order_by='folders.name')) }}{% endif %}
-  {% if session['hide_completed'] == true %}
-  {{ badge('Show Completed', class='list-inline-item float-end', pill=true, href=url_for('tasks.hide_toggle')) }}
-  {% else %}
-  {{ badge('Hide Completed', class='list-inline-item float-end', pill=true, href=url_for('tasks.hide_toggle')) }}
-  {% endif %}
+{% macro tasks_sort() %}
+<div class="list-inline d-flex" onclick="$('#sortMenu').fadeToggle()">
+  <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
+  <div class="list-inline-item flex-grow-1" style="display:none" id="sortMenu">
+    {% if order_by != 'tasks.date_created desc' %}<a class="m-1 badge text-dark link" href="{{ url_for('tasks.tasks_', order_by='tasks.date_created desc') }}">Date Created</a>{% endif %}
+    {% if order_by != 'folders.name' %}<a class="m-1 badge text-dark link" href="{{ url_for('tasks.tasks_', order_by='folders.name') }}">Folder</a>{% endif %}
+    {% if session['hide_completed'] == true %}
+    <a class="m-1 badge text-dark link float-end" href="{{ url_for('tasks.hide_toggle') }}">Show Completed</a>
+    {% else %}
+    <a class="m-1 badge text-dark link float-end" href="{{ url_for('tasks.hide_toggle') }}">Hide Completed</a>
+    {% endif %}
+  </div>
 </div>
 {% endmacro %}
 
 <!--Lists Sort-->
-{% macro lists_sort(class='') %}
-<div class="list-inline {{ class }}">
-  {{ badge('Sort by:', class='list-inline-item', bg_color='white', txt_color='black') }}
-  {% if order_by != 'date_created desc' %}{{ badge('Date Created', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_created desc')) }}{% endif %}
-  {% if order_by != 'date_updated desc' %}{{ badge('Date Updated', class='list-inline-item', pill=true, href=url_for('lists.lists_', order_by='date_updated desc')) }}{% endif %}
+{% macro lists_sort() %}
+<div class="list-inline" onclick="$('#sortMenu').fadeToggle()">
+  <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
+  <div class="list-inline-item" style="display:none" id="sortMenu">
+    {% if order_by != 'date_created desc' %}<a class="badge text-dark link" href="{{ url_for('lists.lists_', order_by='date_created desc') }}">Date Created</a>{% endif %}
+    {% if order_by != 'date_updated desc' %}<a class="badge text-dark link" href="{{ url_for('lists.lists_', order_by='date_updated desc') }}">Date Updated</a>{% endif %}
+  </div>
 </div>
 {% endmacro %}
 

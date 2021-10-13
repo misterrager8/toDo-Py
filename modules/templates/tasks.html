@@ -8,7 +8,7 @@
   <div id="task_create" style="display:none" class="col-6 offset-3 mt-3">{{ macros.task_create_form() }}</div>
 </div>
 
-{{ macros.tasks_sort(class='mx-2') }}
+{{ macros.tasks_sort() }}
 <div class="row" data-masonry>
   {% for i in tasks_.items %}
   {{ macros.task_card(i) }}
