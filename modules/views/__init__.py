@@ -10,7 +10,8 @@ database = Database()
 @app.context_processor
 def inject_all():
     all_folders = database.search(Folder, order_by="date_created desc")
-    return dict(all_folders=all_folders)
+    total_undone: int = sum([i.get_undone_count() for i in all_folders])
+    return dict(all_folders=all_folders, total_undone=total_undone)
 
 
 @app.route("/")
