@@ -13,16 +13,11 @@ database = Database()
 
 
 @tasks.route("/tasks")
-@tasks.route("/tasks/<int:page>")
-def tasks_(page=1):
+def tasks_():
     order_by = request.args.get("order_by", default="tasks.date_created desc")
-    if session.get("hide_completed") is True:
-        tasks_list = db.session.query(Task).filter(Task.done == False, Task.parent_task == None).join(Folder).order_by(
-            text(order_by)).paginate(page=page, per_page=40)
-    else:
-        tasks_list = db.session.query(Task).filter(Task.parent_task == None).join(Folder).order_by(Task.done, text(
-            order_by)).paginate(page=page,
-                                per_page=40)
+    tasks_list = db.session.query(Task).filter(Task.done == False, Task.parent_task == None).join(Folder).order_by(
+        text(order_by)) if session.get("hide_completed") is True else db.session.query(Task).filter(
+        Task.parent_task == None).join(Folder).order_by(Task.done, text(order_by))
 
     return render_template("tasks.html", tasks_=tasks_list, order_by=order_by)
 

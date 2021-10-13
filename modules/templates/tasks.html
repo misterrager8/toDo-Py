@@ -10,10 +10,9 @@
 
 {{ macros.tasks_sort() }}
 <div class="row" data-masonry>
-  {% for i in tasks_.items %}
+  {% for i in tasks_ %}
   {{ macros.task_card(i) }}
   {% endfor %}
 </div>
-{{ macros.tasks_paginate() }}
 
 {% endblock %}
