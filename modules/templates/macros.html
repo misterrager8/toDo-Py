@@ -233,6 +233,13 @@
 </div>
 {% endmacro %}
 
+{% macro session_card(session) %}
+<div class="list-group-item list-group-item-action border-0 d-flex justify-content-between">
+  {{ paragraph('%s minutes' % session.length) }}
+  <a class="" href="{{ url_for('session_delete', id_=session.id) }}">{{ delete_icon(size=15) }}</a>
+</div>
+{% endmacro %}
+
 <!--Task create form-->
 {% macro task_create_form(folder='') %}
 <form class="form-group" method="POST" action="{{ url_for('tasks.task_create') }}">
@@ -343,6 +350,20 @@
   {{ input('name', 'Name', class='mb-2', value=list.name) }}
   <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10">{{ list.contents }}</textarea>
   {{ button('Edit') }}
+</form>
+{% endmacro %}
+
+{% macro session_create_form(class='') %}
+<form method="POST" action="{{ url_for('session_create') }}" class="form-group {{ class }}">
+  <div class="input-group mb-2">
+    <button type="button" class="btn btn-success" onclick="$('#startTime').val(Date.now())">Start</button>
+    <input type="text" autocomplete="off" class="form-control" id="startTime" name="start_time" readonly>
+  </div>
+  <div class="input-group mb-2">
+    <button type="button" class="btn btn-danger" onclick="$('#stopTime').val(Date.now())">Stop</button>
+    <input type="text" autocomplete="off" class="form-control" id="stopTime" name="stop_time" readonly>
+  </div>
+  <button type="submit" class="btn btn-custom w-100">Submit</button>
 </form>
 {% endmacro %}
 

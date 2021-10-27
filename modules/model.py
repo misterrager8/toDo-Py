@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, Text, Date, Boolean, Integer, ForeignKey, DateTime, Float
 from sqlalchemy.orm import relationship
 
 from modules import db
@@ -120,6 +120,17 @@ class Day(db.Model):
 
     def __str__(self):
         return "%s,%s" % (self.habit, self.date)
+
+
+class Session(db.Model):
+    __tablename__ = "sessions"
+
+    date = Column(Date)
+    length = Column(Float)
+    id = Column(Integer, primary_key=True)
+
+    def __init__(self, **kwargs):
+        super(Session, self).__init__(**kwargs)
 
 
 db.create_all()

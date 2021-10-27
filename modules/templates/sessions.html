@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block body %}
+<title>Sessions</title>
+<div class="text-center m-3">
+  {{ macros.paragraph('Sessions', size=3) }}
+</div>
+
+{{ macros.session_create_form(class='col-6 offset-3 mb-2') }}
+
+{% for i in sessions_ %}
+{{ macros.session_card(i) }}
+{% endfor %}
+
+{% endblock %}

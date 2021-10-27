@@ -1,8 +1,11 @@
+from datetime import date
+
 from flask import request, render_template
+from werkzeug.utils import redirect
 
 from modules import db, app
 from modules.ctrla import Calendar, Database
-from modules.model import Folder, Day, Habit
+from modules.model import Folder, Day, Habit, Session
 
 database = Database()
 
@@ -34,3 +37,29 @@ def day():
                            day_date=day_date,
                            items=db.session.query(Day).filter(Day.date == day_date),
                            habits=db.session.query(Habit).all())
+
+
+@app.route("/sessions")
+def sessions():
+    return render_template("sessions.html", sessions_=database.search(Session))
+
+
+@app.route("/session_create", methods=["POST"])
+def session_create():
+    start_time = int(request.form["start_time"])
+    stop_time = int(request.form["stop_time"])
+
+    millis = stop_time - start_time
+    mins = round((millis / (1000 * 60)) % 60, 1)
+
+    database.create(Session(date=date.today(), length=mins))
+
+    return redirect(request.referrer)
+
+
+@app.route("/session_delete")
+def session_delete():
+    _: Session = database.get(Session, request.args.get("id_"))
+    database.delete(_)
+
+    return redirect(request.referrer)
