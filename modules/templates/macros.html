@@ -236,7 +236,7 @@
 {% macro session_card(session) %}
 <div class="list-group-item list-group-item-action border-0 d-flex justify-content-between">
   {{ paragraph('%s minutes' % session.length) }}
-  <a class="" href="{{ url_for('session_delete', id_=session.id) }}">{{ delete_icon(size=15) }}</a>
+  <a onclick="deleteSession({{ session.id }})">{{ delete_icon(size=15) }}</a>
 </div>
 {% endmacro %}
 
@@ -354,7 +354,7 @@
 {% endmacro %}
 
 {% macro session_create_form(class='') %}
-<form method="POST" action="{{ url_for('session_create') }}" class="form-group {{ class }}">
+<form method="POST" action="{{ url_for('session_create') }}" class="form-group {{ class }}" id="sessionCreate">
   <div class="input-group mb-2">
     <button type="button" class="btn btn-success" onclick="$('#startTime').val(Date.now())">Start</button>
     <input type="text" autocomplete="off" class="form-control" id="startTime" name="start_time" readonly>

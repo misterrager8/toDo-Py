@@ -29,3 +29,12 @@ function checkBox(elem, id) {
         $('#' + id).hide();
     }
 }
+
+$('#sessionCreate').on('submit', function(event) {
+    $.post('/session_create', { start_time : $('#startTime').val(), stop_time : $('#stopTime').val() }, function(data) { $('#allSessions').load(location.href + ' #allSessions'); });
+    event.preventDefault();
+});
+
+function deleteSession(sessionId) {
+    $.get('session_delete', { id_: sessionId }, function(data) { $('#allSessions').load(location.href + ' #allSessions'); });
+}
