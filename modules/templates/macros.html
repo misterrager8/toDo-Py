@@ -360,9 +360,9 @@
 
 <!--Folders Sort-->
 {% macro folders_sort() %}
-<div class="list-inline" onclick="$('#sortMenu').fadeToggle()">
+<div class="list-inline">
   <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
-  <div class="list-inline-item" style="display:none" id="sortMenu">
+  <div class="list-inline-item">
     {% if order_by != 'name' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='name') }}">Name</a>{% endif %}
     {% if order_by != 'color' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='color') }}">Color</a>{% endif %}
     {% if order_by != 'date_created desc' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='date_created desc') }}">Date Created</a>{% endif %}
@@ -372,9 +372,9 @@
 
 <!--Tasks Sort-->
 {% macro tasks_sort() %}
-<div class="list-inline d-flex" onclick="$('#sortMenu').fadeToggle()">
+<div class="list-inline d-flex">
   <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
-  <div class="list-inline-item flex-grow-1" style="display:none" id="sortMenu">
+  <div class="list-inline-item flex-grow-1">
     {% if order_by != 'tasks.date_created desc' %}<a class="m-1 badge text-dark link" href="{{ url_for('tasks.tasks_', order_by='tasks.date_created desc') }}">Date Created</a>{% endif %}
     {% if order_by != 'folders.name' %}<a class="m-1 badge text-dark link" href="{{ url_for('tasks.tasks_', order_by='folders.name') }}">Folder</a>{% endif %}
     {% if session['hide_completed'] == true %}
@@ -388,9 +388,9 @@
 
 <!--Lists Sort-->
 {% macro lists_sort() %}
-<div class="list-inline" onclick="$('#sortMenu').fadeToggle()">
+<div class="list-inline">
   <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
-  <div class="list-inline-item" style="display:none" id="sortMenu">
+  <div class="list-inline-item">
     {% if order_by != 'date_created desc' %}<a class="badge text-dark link" href="{{ url_for('lists.lists_', order_by='date_created desc') }}">Date Created</a>{% endif %}
     {% if order_by != 'date_updated desc' %}<a class="badge text-dark link" href="{{ url_for('lists.lists_', order_by='date_updated desc') }}">Date Updated</a>{% endif %}
   </div>
