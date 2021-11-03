@@ -23,7 +23,7 @@ function expandDiv(parentId, divId) {
 }
 
 function checkBox(elem, id) {
-    if ($(elem).is(':checked')) {
+    if ($('#' + elem).is(':checked')) {
         $('#' + id).show();
     } else {
         $('#' + id).hide();
