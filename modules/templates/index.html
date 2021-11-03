@@ -11,7 +11,7 @@
 </div>
 
 {{ macros.folders_sort() }}
-<div class="row" data-masonry="">
+<div class="row" data-masonry="" id="allFolders">
   {% for i in folders_ %}
   {{ macros.folder_card(i) }}
   {% endfor %}

@@ -118,7 +118,7 @@
     </span>
     <div id="taskCreate{{ folder.id }}" style="display:none" class="mt-3">{{ task_create_form(folder) }}</div>
     <div id="folderUpdate{{ folder.id }}" style="display:none" class="mt-3">{{ folder_update_form(folder) }}</div>
-    <div id="folderDelete{{ folder.id }}" style="display:none" class="mt-3"><a href="{{ url_for('folders.folder_delete', id_=folder.id) }}" class="btn btn-danger w-100">Delete</a></div>
+    <div id="folderDelete{{ folder.id }}" style="display:none" class="mt-3"><a class="btn btn-danger w-100" onclick="folderDelete({{ folder.id }})">Delete</a></div>
     <div class="mt-3" id="tasks{{ folder.id }}" style="display:none">
       {% for i in folder.get_tasks() | sort(attribute='done') %}
       <div class="list-group-item-action">
@@ -157,7 +157,7 @@
       <a class="float-end mx-1" onclick="expandDiv('taskCard' + {{ task.id }}, 'subtask_create_'+{{ task.id }})">{{ add_icon(size=16) }}</a>
       {% endif %}
     </div>
-    <a href="{{ url_for('tasks.task_delete', id_=task.id) }}" class="btn btn-danger w-100 mt-3" id="task_delete_{{ task.id }}" style="display:none;">Delete</a>
+    <a class="btn btn-danger w-100 mt-3" id="task_delete_{{ task.id }}" style="display:none;" onclick="taskDelete({{ task.id }})">Delete</a>
     <div id="task_update_{{ task.id }}" style="display:none" class="mt-3">{{ task_update_form(task) }}</div>
     <div id="subtask_create_{{ task.id }}" style="display:none" class="mt-3">{{ subtask_create_form(task) }}</div>
     {% if task.subtasks.count() > 0 %}
@@ -242,12 +242,9 @@
 
 <!--Task create form-->
 {% macro task_create_form(folder='') %}
-<form class="form-group" method="POST" action="{{ url_for('tasks.task_create') }}">
-  <div class="input-group">
-    {{ input('name', 'Name', class='mb-2 w-75') }}
-    <button type="button" class="btn btn-success mb-2" onclick="addInput(this)">+</button>
-  </div>
-  <select name="folder" class="form-control mb-2">
+<form class="input-group" method="POST" action="{{ url_for('tasks.task_create') }}" id="taskCreate">
+  {{ input('name', 'Name', id='taskName') }}
+  <select name="folder" class="form-control" id="taskFolder">
     <option>Select</option>
     {% for i in all_folders %}
     <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
@@ -259,12 +256,9 @@
 
 <!--Subtask create form-->
 {% macro subtask_create_form(task) %}
-<form class="form-group" method="POST" action="{{ url_for('tasks.subtask_create', id_=task.id) }}">
-  <div class="input-group">
-    {{ input('name', 'Name', class='w-75 mb-2') }}
-    <button type="button" class="btn btn-success mb-2" onclick="addInput(this)">+</button>
-  </div>
-  {{ button('Submit') }}
+<form class="input-group" method="POST" action="{{ url_for('tasks.subtask_create', id_=task.id) }}">
+  {{ input('name', 'Name') }}
+  <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
 
@@ -290,12 +284,9 @@
 
 <!--Folder create form-->
 {% macro folder_create_form() %}
-<form class="form-group" method="POST" action="{{ url_for('folders.folder_create') }}">
-  <div class="input-group">
-    {{ input('name', 'Name', class='w-75 mb-2') }}
-    <button type="button" class="btn btn-success mb-2" onclick="addInput(this)">+</button>
-  </div>
-  {{ button('Submit') }}
+<form class="input-group" method="POST" action="{{ url_for('folders.folder_create') }}" id="folderCreate">
+  {{ input('name', 'Name', id='folderName') }}
+  <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
 
