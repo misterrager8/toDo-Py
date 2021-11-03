@@ -146,7 +146,7 @@
       {% if task.note %}{{ paragraph(task.note, class='fst-italic') }}{% endif %}
     </div>
     <div>
-      <a href="{{ url_for('tasks.task_toggle', id_=task.id) }}" class="link">{{ check_icon(task.done, size=16) }}</a>
+      <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done, size=16) }}</a>
       {% if task.reminder %}{{ reminder_icon(size=16) }}{% endif %}
       {% if task.subtasks.count() > 0 %}
       <a class="badge bg-dark link rounded-pill" style="color:white" onclick="expandDiv('taskCard' + {{ task.id }}, 'subtasks_'+{{ task.id }})">{{ task.get_subtasks_count() }}</a>
@@ -163,11 +163,11 @@
     {% if task.subtasks.count() > 0 %}
     <div class="mt-3" style="display:none" id="subtasks_{{ task.id }}">
       <div class="progress mb-3">
-        <div class="progress-bar" role="progressbar" style="width:{{ task.get_subtasks_progress() }}%"></div>
+        <div class="progress-bar" role="progressbar" id="progress{{ task.id }}" style="width:{{ task.get_subtasks_progress() }}%"></div>
       </div>
       {% for i in task.subtasks | sort(attribute='done') %}
       <div class="list-group-item-action">
-        <a href="{{ url_for('tasks.task_toggle', id_=i.id) }}" class="link">{{ check_icon(i.done, size=16) }}</a>
+        <a class="link" onclick="taskToggle({{ i.id }})">{{ check_icon(i.done, size=16) }}</a>
         {{ paragraph(i.name, class='d-inline', size=0.9) }}
         <a href="{{ url_for('tasks.task_delete', id_=i.id) }}" class="link float-end">{{ delete_icon(size=16) }}</a>
       </div>
