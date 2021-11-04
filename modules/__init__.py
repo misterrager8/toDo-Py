@@ -1,9 +1,11 @@
 import os
 
 import dotenv
+import pymysql
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+pymysql.install_as_MySQLdb()
 app = Flask(__name__)
 
 dotenv.load_dotenv()
@@ -13,6 +15,7 @@ db_passwd = os.getenv("passwd")
 db_name = os.getenv("db")
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://{db_user}:{db_passwd}@{db_host}/{db_name}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 60}
 
 app.secret_key = os.getenv("secret_key")
 
