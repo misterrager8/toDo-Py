@@ -1,9 +1,11 @@
 import os
 
 import dotenv
+import pymysql
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
+pymysql.install_as_MySQLdb()
 app = Flask(__name__)
 
 dotenv.load_dotenv()
