@@ -22,7 +22,10 @@
         {% endfor %}
       </ul>
     </div>
-    <div class="collapse navbar-collapse">
+    <button type="button" data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navContent">
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a href="{{ url_for('tasks.tasks_') }}" class="nav-link">Tasks<p class="badge bg-dark m-0 ms-1">{{ total_undone }}</p></a></li>
         <li class="nav-item"><a href="{{ url_for('habits.habits_') }}" class="nav-link">Habits</a></li>
