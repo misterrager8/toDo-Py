@@ -1,10 +1,3 @@
-function addInput(elem) {
-    var nput = elem.previousElementSibling.cloneNode();
-    nput.value = null;
-    elem.parentNode.insertBefore(nput, elem);
-    nput.focus();
-}
-
 function changeTheme() {
     if (document.getElementById("site-content").classList.contains("other-theme")) {
         document.getElementById("site-content").classList.remove("other-theme");
