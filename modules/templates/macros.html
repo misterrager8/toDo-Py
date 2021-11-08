@@ -4,15 +4,6 @@
 <p class="m-0 {{ class }}" style="font-size:{{ size }}em">{{ text }}</p>
 {% endmacro %}
 
-<!--Button-->
-{% macro button(text) %}
-<button type="submit"
-        class="btn btn-custom w-100"
->
-  {{ text }}
-</button>
-{% endmacro %}
-
 <!--Modal-->
 {% macro modal(id, title='', lg=false) %}
 <div class="modal" id="{{ id }}">
@@ -250,7 +241,7 @@
     <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
     {% endfor %}
   </select>
-  {{ button('Submit') }}
+  <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
 
@@ -278,7 +269,7 @@
     <label class="form-check-label" for="reminderCheck{{ task.id }}">Remind Me!</label>
   </div>
   <input type="date" class="form-control mb-2" name="date_due" value="{{ task.date_due }}" id="dateDue{{ task.id }}" style="{% if not task.reminder %}display:none{% endif %}">
-  {{ button('Submit') }}
+  <button type="submit" class="btn btn-custom w-100">Update</button>
 </form>
 {% endmacro %}
 
@@ -295,7 +286,7 @@
 <form class="form-group" method="POST" action="{{ url_for('folders.folder_update', id_=folder.id) }}">
   {{ input('name', 'Name', class='mb-2', value=folder.name) }}
   <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ folder.color }}">
-  {{ button('Edit') }}
+  <button type="submit" class="btn btn-custom w-100">Update</button>
 </form>
 {% endmacro %}
 
@@ -308,7 +299,7 @@
     <option value="Weekly">Weekly</option>
     <option value="Monthly">Monthly</option>
   </select>
-  {{ button('Submit') }}
+  <button type="submit" class="btn btn-custom w-100">+</button>
 </form>
 {% endmacro %}
 
@@ -322,7 +313,7 @@
     <option value="Monthly">Monthly</option>
   </select>
   <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ habit.color }}">
-  {{ button('Submit') }}
+  <button type="submit" class="btn btn-custom w-100">Update</button>
 </form>
 {% endmacro %}
 
@@ -331,7 +322,7 @@
 <form class="form-group" method="POST" action="{{ url_for('lists.list_create') }}">
   {{ input('name', 'Name', class='mb-2') }}
   <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10"></textarea>
-  {{ button('Submit') }}
+  <button type="submit" class="btn btn-custom w-100">+</button>
 </form>
 {% endmacro %}
 
@@ -340,7 +331,7 @@
 <form class="form-group" method="POST" action="{{ url_for('lists.list_update', id_=list.id) }}">
   {{ input('name', 'Name', class='mb-2', value=list.name) }}
   <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10">{{ list.contents }}</textarea>
-  {{ button('Edit') }}
+  <button type="submit" class="btn btn-custom w-100">Update</button>
 </form>
 {% endmacro %}
 
