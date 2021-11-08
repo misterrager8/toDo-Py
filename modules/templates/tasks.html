@@ -9,7 +9,7 @@
 </div>
 
 {{ macros.tasks_sort() }}
-<div class="row" data-masonry id="allTasks">
+<div class="row" id="allTasks">
   {% for i in tasks_ %}
   {{ macros.task_card(i) }}
   {% endfor %}

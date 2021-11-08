@@ -8,7 +8,7 @@
   <div class="col-6 offset-3 mt-3" id="habitCreate" style="display:none">{{ macros.habit_create_form() }}</div>
 </div>
 
-<div class="row" data-masonry>
+<div class="row">
   {% for i in habits_ %}
   {{ macros.habit_card(i) }}
   {% endfor %}

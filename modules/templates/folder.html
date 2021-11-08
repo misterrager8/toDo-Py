@@ -9,7 +9,7 @@
   <div id="task_create" style="display:none" class="col-6 offset-3 mt-3">{{ macros.task_create_form(folder=folder) }}</div>
 </div>
 
-<div class="row" data-masonry id="allTasks">
+<div class="row" id="allTasks">
   {% for i in folder.get_tasks() %}
   {{ macros.task_card(i) }}
   {% endfor %}
