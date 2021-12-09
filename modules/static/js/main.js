@@ -43,12 +43,26 @@ $('#folderCreate').on('submit', function(event) {
     event.preventDefault();
 });
 
+function taskEdit(taskId) {
+    $.post('task_edit', {
+        id_ : taskId,
+        name : $('#name' + taskId).val(),
+        note : $('#note' + taskId).val()
+    }, function(data) {
+        $('#taskContent').load(location.href + ' #taskContent');
+    });
+}
+
 function deleteSession(sessionId) {
     $.get('session_delete', { id_: sessionId }, function(data) { $('#allSessions').load(location.href + ' #allSessions'); });
 }
 
 function taskToggle(taskId) {
-    $.get('task_toggle', { id_: taskId }, function(data) { $('#allTasks').load(location.href + ' #allTasks'); });
+    $.get('task_toggle', {
+        id_: taskId
+    }, function(data) {
+        $('#allTasks').load(location.href + ' #allTasks');
+    });
 }
 
 function taskDelete(taskId) {

@@ -22,6 +22,13 @@ def tasks_():
     return render_template("tasks.html", tasks_=tasks_list, order_by=order_by)
 
 
+@tasks.route("/task")
+def task():
+    _: Task = database.get(Task, request.args.get("id_"))
+
+    return render_template("task.html", task=_)
+
+
 @tasks.route("/task_create", methods=["POST"])
 def task_create():
     names = request.form.getlist("name")
@@ -58,6 +65,18 @@ def task_update():
     _.folder = int(request.form["folder"])
     _.reminder = request.form.get("reminder") is not None
     _.date_due = request.form["date_due"] if _.reminder else None
+
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+
+@tasks.route("/task_edit", methods=["POST"])
+def task_edit():
+    _: Task = database.get(Task, int(request.form["id_"]))
+
+    _.name = request.form["name"]
+    _.note = request.form["note"]
 
     db.session.commit()
 

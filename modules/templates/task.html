@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block body %}
+<title>{{ task.name }}</title>
+<div id="taskContent" class="my-5">
+  <input value="{{ task.name }}" id="name{{ task.id }}" autocomplete="off" class="form-control border-0 border-top my-3 text-center fw-bold" onchange="taskEdit({{ task.id }})" style="font-size:2em">
+  <textarea autocomplete="off" class="form-control border-0 border-top my-3 fst-italic" id="note{{ task.id }}" onchange="taskEdit({{ task.id }})" placeholder="Note">{{ task.note or '' }}</textarea>
+</div>
+{% if task.subtasks.count() > 0 %}
+<div class="mt-3" id="allTasks">
+  <div class="progress mb-3">
+    <div class="progress-bar" role="progressbar" id="progress{{ task.id }}" style="width:{{ task.get_subtasks_progress() }}%"></div>
+  </div>
+  {% for i in task.subtasks | sort(attribute='done') %}
+  <div class="list-group-item-action">
+    <a class="link" onclick="taskToggle({{ i.id }})">{{ macros.check_icon(i.done, size=16) }}</a>
+    {{ macros.paragraph(i.name, class='d-inline', size=0.9) }}
+    <a href="{{ url_for('tasks.task_delete', id_=i.id) }}" class="link float-end">{{ macros.delete_icon(size=16) }}</a>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
