@@ -13,13 +13,11 @@ def create_app(config):
 
     with app.app_context():
         from modules.views.habits import habits
-        from modules.views.lists import lists
         from modules.views.tasks import tasks
         from modules.views.folders import folders
 
         app.register_blueprint(folders)
         app.register_blueprint(tasks)
-        app.register_blueprint(lists)
         app.register_blueprint(habits)
 
         return app

@@ -88,26 +88,6 @@ class Habit(db.Model):
         return "%s" % self.name
 
 
-class List(db.Model):
-    __tablename__ = "lists"
-
-    name = Column(Text)
-    contents = Column(Text)
-    date_created = Column(DateTime)
-    date_updated = Column(DateTime)
-    color = Column(Text)
-    id = Column(Integer, primary_key=True)
-
-    def __init__(self, **kwargs):
-        super(List, self).__init__(**kwargs)
-
-    def get_items(self):
-        return self.contents.split("\n")
-
-    def __str__(self):
-        return "%s" % self.name
-
-
 class Day(db.Model):
     __tablename__ = "days"
 

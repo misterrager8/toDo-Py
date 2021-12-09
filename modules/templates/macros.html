@@ -169,32 +169,6 @@
 </div>
 {% endmacro %}
 
-<!--List card-->
-{% macro list_item(list) %}
-<div class="card col-12 border-0" id="list{{ list.id }}">
-  <div class="card-body my-2" style="border-radius:10px; border: 5px solid {{ list.color }}">
-    <a class="link" onclick="expandDiv('list' + {{ list.id }}, 'listInfo' + {{ list.id }})">{{ list.name }}</a>
-    {% if order_by == 'date_created desc' %}
-    {{ paragraph('Created %s' % list.date_created, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
-    {% elif order_by == 'date_updated desc' %}
-    {{ paragraph('Updated %s' % list.date_updated, class='d-inline mx-1 text-muted fst-italic', size=0.8) }}
-    {% endif %}
-    <div class="float-end">
-      <a class="link mx-1" onclick="expandDiv('list' + {{ list.id }}, 'listUpdate' + {{ list.id }})">{{ edit_icon(size=20) }}</a>
-      <a class="link mx-1" onclick="expandDiv('list' + {{ list.id }}, 'listDelete' + {{ list.id }})">{{ delete_icon(size=20) }}</a>
-    </div>
-    <div id="listInfo{{ list.id }}" style="display:none" class="mt-3">
-      {% for i in list.get_items() %}
-      <div>{{ '%s. '%loop.index }}{{ i }}</div>
-      {% endfor %}
-    </div>
-    <div id="listUpdate{{ list.id }}" style="display:none" class="mt-3">{{ list_update_form(list) }}</div>
-    <div id="listDelete{{ list.id }}" style="display:none" class="mt-3"><a href="{{ url_for('lists.list_delete', id_=list.id) }}" class="btn btn-danger w-100">Delete</a></div>
-  </div>
-</div>
-
-{% endmacro %}
-
 <!--Habit card-->
 {% macro habit_card(habit) %}
 <div class="card col-xl-6 border-0 rounded" id="habit{{ habit.id }}">
@@ -317,24 +291,6 @@
 </form>
 {% endmacro %}
 
-<!--List create form-->
-{% macro list_create_form() %}
-<form class="form-group" method="POST" action="{{ url_for('lists.list_create') }}">
-  {{ input('name', 'Name', class='mb-2') }}
-  <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10"></textarea>
-  <button type="submit" class="btn btn-custom w-100">+</button>
-</form>
-{% endmacro %}
-
-<!--List update form-->
-{% macro list_update_form(list) %}
-<form class="form-group" method="POST" action="{{ url_for('lists.list_update', id_=list.id) }}">
-  {{ input('name', 'Name', class='mb-2', value=list.name) }}
-  <textarea autocomplete="off" name="contents" placeholder="Contents" class="form-control mb-2" rows="10">{{ list.contents }}</textarea>
-  <button type="submit" class="btn btn-custom w-100">Update</button>
-</form>
-{% endmacro %}
-
 {% macro session_create_form(class='') %}
 <form method="POST" action="{{ url_for('session_create') }}" class="form-group {{ class }}" id="sessionCreate">
   <div class="input-group mb-2">
@@ -373,17 +329,6 @@
     {% else %}
     <a class="m-1 badge text-dark link float-end" href="{{ url_for('tasks.hide_toggle') }}">Hide Completed</a>
     {% endif %}
-  </div>
-</div>
-{% endmacro %}
-
-<!--Lists Sort-->
-{% macro lists_sort() %}
-<div class="list-inline">
-  <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
-  <div class="list-inline-item">
-    {% if order_by != 'date_created desc' %}<a class="badge text-dark link" href="{{ url_for('lists.lists_', order_by='date_created desc') }}">Date Created</a>{% endif %}
-    {% if order_by != 'date_updated desc' %}<a class="badge text-dark link" href="{{ url_for('lists.lists_', order_by='date_updated desc') }}">Date Updated</a>{% endif %}
   </div>
 </div>
 {% endmacro %}
