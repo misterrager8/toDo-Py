@@ -1,5 +1,3 @@
-import datetime
-
 from sqlalchemy import text
 
 from modules import db
@@ -17,6 +15,10 @@ class Database:
     @staticmethod
     def get(type_, id_: int):
         return db.session.query(type_).get(id_)
+
+    @staticmethod
+    def update():
+        db.session.commit()
 
     @staticmethod
     def delete(object_):
