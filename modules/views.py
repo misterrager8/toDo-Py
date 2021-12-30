@@ -2,7 +2,7 @@ import datetime
 import random
 
 from flask import request, render_template, current_app, url_for
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
@@ -37,13 +37,19 @@ def login():
     email = request.form["email"]
     password = request.form["password"]
 
-    user = database.search(User, filter_=email).first()
+    user = db.session.query(User).filter(User.email == email).first()
 
     if user and check_password_hash(user.password, password):
         login_user(user)
         return redirect(url_for("index"))
     else:
         return "Login failed."
+
+
+@current_app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
 
 
 @current_app.route("/signup", methods=["POST"])
@@ -58,12 +64,14 @@ def signup():
 
 
 @current_app.route("/folder")
+@login_required
 def folder():
     _: Folder = database.get(Folder, request.args.get("id_"))
     return render_template("folder.html", folder=_)
 
 
 @current_app.route("/folder_create", methods=["POST"])
+@login_required
 def folder_create():
     database.create(Folder(name=request.form["name"].title(),
                            color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
@@ -85,6 +93,7 @@ def folder_update():
 
 
 @current_app.route("/folder_delete")
+@login_required
 def folder_delete():
     _: Folder = database.get(Folder, request.args.get("id_"))
     database.delete(_)
@@ -93,6 +102,7 @@ def folder_delete():
 
 
 @current_app.route("/tasks")
+@login_required
 def tasks_():
     order_by = request.args.get("order_by", default="tasks.date_created desc")
 
@@ -100,6 +110,7 @@ def tasks_():
 
 
 @current_app.route("/task")
+@login_required
 def task():
     _: Task = database.get(Task, request.args.get("id_"))
 
@@ -107,6 +118,7 @@ def task():
 
 
 @current_app.route("/task_create", methods=["POST"])
+@login_required
 def task_create():
     database.create(Task(name=request.form["name"].title(),
                          folder=int(request.form["folder"]),
@@ -117,6 +129,7 @@ def task_create():
 
 
 @current_app.route("/subtask_create", methods=["POST"])
+@login_required
 def subtask_create():
     _: Task = database.get(Task, int(request.form["id_"]))
 
@@ -130,6 +143,7 @@ def subtask_create():
 
 
 @current_app.route("/task_edit", methods=["POST"])
+@login_required
 def task_edit():
     _: Task = database.get(Task, int(request.form["id_"]))
 
@@ -145,6 +159,7 @@ def task_edit():
 
 
 @current_app.route("/task_delete")
+@login_required
 def task_delete():
     _: Task = database.get(Task, request.args.get("id_"))
     database.delete(_)
@@ -153,6 +168,7 @@ def task_delete():
 
 
 @current_app.route("/task_toggle")
+@login_required
 def task_toggle():
     _: Task = database.get(Task, request.args.get("id_"))
     _.done = not _.done

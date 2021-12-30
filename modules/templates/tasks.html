@@ -10,7 +10,7 @@
 
 {{ macros.tasks_sort() }}
 <div class="row" id="allTasks">
-  {% for i in tasks_ %}
+  {% for i in current_user.tasks %}
   {{ macros.task_card(i) }}
   {% endfor %}
 </div>

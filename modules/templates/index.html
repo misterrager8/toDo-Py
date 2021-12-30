@@ -12,7 +12,7 @@
 
 {{ macros.folders_sort() }}
 <div class="row" id="allFolders">
-  {% for i in folders_ %}
+  {% for i in current_user.folders %}
   {{ macros.folder_card(i) }}
   {% endfor %}
 </div>
