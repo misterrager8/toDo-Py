@@ -53,10 +53,6 @@ function taskEdit(taskId) {
     });
 }
 
-function deleteSession(sessionId) {
-    $.get('session_delete', { id_: sessionId }, function(data) { $('#allSessions').load(location.href + ' #allSessions'); });
-}
-
 function taskToggle(taskId) {
     $.get('task_toggle', {
         id_: taskId
