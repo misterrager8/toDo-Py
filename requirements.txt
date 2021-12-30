@@ -5,3 +5,4 @@ Werkzeug~=2.0.1
 gunicorn
 flask_sqlalchemy
 PyMySQL~=1.0.2
+flask_login
