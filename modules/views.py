@@ -6,7 +6,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
-from modules import login_manager
+from modules import login_manager, db
 from modules.ctrla import Database
 from modules.models import Folder, Task, User
 
@@ -17,13 +17,6 @@ database = Database()
 def load_user(id_) -> User:
     _: User = database.get(User, id_)
     return _
-
-
-@current_app.context_processor
-def inject_all():
-    all_folders = database.search(Folder, order_by="date_created desc")
-    total_undone: int = sum([i.get_undone_count() for i in all_folders])
-    return dict(all_folders=all_folders, total_undone=total_undone)
 
 
 @current_app.route("/")
@@ -81,8 +74,9 @@ def folder_create():
     return redirect(request.referrer)
 
 
-@current_app.route("/folder_update", methods=["POST"])
-def folder_update():
+@current_app.route("/folder_edit", methods=["POST"])
+@login_required
+def folder_edit():
     _: Folder = database.get(Folder, int(request.form["id_"]))
 
     _.name = request.form["name"]
@@ -96,6 +90,8 @@ def folder_update():
 @login_required
 def folder_delete():
     _: Folder = database.get(Folder, request.args.get("id_"))
+    for i in _.tasks:
+        database.delete(i)
     database.delete(_)
 
     return redirect(url_for("index"))
@@ -121,7 +117,7 @@ def task():
 @login_required
 def task_create():
     database.create(Task(name=request.form["name"].title(),
-                         folder=int(request.form["folder"]),
+                         folder=int(request.form["id_"]),
                          date_created=datetime.datetime.now(),
                          user=current_user.id))
 

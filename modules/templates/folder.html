@@ -3,14 +3,12 @@
 
 {% block body %}
 <title>{{ folder.name }}</title>
-<div class="text-center m-3">
-  {{ macros.paragraph(folder.name, size=3, class='m-0') }}
-  <a href="#" class="link" onclick="$('#task_create').fadeToggle();">{{ macros.add_icon() }}</a>
-  <div id="task_create" style="display:none" class="col-6 offset-3 mt-3">{{ macros.task_create_form(folder=folder) }}</div>
-</div>
+<p class="h3 my-3">{{ folder.name }}</p>
+<a class="badge badge-custom link text-light my-2" onclick="toggleDiv('taskCreate')">+ New Task</a>
+<div id="taskCreate" style="display:none">{{ macros.task_create_form(folder) }}</div>
 
 <div class="row" id="allTasks">
-  {% for i in folder.get_tasks() %}
+  {% for i in folder.tasks %}
   {{ macros.task_card(i) }}
   {% endfor %}
 </div>

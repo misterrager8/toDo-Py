@@ -1,47 +1,19 @@
 function changeTheme() {
-    if (document.getElementById("site-content").classList.contains("other-theme")) {
-        document.getElementById("site-content").classList.remove("other-theme");
-    } else {
-        document.getElementById("site-content").classList.add("other-theme");
-    }
+    $('.btn-custom, .badge-custom, .navbar').addClass('other-theme');
 }
 
-function expandDiv(parentId, divId) {
-    $('#' + divId).fadeToggle();
+function toggleDiv(divId) {
+    $('#' + divId).toggle(250);
 }
 
-function checkBox(elem, id) {
-    if ($('#' + elem).is(':checked')) {
-        $('#' + id).show();
-    } else {
-        $('#' + id).hide();
-    }
-}
-
-$('#sessionCreate').on('submit', function(event) {
-    $.post('/session_create', { start_time : $('#startTime').val(), stop_time : $('#stopTime').val() }, function(data) { $('#allSessions').load(location.href + ' #allSessions'); });
-    event.preventDefault();
-});
-
-$('#taskCreate').on('submit', function(event) {
-    $.post('/task_create',
-    { name : $('#taskName').val(), folder : $('#taskFolder').val() },
-    function(data) {
+function taskCreate(folderId) {
+    $.post('task_create', {
+        id_: folderId,
+        name : $('#taskName').val()
+    }, function(data) {
         $('#allTasks').load(location.href + ' #allTasks');
     });
-    $('#taskName').val('');
-    event.preventDefault();
-});
-
-$('#folderCreate').on('submit', function(event) {
-    $.post('/folder_create',
-    { name : $('#folderName').val() },
-    function(data) {
-        $('#allFolders').load(location.href + ' #allFolders');
-    });
-    $('#folderName').val('');
-    event.preventDefault();
-});
+}
 
 function taskEdit(taskId) {
     $.post('task_edit', {
@@ -62,9 +34,35 @@ function taskToggle(taskId) {
 }
 
 function taskDelete(taskId) {
-    $.get('task_delete', { id_: taskId }, function(data) { $('#allTasks').load(location.href + ' #allTasks'); });
+    $.get('task_delete', {
+        id_: taskId
+    }, function(data) {
+        $('#allTasks').load(location.href + ' #allTasks');
+    });
+}
+
+function folderCreate() {
+    $.post('folder_create', {
+        name : $('#folderName').val()
+    }, function(data) {
+        $('#allFolders').load(location.href + ' #allFolders');
+    });
+}
+
+function folderEdit(folderId) {
+    $.post('folder_edit', {
+        id_ : folderId,
+        name : $('#folderName' + folderId).val(),
+        color : $('#color' + folderId).val()
+    }, function(data) {
+        $('#allFolders').load(location.href + ' #allFolders');
+    });
 }
 
 function folderDelete(folderId) {
-    $.get('folder_delete', { id_: folderId }, function(data) { $('#allFolders').load(location.href + ' #allFolders'); });
+    $.get('folder_delete', {
+        id_: folderId
+    }, function(data) {
+        $('#allFolders').load(location.href + ' #allFolders');
+    });
 }

@@ -1,35 +1,14 @@
-<!--Paragraph-->
-{% macro paragraph(text, class='', size=1) %}
 <!--suppress ALL-->
-<p class="m-0 {{ class }}" style="font-size:{{ size }}em">{{ text }}</p>
-{% endmacro %}
-
-<!--Modal-->
-{% macro modal(id, title='', lg=false) %}
-<div class="modal" id="{{ id }}">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content p-3">
-      {% if title %}{{ paragraph(title, class='text-center m-3', size=3) }}{% endif %}
-      {{ caller() }}
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
-<!--Input-->
-{% macro input(name, placeholder, class='', value='', id='') %}
-<input type="text" autocomplete="off" class="form-control {{ class }}" name="{{ name }}" placeholder="{{ placeholder }}" value="{{ value }}" id="{{ id }}">
-{% endmacro %}
 
 <!--Brand icon-->
-{% macro brand_icon(size=25, color='currentcolor', tooltip='') %}
+{% macro brand_icon(size=20, color='currentcolor') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-check-all" viewBox="0 0 16 16">
   <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992a.252.252 0 0 1 .02-.022zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486-.943 1.179z"/>
 </svg>
 {% endmacro %}
 
 <!--Add icon-->
-{% macro add_icon(size=25, color='green', tooltip='') %}
+{% macro add_icon(size=20, color='green') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-plus-circle" viewBox="0 0 16 16">
   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -37,7 +16,7 @@
 {% endmacro %}
 
 <!--Delete icon-->
-{% macro delete_icon(size=25, color='red', tooltip='') %}
+{% macro delete_icon(size=20, color='red') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-x-circle" viewBox="0 0 16 16">
   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
   <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -45,7 +24,7 @@
 {% endmacro %}
 
 <!--Edit icon-->
-{% macro edit_icon(size=25, color='currentcolor', tooltip='') %}
+{% macro edit_icon(size=20, color='currentcolor') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-pencil-square" viewBox="0 0 16 16">
   <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
   <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -53,7 +32,7 @@
 {% endmacro %}
 
 <!--Reminder icon-->
-{% macro reminder_icon(size=25, color='currentcolor', tooltip='') %}
+{% macro reminder_icon(size=20, color='currentcolor') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-alarm" viewBox="0 0 16 16">
   <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
   <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
@@ -61,7 +40,7 @@
 {% endmacro %}
 
 <!--Calendar icon-->
-{% macro calendar_icon(size=25, color='currentcolor', tooltip='') %}
+{% macro calendar_icon(size=20, color='currentcolor') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-calendar-plus" viewBox="0 0 16 16">
   <path d="M8 7a.5.5 0 0 1 .5.5V9H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V10H6a.5.5 0 0 1 0-1h1.5V7.5A.5.5 0 0 1 8 7z"/>
   <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
@@ -69,259 +48,137 @@
 {% endmacro %}
 
 <!--Check icon-->
-{% macro check_icon(done, size=25, tooltip='') %}
+{% macro check_icon(done, size=20) %}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{% if done %}green{% else %}lightgray{% endif %}" class="bi bi-check-lg" viewBox="0 0 16 16">
   <path d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z"/>
 </svg>
 {% endmacro %}
 
 <!--Circle icon-->
-{% macro circle_icon(size=25, color='currentcolor', tooltip='', class='') %}
+{% macro circle_icon(size=20, color='currentcolor', class='') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill {{ class }}" viewBox="0 0 16 16">
   <circle cx="8" cy="8" r="8"/>
 </svg>
 {% endmacro %}
 
 <!--User icon-->
-{% macro user_icon(size=25, color='currentcolor', tooltip='') %}
-<svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-person-fill" viewBox="0 0 16 16">
+{% macro user_icon(size=20, color='currentcolor') %}
+<svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-person-fill" viewBox="0 0 20 20">
   <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
 </svg>
 {% endmacro %}
 
 <!--Theme icon-->
-{% macro theme_icon(size=20, color='currentcolor', tooltip='') %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-palette-fill" viewBox="0 0 16 16">
+{% macro theme_icon(size=20, color='currentcolor') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-palette-fill" viewBox="0 0 20 20">
   <path d="M12.433 10.07C14.133 10.585 16 11.15 16 8a8 8 0 1 0-8 8c1.996 0 1.826-1.504 1.649-3.08-.124-1.101-.252-2.237.351-2.92.465-.527 1.42-.237 2.433.07zM8 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm4.5 3a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zM5 6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm.5 6.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
 </svg>
 {% endmacro %}
 
 <!--Folder card-->
 {% macro folder_card(folder) %}
-<div class="card col-xl-4 border-0 rounded" style="position:relative" id="folder{{ folder.id }}">
-  <div class="card-body my-3 p-3 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
-    <a href="{{ url_for('folders.folder', id_=folder.id) }}" class="link fw-bold">{{ folder.name }}</a>
-    <a class="px-2 py-1 fw-bold d-inline mx-1 link" style="background-color:black; color:white; font-size:0.75em; border-radius:10px;" onclick="expandDiv('folder' + {{ folder.id }}, 'tasks' + {{ folder.id }})">{{ folder.get_undone_count() }}</a>
-    <span class="float-end">
-      <a class="link mx-1" onclick="expandDiv('folder' + {{ folder.id }}, 'taskCreate' + {{ folder.id }})">{{ add_icon(size=16) }}</a>
-      <a class="link mx-1" onclick="expandDiv('folder' + {{ folder.id }}, 'folderUpdate' + {{ folder.id }})">{{ edit_icon(size=16) }}</a>
-      <a class="link mx-1" onclick="expandDiv('folder' + {{ folder.id }}, 'folderDelete' + {{ folder.id }})">{{ delete_icon(size=16) }}</a>
-    </span>
-    <div id="taskCreate{{ folder.id }}" style="display:none" class="mt-3">{{ task_create_form(folder) }}</div>
-    <div id="folderUpdate{{ folder.id }}" style="display:none" class="mt-3">{{ folder_update_form(folder) }}</div>
-    <div id="folderDelete{{ folder.id }}" style="display:none" class="mt-3"><a class="btn btn-danger w-100" onclick="folderDelete({{ folder.id }})">Delete</a></div>
-    <div class="mt-3" id="tasks{{ folder.id }}" style="display:none">
-      {% for i in folder.get_tasks() | sort(attribute='done') %}
-      <div class="list-group-item-action">
-        <a href="{{ url_for('tasks.task_toggle', id_=i.id) }}" class="link">{{ check_icon(i.done, size=16) }}</a>
-        {{ paragraph(i.name, class='d-inline', size=0.9) }}
-        <a href="{{ url_for('tasks.task_delete', id_=i.id) }}" class="link float-end">{{ delete_icon(size=16) }}</a>
-      </div>
-      {% endfor %}
+<div class="card border-0 col-4">
+  <div class="card-body my-2 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
+    <a class="link h5" href="{{ url_for('folder', id_=folder.id) }}">
+      {{ folder.name }}
+      <span class="badge bg-dark text-light">{{ folder.get_undone_count() }}</span>
+    </a>
+    <div class="float-end">
+      <a class="link mx-1" onclick="toggleDiv('edit' + {{ folder.id }})">{{ macros.edit_icon() }}</a>
+      <a class="link mx-1" onclick="toggleDiv('delete' + {{ folder.id }})">{{ macros.delete_icon() }}</a>
     </div>
+    <div id="edit{{ folder.id }}" style="display:none" class="mt-3">{{ folder_edit_form(folder) }}</div>
+    <button class="btn btn-danger w-100 mt-3" onclick="folderDelete({{ folder.id }})" id="delete{{ folder.id }}" style="display:none">Delete</button>
   </div>
 </div>
 {% endmacro %}
 
 <!--Task card-->
 {% macro task_card(task) %}
-<div class="card col-xl-4 border-0" style="position:relative;" id="taskCard{{ task.id }}">
-  <div class="card-body shadow-sm my-3 p-3" style="border-radius: 10px; border: 5px solid {{ task.folders.color }}; {% if task.done %}background-color:#c9ffc9;{% endif %}">
-    <div class="d-flex justify-content-between">
-      <a href="{{ url_for('tasks.task', id_=task.id) }}" class="link fw-bold text-truncate" style="font-size:0.9em" data-bs-toggle="tooltip" title="{{ task.name }}">{{ task.name }}</a>
-      <a href="{{ url_for('folders.folder', id_=task.folders.id) }}" class="badge text-truncate link mb-1" style="color:white; background-color:{{ task.folders.color }}">{{ task.folders.name }}</a>
-    </div>
-    <div>
-      <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done, size=16) }}</a>
-      {% if task.reminder %}{{ reminder_icon(size=16) }}{% endif %}
-      {% if task.subtasks.count() > 0 %}
-      <a class="badge bg-dark link rounded-pill" style="color:white" onclick="expandDiv('taskCard' + {{ task.id }}, 'subtasks_'+{{ task.id }})">{{ task.get_subtasks_count() }}</a>
-      {% endif %}
-      <a class="float-end mx-1" onclick="expandDiv('taskCard' + {{ task.id }}, 'task_delete_'+{{ task.id }})">{{ delete_icon(size=16) }}</a>
-      {% if not task.done %}
-      <a class="float-end mx-1" onclick="expandDiv('taskCard' + {{ task.id }}, 'subtask_create_'+{{ task.id }})">{{ add_icon(size=16) }}</a>
-      {% endif %}
-    </div>
-    <a class="btn btn-danger w-100 mt-3" id="task_delete_{{ task.id }}" style="display:none;" onclick="taskDelete({{ task.id }})">Delete</a>
-    <div id="subtask_create_{{ task.id }}" style="display:none" class="mt-3">{{ subtask_create_form(task) }}</div>
-    {% if task.subtasks.count() > 0 %}
-    <div class="mt-3" style="display:none" id="subtasks_{{ task.id }}">
-      <div class="progress mb-3">
-        <div class="progress-bar" role="progressbar" id="progress{{ task.id }}" style="width:{{ task.get_subtasks_progress() }}%"></div>
-      </div>
-      {% for i in task.subtasks | sort(attribute='done') %}
-      <div class="list-group-item-action">
-        <a class="link" onclick="taskToggle({{ i.id }})">{{ check_icon(i.done, size=16) }}</a>
-        {{ paragraph(i.name, class='d-inline', size=0.9) }}
-        <a href="{{ url_for('tasks.task_delete', id_=i.id) }}" class="link float-end">{{ delete_icon(size=16) }}</a>
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
+<div class="card col-4 border-0">
+  <div class="card-body my-2" style="border:5px solid {{ task.folders.color }}; border-radius:10px;">
+    <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done, size=16) }}</a>
+    <span>{{ task.name }}</span>
+    <a class="link float-end" onclick="toggleDiv('deleteTask' + {{ task.id }})">{{ delete_icon() }}</a>
+    <button class="btn btn-danger w-100 mt-3" style="display:none" id="deleteTask{{ task.id }}" onclick="taskDelete({{ task.id }})">Delete</button>
   </div>
 </div>
 {% endmacro %}
 
-<!--Habit card-->
-{% macro habit_card(habit) %}
-<div class="card col-xl-6 border-0 rounded" id="habit{{ habit.id }}">
-  <div class="card-body my-3 p-3 shadow-sm" style="border-radius:10px; border:5px solid {{ habit.color }}">
-    {{ circle_icon(size=20, color=habit.color) }}
-    <a href="{{ url_for('habits.habit', id_=habit.id) }}" class="link fw-bold d-inline mx-2">{{ habit.name }}</a>
-    {% if habit.reminder %}{{ reminder_icon(size=17) }}{% endif %}
-    {{ paragraph('%s, starting %s' % (habit.frequency, habit.start_date.strftime('%B %d, %Y')), class='d-inline fst-italic text-muted', size=0.8) }}
-    <div class="float-end">
-      <a href="{{ url_for('habits.habit_today', id_=habit.id) }}" class="link mx-1">{{ calendar_icon(size=20, color='green') }}</a>
-      <a class="link mx-1" onclick="expandDiv('habit' + {{ habit.id }}, 'habitUpdate' + {{ habit.id }})">{{ edit_icon(size=20) }}</a>
-      <a class="link mx-1" onclick="expandDiv('habit' + {{ habit.id }}, 'habitDelete' + {{ habit.id }})">{{ delete_icon(size=20) }}</a>
-    </div>
-    <div id="habitUpdate{{ habit.id }}" style="display:none" class="mt-3">{{ habit_update_form(habit) }}</div>
-    <div id="habitDelete{{ habit.id }}" style="display:none" class="mt-3"><a href="{{ url_for('habits.habit_delete', id_=habit.id) }}" class="btn btn-danger w-100">Delete</a></div>
-  </div>
-</div>
+{% macro login_form() %}
+<form class="form-group" method="POST" action="{{ url_for('login') }}">
+  <input autocomplete="off" class="form-control mb-2" type="text" name="email" placeholder="E-mail">
+  <input autocomplete="off" class="form-control mb-2" type="password" name="password" placeholder="Password">
+  <button type="submit" class="btn btn-custom w-100">Log In</button>
+</form>
 {% endmacro %}
 
-{% macro day_item(day) %}
-<div class="card col-12 border-0">
-  <div class="card-body border rounded shadow-sm m-2">
-    {{ circle_icon(size=20, color=day.habits.color, class='m-0') }}
-    {{ paragraph(day.date.strftime('%B %d, %Y'), class='fst-italic d-inline mx-2') }}
-    <a href="{{ url_for('habits.day_delete', id_=day.id) }}" class="float-end">{{ delete_icon(size=20) }}</a>
-  </div>
-</div>
-{% endmacro %}
-
-{% macro session_card(session) %}
-<div class="list-group-item list-group-item-action border-0 d-flex justify-content-between">
-  {{ paragraph('%s minutes' % session.length) }}
-  <a onclick="deleteSession({{ session.id }})">{{ delete_icon(size=15) }}</a>
-</div>
+{% macro signup_form() %}
+<form class="form-group" method="POST" action="{{ url_for('signup') }}">
+  <input autocomplete="off" class="form-control mb-2" type="text" name="first_name" placeholder="First Name">
+  <input autocomplete="off" class="form-control mb-2" type="text" name="last_name" placeholder="Last Name">
+  <input autocomplete="off" class="form-control mb-2" type="text" name="email" placeholder="E-mail">
+  <input autocomplete="off" class="form-control mb-2" type="password" name="password" placeholder="Password">
+  <button type="submit" class="btn btn-custom w-100">Sign Up</button>
+</form>
 {% endmacro %}
 
 <!--Task create form-->
 {% macro task_create_form(folder='') %}
-<form class="input-group" method="POST" action="{{ url_for('tasks.task_create') }}" id="taskCreate">
-  {{ input('name', 'Name', id='taskName') }}
-  <select name="folder" class="form-control" id="taskFolder">
-    <option>Select</option>
-    {% for i in all_folders %}
-    <option value="{{ i.id }}" {% if folder.id==i.id %}selected{% endif %}>{{ i.name }}</option>
+<form class="input-group" onsubmit="event.preventDefault(); taskCreate({{ folder.id }}); this.reset();">
+  <input autocomplete="off" class="form-control" id="taskName" placeholder="Name" type="text">
+  {% if not folder %}
+  <select id="taskFolder" class="form-control" autocomplete="off">
+    {% for i in current_user.folders %}
+    <option value="{{ i.id }}">{{ i.name }}</option>
     {% endfor %}
   </select>
+  {% endif %}
   <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
 
 <!--Subtask create form-->
 {% macro subtask_create_form(task) %}
-<form class="input-group" method="POST" action="{{ url_for('tasks.subtask_create', id_=task.id) }}">
-  {{ input('name', 'Name') }}
-  <button type="submit" class="btn btn-custom">+</button>
+<form>
+
 </form>
 {% endmacro %}
 
 <!--Task update form-->
 {% macro task_update_form(task) %}
-<form class="form-group" method="POST" action="{{ url_for('tasks.task_update', id_=task.id) }}">
-  {{ input('name', 'Name', class='mb-2', value=task.name) }}
-  <textarea autocomplete="off" name="note" placeholder="Note" class="form-control mb-2" rows="2">{% if task.note %}{{ task.note }}{% endif %}</textarea>
-  <select name="folder" class="form-control mb-2">
-    <option>Select</option>
-    {% for i in all_folders %}
-    <option value="{{ i.id }}" {% if task.folder== i.id %}selected{% endif %}>{{ i.name }}</option>
-    {% endfor %}
-  </select>
-  <div class="form-check mb-2">
-    <input type="checkbox" autocomplete="off" class="form-check-input" name="reminder" {% if task.reminder %}checked{% endif %} id="reminderCheck{{ task.id }}" onclick="checkBox(this.id, 'dateDue'+{{ task.id }})">
-    <label class="form-check-label" for="reminderCheck{{ task.id }}">Remind Me!</label>
-  </div>
-  <input type="date" class="form-control mb-2" name="date_due" value="{{ task.date_due }}" id="dateDue{{ task.id }}" style="{% if not task.reminder %}display:none{% endif %}">
-  <button type="submit" class="btn btn-custom w-100">Update</button>
+<form>
+
 </form>
 {% endmacro %}
 
 <!--Folder create form-->
 {% macro folder_create_form() %}
-<form class="input-group" method="POST" action="{{ url_for('folders.folder_create') }}" id="folderCreate">
-  {{ input('name', 'Name', id='folderName') }}
+<form class="input-group" onsubmit="event.preventDefault(); folderCreate(); this.reset();">
+  <input autocomplete="off" class="form-control" id="folderName" placeholder="Name" type="text">
   <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
 
 <!--Folder update form-->
-{% macro folder_update_form(folder) %}
-<form class="form-group" method="POST" action="{{ url_for('folders.folder_update', id_=folder.id) }}">
-  {{ input('name', 'Name', class='mb-2', value=folder.name) }}
-  <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ folder.color }}">
-  <button type="submit" class="btn btn-custom w-100">Update</button>
-</form>
-{% endmacro %}
-
-<!--Habit create form-->
-{% macro habit_create_form() %}
-<form class="form-group" method="POST" action="{{ url_for('habits.habit_create') }}">
-  {{ input('name', 'Name', class='mb-2') }}
-  <select name="frequency" class="form-control mb-2">
-    <option value="Daily">Daily</option>
-    <option value="Weekly">Weekly</option>
-    <option value="Monthly">Monthly</option>
-  </select>
-  <button type="submit" class="btn btn-custom w-100">+</button>
-</form>
-{% endmacro %}
-
-<!--Habit update form-->
-{% macro habit_update_form(habit) %}
-<form class="form-group" method="POST" action="{{ url_for('habits.habit_update', id_=habit.id) }}">
-  {{ input('name', 'Name', class='mb-2', value=habit.name) }}
-  <select name="frequency" class="form-control mb-2">
-    <option value="Daily">Daily</option>
-    <option value="Weekly">Weekly</option>
-    <option value="Monthly">Monthly</option>
-  </select>
-  <input type="color" autocomplete="off" class="form-control mb-2" name="color" value="{{ habit.color }}">
-  <button type="submit" class="btn btn-custom w-100">Update</button>
-</form>
-{% endmacro %}
-
-{% macro session_create_form(class='') %}
-<form method="POST" action="{{ url_for('session_create') }}" class="form-group {{ class }}" id="sessionCreate">
-  <div class="input-group mb-2">
-    <button type="button" class="btn btn-success" onclick="$('#startTime').val(Date.now())">Start</button>
-    <input type="text" autocomplete="off" class="form-control" id="startTime" name="start_time" readonly>
-  </div>
-  <div class="input-group mb-2">
-    <button type="button" class="btn btn-danger" onclick="$('#stopTime').val(Date.now())">Stop</button>
-    <input type="text" autocomplete="off" class="form-control" id="stopTime" name="stop_time" readonly>
-  </div>
-  <button type="submit" class="btn btn-custom w-100">Submit</button>
+{% macro folder_edit_form(folder) %}
+<form onsubmit="event.preventDefault(); folderEdit({{ folder.id }});">
+  <input autocomplete="off" type="text" value="{{ folder.name }}" onchange="folderEdit({{ folder.id }})" class="form-control mb-2" id="folderName{{ folder.id }}">
+  <input autocomplete="off" type="color" value="{{ folder.color }}" onchange="folderEdit({{ folder.id }})" class="form-control mb-2" id="color{{ folder.id }}">
+  <button type="submit" class="btn btn-custom w-100">Save</button>
 </form>
 {% endmacro %}
 
 <!--Folders Sort-->
 {% macro folders_sort() %}
-<div class="list-inline">
-  <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
-  <div class="list-inline-item">
-    {% if order_by != 'name' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='name') }}">Name</a>{% endif %}
-    {% if order_by != 'color' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='color') }}">Color</a>{% endif %}
-    {% if order_by != 'date_created desc' %}<a class="badge text-dark link" href="{{ url_for('index', order_by='date_created desc') }}">Date Created</a>{% endif %}
-  </div>
+<div>
+
 </div>
 {% endmacro %}
 
 <!--Tasks Sort-->
 {% macro tasks_sort() %}
-<div class="list-inline d-flex">
-  <p class="badge badge-custom list-inline-item m-1" style="font-size:0.8em; cursor:pointer">Sort</p>
-  <div class="list-inline-item flex-grow-1">
-    {% if order_by != 'tasks.date_created desc' %}<a class="m-1 badge text-dark link" href="{{ url_for('tasks.tasks_', order_by='tasks.date_created desc') }}">Date Created</a>{% endif %}
-    {% if order_by != 'folders.name' %}<a class="m-1 badge text-dark link" href="{{ url_for('tasks.tasks_', order_by='folders.name') }}">Folder</a>{% endif %}
-    {% if session['hide_completed'] == true %}
-    <a class="m-1 badge text-dark link float-end" href="{{ url_for('tasks.hide_toggle') }}">Show Completed</a>
-    {% else %}
-    <a class="m-1 badge text-dark link float-end" href="{{ url_for('tasks.hide_toggle') }}">Hide Completed</a>
-    {% endif %}
-  </div>
+<div>
+
 </div>
 {% endmacro %}

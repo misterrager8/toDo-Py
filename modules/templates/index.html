@@ -3,18 +3,14 @@
 
 {% block body %}
 <title>Home</title>
-<div class="text-center m-3">
-  <a href="#" class="link " onclick="$('#folder_create').fadeToggle()">{{ macros.add_icon() }}</a>
-  <div style="display:none" id="folder_create" class="col-6 offset-3 mt-3">
-    {{ macros.folder_create_form() }}
-  </div>
+<a class="badge badge-custom link text-light my-2" onclick="toggleDiv('folderCreate')">+ New Folder</a>
+<div style="display:none" id="folderCreate">
+  {{ macros.folder_create_form() }}
 </div>
 
-{{ macros.folders_sort() }}
 <div class="row" id="allFolders">
   {% for i in current_user.folders %}
   {{ macros.folder_card(i) }}
   {% endfor %}
 </div>
-
 {% endblock %}

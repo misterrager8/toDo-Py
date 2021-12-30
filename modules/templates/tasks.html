@@ -3,10 +3,8 @@
 
 {% block body %}
 <title>Tasks</title>
-<div class="text-center my-3">
-  <a class="link" onclick="$('#task_create').fadeToggle();">{{ macros.add_icon() }}</a>
-  <div id="task_create" style="display:none" class="col-6 offset-3 mt-3">{{ macros.task_create_form() }}</div>
-</div>
+<a class="link badge badge-custom text-light my-2" onclick="toggleDiv('task_create')">+ New Task</a>
+<div id="task_create" style="display:none">{{ macros.task_create_form() }}</div>
 
 {{ macros.tasks_sort() }}
 <div class="row" id="allTasks">

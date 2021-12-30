@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% import "macros.html" as macros with context %}
-<html lang="en" id="site-content">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <link href="static/favicon.svg" rel="icon" type="image/x-icon"/>
@@ -11,35 +11,41 @@
 </head>
 <nav class="navbar navbar-expand-xl navbar-dark">
   <div class="container-fluid">
-    <div class="btn-group">
-      <a class="navbar-brand px-0" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
-      <button type="button" class="btn dropdown-toggle dropdown-toggle-split ps-0" data-bs-toggle="dropdown" style="color:white"></button>
-      <ul class="dropdown-menu">
-        {% for i in all_folders %}
-        <li><a class="dropdown-item" href="{{ url_for('folders.folder', id_=i.id) }}">
-          {{ macros.circle_icon(size=10, color=i.color, class='me-1') }}
-          {{ i.name }}
-        </a></li>
-        {% endfor %}
-      </ul>
-    </div>
-    <button type="button" data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navContent">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navContent">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a href="{{ url_for('tasks.tasks_') }}" class="nav-link">Tasks<p class="badge bg-dark m-0 ms-1">{{ total_undone }}</p></a></li>
-        <li class="nav-item"><a href="{{ url_for('habits.habits_') }}" class="nav-link">Habits</a></li>
-        <li class="nav-item"><a href="{{ url_for('calendar') }}" class="nav-link">Calendar</a></li>
-        <li class="nav-item"><a href="{{ url_for('sessions') }}" class="nav-link">Sessions</a></li>
-      </ul>
-      <div class="ms-auto navbar-nav dropdown">
-        <a href="#" class="nav-item nav-link" onclick="changeTheme()">{{ macros.theme_icon() }}</a>
-        <a href="#" class="nav-item nav-link" data-bs-toggle="dropdown">{{ macros.user_icon() }}</a>
-        <div class="dropdown-menu dropdown-menu-end">
-          <a class="dropdown-item" href="#">Log In</a>
-          <a class="dropdown-item" href="#">Sign Up</a>
+    <a class="navbar-brand" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item"><a href="{{ url_for('tasks_') }}" class="nav-link">Tasks</a></li>
+    </ul>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item"><a class="nav-link" onclick="changeTheme()">{{ macros.theme_icon() }}</a></li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-target="#userDD" data-bs-toggle="dropdown">
+          {% if not current_user.is_anonymous %}<span class="nav-item me-2">{{ current_user.first_name }}</span>{% endif %}
+          {{ macros.user_icon() }}
+        </a>
+        <div class="dropdown-menu dropdown-menu-end text-center" id="userDD">
+          {% if not current_user.is_anonymous %}
+          <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+          {% else %}
+          <a class="dropdown-item" data-bs-target="#login" data-bs-toggle="modal">Log In</a>
+          <a class="dropdown-item" data-bs-target="#signup" data-bs-toggle="modal">Sign Up</a>
+          {% endif %}
         </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="modal" id="login">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+        {{ macros.login_form() }}
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="signup">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+        {{ macros.signup_form() }}
       </div>
     </div>
   </div>

@@ -1,18 +1,15 @@
 :root {
-    --primary-bg-color: #044759;
-    --secondary-bg-color: #1b92b3;
-    --navbar-font-color: #e0f8ff;
+    --primary-bg-color: #D1462F;
+    --secondary-bg-color: #F0C987;
 }
 
 .other-theme {
-    --primary-bg-color: #873200;
-    --secondary-bg-color: #ff7a2b;
-    --navbar-font-color: #ffe2d1;
+    --primary-bg-color: #0F0A0A;
+    --secondary-bg-color: #857E7B;
 }
 
 .navbar {
     background-color: var(--primary-bg-color);
-    color: var(--navbar-font-color);
 }
 
 .btn-custom {
@@ -28,17 +25,6 @@
 .link, .link:hover {
     color: inherit;
     text-decoration: none;
-}
-
-.dropdown-custom {
-    border-radius: 10px;
-    padding: 1rem;
-}
-
-.day {
-    width: 14.28%;
-    display: inline-block;
-    font-size: 0.9em;
 }
 
 a:hover {
