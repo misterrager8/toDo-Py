@@ -51,8 +51,8 @@ class Folder(db.Model):
     tasks = relationship("Task", backref="folders", lazy="dynamic")
     id = Column(Integer, primary_key=True)
 
-    def get_undone_count(self) -> int:
-        return self.tasks.filter(Task.parent_task == None, Task.done == False).count()
-
     def __init__(self, **kwargs):
         super(Folder, self).__init__(**kwargs)
+
+    def get_undone_count(self) -> int:
+        return self.tasks.filter(Task.parent_task == None, Task.done == False).count()

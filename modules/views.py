@@ -3,6 +3,7 @@ import random
 
 from flask import request, render_template, current_app, url_for
 from flask_login import login_user, current_user, logout_user, login_required
+from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
@@ -22,7 +23,8 @@ def load_user(id_) -> User:
 @current_app.route("/")
 def index():
     order_by = request.args.get("order_by", default="date_created desc")
-    return render_template("index.html", order_by=order_by)
+    _ = current_user.folders.order_by(text(order_by))
+    return render_template("index.html", folders_=_, order_by=order_by)
 
 
 @current_app.route("/login", methods=["POST"])
@@ -66,7 +68,7 @@ def folder():
 @current_app.route("/folder_create", methods=["POST"])
 @login_required
 def folder_create():
-    database.create(Folder(name=request.form["name"].title(),
+    database.create(Folder(name=request.form["name"],
                            color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
                            date_created=datetime.datetime.now(),
                            user=current_user.id))
@@ -101,8 +103,8 @@ def folder_delete():
 @login_required
 def tasks_():
     order_by = request.args.get("order_by", default="tasks.date_created desc")
-
-    return render_template("tasks.html", order_by=order_by)
+    _ = current_user.tasks.join(Folder).order_by(text(order_by))
+    return render_template("tasks.html", tasks_=_, order_by=order_by)
 
 
 @current_app.route("/task")
@@ -116,7 +118,7 @@ def task():
 @current_app.route("/task_create", methods=["POST"])
 @login_required
 def task_create():
-    database.create(Task(name=request.form["name"].title(),
+    database.create(Task(name=request.form["name"],
                          folder=int(request.form["id_"]),
                          date_created=datetime.datetime.now(),
                          user=current_user.id))
@@ -129,7 +131,7 @@ def task_create():
 def subtask_create():
     _: Task = database.get(Task, int(request.form["id_"]))
 
-    database.create(Task(name=request.form["name"].title(),
+    database.create(Task(name=request.form["name"],
                          folder=_.folder,
                          date_created=datetime.datetime.now(),
                          parent_task=_.id,

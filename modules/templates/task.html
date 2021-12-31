@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 {% import "macros.html" as macros with context %}
 
+<!--suppress ALL-->
 {% block body %}
 <title>{{ task.name }}</title>
-<div id="taskContent" class="my-5">
-  <input value="{{ task.name }}" id="name{{ task.id }}" autocomplete="off" class="form-control border-0 border-top my-3 text-center fw-bold" onchange="taskEdit({{ task.id }})" style="font-size:2em">
-  <textarea autocomplete="off" class="form-control border-0 border-top my-3 fst-italic" id="note{{ task.id }}" onchange="taskEdit({{ task.id }})" placeholder="Note">{{ task.note or '' }}</textarea>
+<div id="taskContent" class="my-3">
+  <input value="{{ task.name }}" id="name{{ task.id }}" autocomplete="off" class="form-control mb-2" onchange="taskEdit({{ task.id }})">
+  <textarea autocomplete="off" class="form-control mb-2" id="note{{ task.id }}" onchange="taskEdit({{ task.id }})" placeholder="Note" rows="10">{{ task.note or '' }}</textarea>
+  <select id="folder{{ task.id }}" class="form-control" autocomplete="off" onchange="taskEdit({{ task.id }})">
+    {% for i in current_user.folders %}
+    <option value="{{ i.id }}" {% if i.id==task.folders.id %}selected{% endif %}>{{ i.name }}</option>
+    {% endfor %}
+  </select>
 </div>
 {% if task.subtasks.count() > 0 %}
 <div class="mt-3" id="allTasks">
@@ -15,7 +21,7 @@
   {% for i in task.subtasks | sort(attribute='done') %}
   <div class="list-group-item-action">
     <a class="link" onclick="taskToggle({{ i.id }})">{{ macros.check_icon(i.done, size=16) }}</a>
-    {{ macros.paragraph(i.name, class='d-inline', size=0.9) }}
+    <span>{{ i.name }}</span>
     <a href="{{ url_for('tasks.task_delete', id_=i.id) }}" class="link float-end">{{ macros.delete_icon(size=16) }}</a>
   </div>
   {% endfor %}

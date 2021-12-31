@@ -1,5 +1,5 @@
 function changeTheme() {
-    $('.btn-custom, .badge-custom, .navbar').addClass('other-theme');
+    $('.btn-custom, .badge-custom, .navbar, body').addClass('other-theme');
 }
 
 function toggleDiv(divId) {
@@ -12,6 +12,7 @@ function taskCreate(folderId) {
         name : $('#taskName').val()
     }, function(data) {
         $('#allTasks').load(location.href + ' #allTasks');
+        $('#allFolders').load(location.href + ' #allFolders');
     });
 }
 
@@ -19,7 +20,8 @@ function taskEdit(taskId) {
     $.post('task_edit', {
         id_ : taskId,
         name : $('#name' + taskId).val(),
-        note : $('#note' + taskId).val()
+        note : $('#note' + taskId).val(),
+        folder : $('#folder' + taskId).val()
     }, function(data) {
         $('#taskContent').load(location.href + ' #taskContent');
     });

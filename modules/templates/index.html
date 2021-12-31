@@ -3,13 +3,13 @@
 
 {% block body %}
 <title>Home</title>
-<a class="badge badge-custom link text-light my-2" onclick="toggleDiv('folderCreate')">+ New Folder</a>
+<a class="badge badge-custom link my-2" onclick="toggleDiv('folderCreate')">+ New Folder</a>
 <div style="display:none" id="folderCreate">
   {{ macros.folder_create_form() }}
 </div>
 
 <div class="row" id="allFolders">
-  {% for i in current_user.folders %}
+  {% for i in folders_ %}
   {{ macros.folder_card(i) }}
   {% endfor %}
 </div>

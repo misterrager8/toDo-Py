@@ -77,8 +77,8 @@
 
 <!--Folder card-->
 {% macro folder_card(folder) %}
-<div class="card border-0 col-4">
-  <div class="card-body my-2 shadow-sm" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
+<div class="card border-0 col-xl-4">
+  <div class="card-body my-2" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
     <a class="link h5" href="{{ url_for('folder', id_=folder.id) }}">
       {{ folder.name }}
       <span class="badge bg-dark text-light">{{ folder.get_undone_count() }}</span>
@@ -95,10 +95,10 @@
 
 <!--Task card-->
 {% macro task_card(task) %}
-<div class="card col-4 border-0">
+<div class="card col-xl-4 border-0">
   <div class="card-body my-2" style="border:5px solid {{ task.folders.color }}; border-radius:10px;">
     <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done, size=16) }}</a>
-    <span>{{ task.name }}</span>
+    <a class="link ms-2" href="{{ url_for('task', id_=task.id) }}">{{ task.name }}</a>
     <a class="link float-end" onclick="toggleDiv('deleteTask' + {{ task.id }})">{{ delete_icon() }}</a>
     <button class="btn btn-danger w-100 mt-3" style="display:none" id="deleteTask{{ task.id }}" onclick="taskDelete({{ task.id }})">Delete</button>
   </div>
@@ -179,6 +179,7 @@
 <!--Tasks Sort-->
 {% macro tasks_sort() %}
 <div>
-
+  {% if order_by != 'tasks.date_created desc' %}<a class="link badge badge-custom rounded-pill" href="{{ url_for('tasks_', order_by='tasks.date_created desc') }}">Date Created</a>{% endif %}
+  {% if order_by != 'folders.name' %}<a class="link badge badge-custom rounded-pill" href="{{ url_for('tasks_', order_by='folders.name') }}">Folder</a>{% endif %}
 </div>
 {% endmacro %}

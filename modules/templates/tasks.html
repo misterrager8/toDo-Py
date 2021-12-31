@@ -3,12 +3,12 @@
 
 {% block body %}
 <title>Tasks</title>
-<a class="link badge badge-custom text-light my-2" onclick="toggleDiv('task_create')">+ New Task</a>
+<a class="link badge badge-custom my-2" onclick="toggleDiv('task_create')">+ New Task</a>
 <div id="task_create" style="display:none">{{ macros.task_create_form() }}</div>
 
 {{ macros.tasks_sort() }}
 <div class="row" id="allTasks">
-  {% for i in current_user.tasks %}
+  {% for i in tasks_ %}
   {{ macros.task_card(i) }}
   {% endfor %}
 </div>

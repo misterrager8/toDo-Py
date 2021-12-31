@@ -1,25 +1,24 @@
 :root {
-    --primary-bg-color: #D1462F;
-    --secondary-bg-color: #F0C987;
+    --navbar-bg-color: white;
+    --body-bg-color: black;
 }
 
 .other-theme {
-    --primary-bg-color: #0F0A0A;
-    --secondary-bg-color: #857E7B;
+    --navbar-bg-color: black;
+    --body-bg-color: white;
 }
 
-.navbar {
-    background-color: var(--primary-bg-color);
+body, .card, input, select, textarea {
+    background-color: var(--body-bg-color) !important;
+    color: var(--navbar-bg-color) !important;
 }
 
-.btn-custom {
-    background-color: var(--secondary-bg-color);
-    color: white;
+.badge-custom, .btn-custom, .navbar {
+    background-color: var(--navbar-bg-color);
 }
 
 .badge-custom {
-    background-color: var(--secondary-bg-color);
-    color: white;
+    color: var(--body-bg-color) !important;
 }
 
 .link, .link:hover {

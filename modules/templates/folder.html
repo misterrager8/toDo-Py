@@ -4,7 +4,7 @@
 {% block body %}
 <title>{{ folder.name }}</title>
 <p class="h3 my-3">{{ folder.name }}</p>
-<a class="badge badge-custom link text-light my-2" onclick="toggleDiv('taskCreate')">+ New Task</a>
+<a class="badge badge-custom link my-2" onclick="toggleDiv('taskCreate')">+ New Task</a>
 <div id="taskCreate" style="display:none">{{ macros.task_create_form(folder) }}</div>
 
 <div class="row" id="allTasks">
