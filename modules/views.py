@@ -106,8 +106,13 @@ def user_edit():
 @current_app.route("/bullet_create", methods=["POST"])
 @login_required
 def bullet_create():
-    database.create(Bullet(type_=request.form["type_"],
-                           content=request.form["content"],
+    type_ = request.form["type_"]
+    content = request.form["content"]
+    event_date = datetime.datetime.strptime(request.form["event_date"], "%Y-%m-%d").date() if type_ == "Event" else None
+
+    database.create(Bullet(type_=type_,
+                           content=content,
+                           event_date=event_date,
                            date_created=datetime.datetime.now(),
                            user=current_user.id))
 
@@ -120,6 +125,8 @@ def editor():
     if request.method == "POST":
         _: Bullet = database.get(Bullet, int(request.form["id_"]))
         _.content = request.form["content"]
+        _.event_date = datetime.datetime.strptime(request.form["event_date"],
+                                                  "%Y-%m-%d").date() if _.type_ == "Event" else None
 
         database.update()
 

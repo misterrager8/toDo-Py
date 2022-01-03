@@ -238,7 +238,7 @@
 <form onsubmit="event.preventDefault(); bulletEdit({{ bullet_.id }});">
   {{ toolbar() }}
   <div contenteditable="true" class="border rounded mb-2 p-3 overflow-auto" style="height:300px" id="content">{{ bullet_.content | safe }}</div>
-  {% if bullet_.type_ == 'Event' %}<input type="date" id="eventDate" class="form-control mb-2" autocomplete="off" value="{{ bullet_.event_date }}">{% endif %}
+  {% if bullet_.type_ == 'Event' %}<input type="date" id="eventDate" class="form-control mb-2" autocomplete="off" value="{{ bullet_.event_date.date() }}">{% endif %}
   <button type="submit" class="btn btn-custom w-100">
     <span class="spinner-border spinner-border-sm" style="display:none" id="saveSpinner"></span>
     Save

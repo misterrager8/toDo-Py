@@ -25,7 +25,8 @@ function styleText(style, val) {
 function bulletCreate() {
     $.post('bullet_create', {
         type_ : $('#type_').val(),
-        content : $('#content').html()
+        content : $('#content').html(),
+        event_date : $('#eventDate').val()
     }, function(data) {
         $('#content').html('')
         refreshDiv('tiles');
@@ -36,7 +37,8 @@ function bulletEdit(bulletId) {
     $('#saveSpinner').show();
     $.post('editor', {
         id_ : bulletId,
-        content : $('#content').html()
+        content : $('#content').html(),
+        event_date : $('#eventDate').val()
     }, function(data) {
         $('#saveSpinner').hide();
     });
