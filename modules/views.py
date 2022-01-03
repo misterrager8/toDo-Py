@@ -33,25 +33,25 @@ def index():
 
 @current_app.route("/notes")
 def notes():
-    _ = current_user.bullets.filter(Bullet.type_ == "Note")
+    _ = current_user.bullets.filter(Bullet.type_ == "Note").order_by(text("date_created desc"))
     return render_template("notes.html", objects=_)
 
 
 @current_app.route("/events")
 def events():
-    _ = current_user.bullets.filter(Bullet.type_ == "Event")
+    _ = current_user.bullets.filter(Bullet.type_ == "Event").order_by(text("date_created desc"))
     return render_template("events.html", objects=_)
 
 
 @current_app.route("/tasks")
 def tasks():
-    _ = current_user.bullets.filter(Bullet.type_ == "Task")
+    _ = current_user.bullets.filter(Bullet.type_ == "Task").order_by(text("date_created desc"))
     return render_template("tasks.html", objects=_)
 
 
 @current_app.route("/pinned")
 def pinned():
-    _ = current_user.bullets.filter(Bullet.pinned == True)
+    _ = current_user.bullets.filter(Bullet.pinned == True).order_by(text("date_created desc"))
     return render_template("pinned.html", objects=_)
 
 
