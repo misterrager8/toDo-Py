@@ -190,8 +190,7 @@
       </div>
       {% endif %}
     </div>
-    <div class="card-body pt-0 text-truncate content-collapse {% if bullet.done %}text-decoration-line-through{% endif %}" id="content{{ bullet.id }}">
-      <a class="link" onclick="$('#content' + {{ bullet.id }}).toggleClass('content-collapse')">{{ expand_icon() }}</a>
+    <div onclick="$('#content' + {{ bullet.id }}).toggleClass('content-collapse')" class="card-body text-truncate content-collapse {% if bullet.done %}text-decoration-line-through{% endif %}" id="content{{ bullet.id }}">
       <div style="white-space:pre-wrap">{{ bullet.content | safe }}</div>
     </div>
     <div class="card-footer">
