@@ -1,15 +1,14 @@
 import datetime
-import random
 
 from flask import request, render_template, current_app, url_for
-from flask_login import login_user, current_user, logout_user, login_required
+from flask_login import login_user, logout_user, current_user
 from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
 from modules import login_manager, db
 from modules.ctrla import Database
-from modules.models import Folder, Task, User
+from modules.models import User, Bullet
 
 database = Database()
 
@@ -20,11 +19,40 @@ def load_user(id_) -> User:
     return _
 
 
+@current_app.route("/profile")
+def profile():
+    return render_template("profile.html")
+
+
 @current_app.route("/")
 def index():
     order_by = request.args.get("order_by", default="date_created desc")
-    _ = current_user.folders.order_by(text(order_by))
-    return render_template("index.html", folders_=_, order_by=order_by)
+    bullets_ = current_user.bullets.order_by(text(order_by)) if current_user.is_authenticated else None
+    return render_template("index.html", order_by=order_by, bullets_=bullets_)
+
+
+@current_app.route("/notes")
+def notes():
+    _ = current_user.bullets.filter(Bullet.type_ == "Note")
+    return render_template("notes.html", objects=_)
+
+
+@current_app.route("/events")
+def events():
+    _ = current_user.bullets.filter(Bullet.type_ == "Event")
+    return render_template("events.html", objects=_)
+
+
+@current_app.route("/tasks")
+def tasks():
+    _ = current_user.bullets.filter(Bullet.type_ == "Task")
+    return render_template("tasks.html", objects=_)
+
+
+@current_app.route("/pinned")
+def pinned():
+    _ = current_user.bullets.filter(Bullet.pinned == True)
+    return render_template("pinned.html", objects=_)
 
 
 @current_app.route("/login", methods=["POST"])
@@ -58,119 +86,68 @@ def signup():
     return redirect(url_for("index"))
 
 
-@current_app.route("/folder")
-@login_required
-def folder():
-    _: Folder = database.get(Folder, request.args.get("id_"))
-    return render_template("folder.html", folder=_)
+@current_app.route("/user_edit", methods=["POST"])
+def user_edit():
+    current_user.first_name = request.form["first_name"]
+    current_user.last_name = request.form["last_name"]
+    current_user.email = request.form["email"]
 
-
-@current_app.route("/folder_create", methods=["POST"])
-@login_required
-def folder_create():
-    database.create(Folder(name=request.form["name"],
-                           color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
-                           date_created=datetime.datetime.now(),
-                           user=current_user.id))
-
-    return redirect(request.referrer)
-
-
-@current_app.route("/folder_edit", methods=["POST"])
-@login_required
-def folder_edit():
-    _: Folder = database.get(Folder, int(request.form["id_"]))
-
-    _.name = request.form["name"]
-    _.color = request.form["color"]
     database.update()
 
     return redirect(request.referrer)
 
 
-@current_app.route("/folder_delete")
-@login_required
-def folder_delete():
-    _: Folder = database.get(Folder, request.args.get("id_"))
-    for i in _.tasks:
-        database.delete(i)
+@current_app.route("/bullet_create", methods=["POST"])
+def bullet_create():
+    database.create(Bullet(type_=request.form["type_"],
+                           content=request.form["content"],
+                           date_created=datetime.datetime.now(),
+                           user=current_user.id))
+
+    return redirect(url_for("index"))
+
+
+@current_app.route("/editor", methods=["POST", "GET"])
+def editor():
+    if request.method == "POST":
+        _: Bullet = database.get(Bullet, int(request.form["id_"]))
+        _.content = request.form["content"]
+
+        database.update()
+
+        return redirect(request.referrer)
+
+    elif request.method == "GET":
+        _: Bullet = database.get(Bullet, request.args.get("id_"))
+
+        return render_template("editor.html", bullet_=_)
+
+
+@current_app.route("/bullet_delete")
+def bullet_delete():
+    _: Bullet = database.get(Bullet, int(request.args.get("id_")))
     database.delete(_)
 
     return redirect(url_for("index"))
 
 
-@current_app.route("/tasks")
-@login_required
-def tasks_():
-    order_by = request.args.get("order_by", default="tasks.date_created desc")
-    _ = current_user.tasks.join(Folder).order_by(text(order_by))
-    return render_template("tasks.html", tasks_=_, order_by=order_by)
-
-
-@current_app.route("/task")
-@login_required
-def task():
-    _: Task = database.get(Task, request.args.get("id_"))
-
-    return render_template("task.html", task=_)
-
-
-@current_app.route("/task_create", methods=["POST"])
-@login_required
-def task_create():
-    database.create(Task(name=request.form["name"],
-                         folder=int(request.form["id_"]),
-                         date_created=datetime.datetime.now(),
-                         user=current_user.id))
-
-    return redirect(request.referrer)
-
-
-@current_app.route("/subtask_create", methods=["POST"])
-@login_required
-def subtask_create():
-    _: Task = database.get(Task, int(request.form["id_"]))
-
-    database.create(Task(name=request.form["name"],
-                         folder=_.folder,
-                         date_created=datetime.datetime.now(),
-                         parent_task=_.id,
-                         user=current_user.id))
-
-    return redirect(request.referrer)
-
-
-@current_app.route("/task_edit", methods=["POST"])
-@login_required
-def task_edit():
-    _: Task = database.get(Task, int(request.form["id_"]))
-
-    _.name = request.form["name"]
-    _.note = request.form["note"]
-    _.folder = int(request.form["folder"])
-    _.reminder = request.form.get("reminder") is not None
-    _.date_due = request.form["date_due"] if _.reminder else None
-
-    database.update()
-
-    return redirect(request.referrer)
-
-
-@current_app.route("/task_delete")
-@login_required
-def task_delete():
-    _: Task = database.get(Task, request.args.get("id_"))
-    database.delete(_)
-
-    return redirect(request.referrer)
-
-
 @current_app.route("/task_toggle")
-@login_required
 def task_toggle():
-    _: Task = database.get(Task, request.args.get("id_"))
+    _: Bullet = database.get(Bullet, int(request.args.get("id_")))
     _.done = not _.done
 
+    _.date_done = datetime.datetime.now() if _.done else None
+
     database.update()
 
-    return redirect(request.referrer)
+    return redirect(url_for("index"))
+
+
+@current_app.route("/pin_toggle")
+def pin_toggle():
+    _: Bullet = database.get(Bullet, int(request.args.get("id_")))
+    _.pinned = not _.pinned
+
+    database.update()
+
+    return redirect(url_for("index"))

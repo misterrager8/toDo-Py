@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block body %}
+<title>Profile</title>
+<div class="form-group">
+  <input type="text" class="form-control mb-2" onchange="userEdit()" value="{{ current_user.first_name }}" id="firstName">
+  <input type="text" class="form-control mb-2" onchange="userEdit()" value="{{ current_user.last_name }}" id="lastName">
+  <input type="text" class="form-control mb-2" onchange="userEdit()" value="{{ current_user.email }}" id="email">
+</div>
+{% endblock %}

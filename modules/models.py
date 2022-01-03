@@ -13,46 +13,38 @@ class User(db.Model, UserMixin):
     email = Column(Text)
     password = Column(Text)
     date_joined = Column(DateTime)
-    tasks = relationship("Task", lazy="dynamic")
-    folders = relationship("Folder", lazy="dynamic")
+    bullets = relationship("Bullet", lazy="dynamic")
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
 
 
-class Task(db.Model):
-    __tablename__ = "tasks"
+class Bullet(db.Model):
+    __tablename__ = "bullets"
 
-    name = Column(Text)
-    note = Column(Text)
-    done = Column(Boolean, default=False)
+    # Generic attrs
+    type_ = Column(Text)  # ["Task", "Event", or "Note"]
+    content = Column(Text)
     date_created = Column(DateTime)
-    date_due = Column(DateTime)
+    pinned = Column(Boolean, default=False)
+    user = Column(Integer, ForeignKey("users.id"))
+    id = Column(Integer, primary_key=True)
+
+    # Task attrs
+    done = Column(Boolean)
     date_done = Column(DateTime)
-    reminder = Column(Boolean, default=False)
-    folder = Column(Integer, ForeignKey("folders.id"))
-    user = Column(Integer, ForeignKey("users.id"))
-    parent_task = Column(Integer, ForeignKey("tasks.id"))
-    subtasks = relationship("Task", lazy="dynamic")
-    id = Column(Integer, primary_key=True)
+
+    # Event attrs
+    event_date = Column(DateTime)
 
     def __init__(self, **kwargs):
-        super(Task, self).__init__(**kwargs)
+        super(Bullet, self).__init__(**kwargs)
 
-
-class Folder(db.Model):
-    __tablename__ = "folders"
-
-    name = Column(Text)
-    color = Column(Text)
-    date_created = Column(DateTime)
-    user = Column(Integer, ForeignKey("users.id"))
-    tasks = relationship("Task", backref="folders", lazy="dynamic")
-    id = Column(Integer, primary_key=True)
-
-    def __init__(self, **kwargs):
-        super(Folder, self).__init__(**kwargs)
-
-    def get_undone_count(self) -> int:
-        return self.tasks.filter(Task.parent_task == None, Task.done == False).count()
+    def bullet_color(self):
+        if self.type_ == "Event":
+            return "#12664F"
+        elif self.type_ == "Task":
+            return "#320D6D"
+        elif self.type_ == "Note":
+            return "#FFD447"

@@ -3,68 +3,73 @@ function changeTheme() {
 }
 
 function toggleDiv(divId) {
-    $('#' + divId).toggle(250);
+    $('#' + divId).toggle();
 }
 
-function taskCreate(folderId) {
-    $.post('task_create', {
-        id_: folderId,
-        name : $('#taskName').val()
+function refreshDiv(divId) {
+    $('#' + divId).load(location.href + ' #' + divId);
+}
+
+function changeType() {
+    if ($('#type_').val() == 'Event') {
+        $('#eventDate').show();
+    } else {
+        $('#eventDate').hide();
+    }
+}
+
+function styleText(style, val) {
+    document.execCommand(style, false, val);
+}
+
+function bulletCreate() {
+    $.post('bullet_create', {
+        type_ : $('#type_').val(),
+        content : $('#content').html()
     }, function(data) {
-        $('#allTasks').load(location.href + ' #allTasks');
-        $('#allFolders').load(location.href + ' #allFolders');
+        $('#content').html('')
+        refreshDiv('tiles');
     });
 }
 
-function taskEdit(taskId) {
-    $.post('task_edit', {
-        id_ : taskId,
-        name : $('#name' + taskId).val(),
-        note : $('#note' + taskId).val(),
-        folder : $('#folder' + taskId).val()
+function bulletEdit(bulletId) {
+    $('#saveSpinner').show();
+    $.post('editor', {
+        id_ : bulletId,
+        content : $('#content').html()
     }, function(data) {
-        $('#taskContent').load(location.href + ' #taskContent');
+        $('#saveSpinner').hide();
     });
 }
 
-function taskToggle(taskId) {
+function userEdit() {
+    $.post('user_edit', {
+        first_name : $('#firstName').val(),
+        last_name : $('#lastName').val(),
+        email : $('#email').val()
+    });
+}
+
+function bulletDelete(bulletId) {
+    $.get('bullet_delete', {
+        id_ : bulletId
+    }, function(data) {
+        refreshDiv('tiles');
+    });
+}
+
+function taskToggle(bulletId) {
     $.get('task_toggle', {
-        id_: taskId
+        id_ : bulletId
     }, function(data) {
-        $('#allTasks').load(location.href + ' #allTasks');
+        refreshDiv('tiles');
     });
 }
 
-function taskDelete(taskId) {
-    $.get('task_delete', {
-        id_: taskId
+function pinToggle(bulletId) {
+    $.get('pin_toggle', {
+        id_ : bulletId
     }, function(data) {
-        $('#allTasks').load(location.href + ' #allTasks');
-    });
-}
-
-function folderCreate() {
-    $.post('folder_create', {
-        name : $('#folderName').val()
-    }, function(data) {
-        $('#allFolders').load(location.href + ' #allFolders');
-    });
-}
-
-function folderEdit(folderId) {
-    $.post('folder_edit', {
-        id_ : folderId,
-        name : $('#folderName' + folderId).val(),
-        color : $('#color' + folderId).val()
-    }, function(data) {
-        $('#allFolders').load(location.href + ' #allFolders');
-    });
-}
-
-function folderDelete(folderId) {
-    $.get('folder_delete', {
-        id_: folderId
-    }, function(data) {
-        $('#allFolders').load(location.href + ' #allFolders');
+        refreshDiv('tiles');
     });
 }

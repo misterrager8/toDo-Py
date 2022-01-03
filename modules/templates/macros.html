@@ -1,7 +1,7 @@
 <!--suppress ALL-->
 
 <!--Brand icon-->
-{% macro brand_icon(size=20, color='currentcolor') %}
+{% macro brand_icon(size=25, color='currentcolor') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-check-all" viewBox="0 0 16 16">
   <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992a.252.252 0 0 1 .02-.022zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486-.943 1.179z"/>
 </svg>
@@ -33,7 +33,7 @@
 
 <!--Reminder icon-->
 {% macro reminder_icon(size=20, color='currentcolor') %}
-<svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-alarm" viewBox="0 0 16 16">
+<svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-alarm" viewBox="0 0 20 20">
   <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z"/>
   <path d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z"/>
 </svg>
@@ -54,13 +54,6 @@
 </svg>
 {% endmacro %}
 
-<!--Circle icon-->
-{% macro circle_icon(size=20, color='currentcolor', class='') %}
-<svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-circle-fill {{ class }}" viewBox="0 0 16 16">
-  <circle cx="8" cy="8" r="8"/>
-</svg>
-{% endmacro %}
-
 <!--User icon-->
 {% macro user_icon(size=20, color='currentcolor') %}
 <svg xmlns="http://www.w3.org/2000/svg" title="{{ tooltip }}" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-person-fill" viewBox="0 0 20 20">
@@ -75,42 +68,98 @@
 </svg>
 {% endmacro %}
 
-<!--Folder card-->
-{% macro folder_card(folder) %}
-<div class="card border-0 col-xl-4">
-  <div class="card-body my-2" style="border: 5px solid {{ folder.color }}; border-radius:10px;">
-    <a class="link h5" href="{{ url_for('folder', id_=folder.id) }}">
-      {{ folder.name }}
-      <span class="badge bg-dark text-light">{{ folder.get_undone_count() }}</span>
-    </a>
-    <div class="float-end">
-      <a class="link mx-1" onclick="toggleDiv('edit' + {{ folder.id }})">{{ macros.edit_icon() }}</a>
-      <a class="link mx-1" onclick="toggleDiv('delete' + {{ folder.id }})">{{ macros.delete_icon() }}</a>
-    </div>
-    <div id="edit{{ folder.id }}" style="display:none" class="mt-3">{{ folder_edit_form(folder) }}</div>
-    <button class="btn btn-danger w-100 mt-3" onclick="folderDelete({{ folder.id }})" id="delete{{ folder.id }}" style="display:none">Delete</button>
-  </div>
-</div>
-{% endmacro %}
-
-<!--Task card-->
-{% macro task_card(task) %}
-<div class="card col-xl-4 border-0">
-  <div class="card-body my-2" style="border:5px solid {{ task.folders.color }}; border-radius:10px;">
-    <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done, size=16) }}</a>
-    <a class="link ms-2" href="{{ url_for('task', id_=task.id) }}">{{ task.name }}</a>
-    <a class="link float-end" onclick="toggleDiv('deleteTask' + {{ task.id }})">{{ delete_icon() }}</a>
-    <button class="btn btn-danger w-100 mt-3" style="display:none" id="deleteTask{{ task.id }}" onclick="taskDelete({{ task.id }})">Delete</button>
-  </div>
-</div>
-{% endmacro %}
-
 {% macro login_form() %}
 <form class="form-group" method="POST" action="{{ url_for('login') }}">
   <input autocomplete="off" class="form-control mb-2" type="text" name="email" placeholder="E-mail">
   <input autocomplete="off" class="form-control mb-2" type="password" name="password" placeholder="Password">
   <button type="submit" class="btn btn-custom w-100">Log In</button>
 </form>
+{% endmacro %}
+
+{% macro expand_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-three-dots {{ class }}" viewBox="0 0 16 16">
+  <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+</svg>
+{% endmacro %}
+
+{% macro bold_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-type-bold {{ class }}" viewBox="0 0 16 16">
+  <path d="M8.21 13c2.106 0 3.412-1.087 3.412-2.823 0-1.306-.984-2.283-2.324-2.386v-.055a2.176 2.176 0 0 0 1.852-2.14c0-1.51-1.162-2.46-3.014-2.46H3.843V13H8.21zM5.908 4.674h1.696c.963 0 1.517.451 1.517 1.244 0 .834-.629 1.32-1.73 1.32H5.908V4.673zm0 6.788V8.598h1.73c1.217 0 1.88.492 1.88 1.415 0 .943-.643 1.449-1.832 1.449H5.907z"/>
+</svg>
+{% endmacro %}
+
+{% macro italic_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-type-italic {{ class }}" viewBox="0 0 16 16">
+  <path d="M7.991 11.674 9.53 4.455c.123-.595.246-.71 1.347-.807l.11-.52H7.211l-.11.52c1.06.096 1.128.212 1.005.807L6.57 11.674c-.123.595-.246.71-1.346.806l-.11.52h3.774l.11-.52c-1.06-.095-1.129-.211-1.006-.806z"/>
+</svg>
+{% endmacro %}
+
+{% macro bullet_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-list-ul {{ class }}" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+</svg>
+{% endmacro %}
+
+{% macro number_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-list-ol {{ class }}" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"/>
+  <path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338v.041zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635V5z"/>
+</svg>
+{% endmacro %}
+
+{% macro underline_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-type-underline {{ class }}" viewBox="0 0 16 16">
+  <path d="M5.313 3.136h-1.23V9.54c0 2.105 1.47 3.623 3.917 3.623s3.917-1.518 3.917-3.623V3.136h-1.23v6.323c0 1.49-.978 2.57-2.687 2.57-1.709 0-2.687-1.08-2.687-2.57V3.136zM12.5 15h-9v-1h9v1z"/>
+</svg>
+{% endmacro %}
+
+{% macro strikethrough_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-type-strikethrough {{ class }}" viewBox="0 0 16 16">
+  <path d="M6.333 5.686c0 .31.083.581.27.814H5.166a2.776 2.776 0 0 1-.099-.76c0-1.627 1.436-2.768 3.48-2.768 1.969 0 3.39 1.175 3.445 2.85h-1.23c-.11-1.08-.964-1.743-2.25-1.743-1.23 0-2.18.602-2.18 1.607zm2.194 7.478c-2.153 0-3.589-1.107-3.705-2.81h1.23c.144 1.06 1.129 1.703 2.544 1.703 1.34 0 2.31-.705 2.31-1.675 0-.827-.547-1.374-1.914-1.675L8.046 8.5H1v-1h14v1h-3.504c.468.437.675.994.675 1.697 0 1.826-1.436 2.967-3.644 2.967z"/>
+</svg>
+{% endmacro %}
+
+{% macro indent_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-text-indent-left {{ class }}" viewBox="0 0 16 16">
+  <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+</svg>
+{% endmacro %}
+
+{% macro outdent_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-text-indent-right {{ class }}" viewBox="0 0 16 16">
+  <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm10.646 2.146a.5.5 0 0 1 .708.708L11.707 8l1.647 1.646a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2zM2 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+</svg>
+{% endmacro %}
+
+{% macro link_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-link {{ class }}" viewBox="0 0 16 16">
+  <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
+  <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"/>
+</svg>
+{% endmacro %}
+
+{% macro heading_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-type-h3 {{ class }}" viewBox="0 0 16 16">
+  <path d="M7.637 13V3.669H6.379V7.62H1.758V3.67H.5V13h1.258V8.728h4.62V13h1.259zm3.625-4.272h1.018c1.142 0 1.935.67 1.949 1.674.013 1.005-.78 1.737-2.01 1.73-1.08-.007-1.853-.588-1.935-1.32H9.108c.069 1.327 1.224 2.386 3.083 2.386 1.935 0 3.343-1.155 3.309-2.789-.027-1.51-1.251-2.16-2.037-2.249v-.068c.704-.123 1.764-.91 1.723-2.229-.035-1.353-1.176-2.4-2.954-2.385-1.873.006-2.857 1.162-2.898 2.358h1.196c.062-.69.711-1.299 1.696-1.299.998 0 1.695.622 1.695 1.525.007.922-.718 1.592-1.695 1.592h-.964v1.074z"/>
+</svg>
+{% endmacro %}
+
+{% macro erase_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-eraser {{ class }}" viewBox="0 0 16 16">
+  <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+</svg>
+{% endmacro %}
+
+{% macro pin_icon(pinned, size=16, class='') %}
+{% if pinned %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="red" class="bi bi-pin-angle-fill {{ class }}" viewBox="0 0 16 16">
+  <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
+</svg>
+{% else %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="currentColor" class="bi bi-pin-angle {{ class }}" viewBox="0 0 16 16">
+  <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146zm.122 2.112v-.002.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a4.507 4.507 0 0 0-.288-.076 4.922 4.922 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a4.924 4.924 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034.114 0 .23-.011.343-.04L9.927 2.028c-.029.113-.04.23-.04.343a1.779 1.779 0 0 0 .062.46z"/>
+</svg>
+{% endif %}
 {% endmacro %}
 
 {% macro signup_form() %}
@@ -123,63 +172,77 @@
 </form>
 {% endmacro %}
 
-<!--Task create form-->
-{% macro task_create_form(folder='') %}
-<form class="input-group" onsubmit="event.preventDefault(); taskCreate({{ folder.id }}); this.reset();">
-  <input autocomplete="off" class="form-control" id="taskName" placeholder="Name" type="text">
-  {% if not folder %}
-  <select id="taskFolder" class="form-control" autocomplete="off">
-    {% for i in current_user.folders %}
-    <option value="{{ i.id }}">{{ i.name }}</option>
-    {% endfor %}
+{% macro bullet_tile(bullet) %}
+<div class="card border-0 col-xl-4">
+  <div class="rounded my-3" style="background-color:{{ bullet.bullet_color() }}">
+    <div class="card-header">
+      <a class="me-1 link" onclick="pinToggle({{ bullet.id }})">{{ pin_icon(bullet.pinned) }}</a>
+      <span class="fw-bold">{{ bullet.type_ }}</span>
+      {% if bullet.type_ == 'Task' %}
+      <div class="float-end small">
+        {% if bullet.done %}<span class="me-2">{{ bullet.date_done.strftime('%B %d, %Y %I:%M %p') }}</span>{% endif %}
+        <a onclick="taskToggle({{ bullet.id }})">{{ check_icon(bullet.done, size=16) }}</a>
+      </div>
+      {% elif bullet.type_ == 'Event' and bullet.event_date %}
+      <div class="float-end small">
+        <span class="me-2">{{ bullet.event_date.strftime('%B %d, %Y') }}</span>
+        <span>{{ reminder_icon() }}</span>
+      </div>
+      {% endif %}
+    </div>
+    <div class="card-body pt-0 text-truncate content-collapse {% if bullet.done %}text-decoration-line-through{% endif %}" id="content{{ bullet.id }}">
+      <a class="link" onclick="$('#content' + {{ bullet.id }}).toggleClass('content-collapse')">{{ expand_icon() }}</a>
+      <div style="white-space:pre-wrap">{{ bullet.content | safe }}</div>
+    </div>
+    <div class="card-footer">
+      <a href="{{ url_for('editor', id_=bullet.id) }}" class="badge bg-light link text-dark">Edit</a>
+      <a onclick="$('#delete' + {{ bullet.id }}).toggle()" class="badge bg-danger link">Delete</a>
+      <a id="delete{{ bullet.id }}" style="display:none" class="badge link text-danger" onclick="bulletDelete({{ bullet.id }})">Delete?</a>
+      <small class="float-end m-1">{{ bullet.date_created.strftime('%B %d, %Y %I:%M %p') }}</small>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro toolbar() %}
+<div class="list-inline mb-2">
+  <button type="button" onclick="styleText('bold')" class="btn btn-custom">{{ bold_icon() }}</button>
+  <button type="button" onclick="styleText('italic')" class="btn btn-custom">{{ italic_icon() }}</button>
+  <button type="button" onclick="styleText('insertUnorderedList')" class="btn btn-custom">{{ bullet_icon() }}</button>
+  <button type="button" onclick="styleText('insertOrderedList')" class="btn btn-custom">{{ number_icon() }}</button>
+  <button type="button" onclick="styleText('underline')" class="btn btn-custom">{{ underline_icon() }}</button>
+  <button type="button" onclick="styleText('strikethrough')" class="btn btn-custom">{{ strikethrough_icon() }}</button>
+  <button type="button" onclick="styleText('indent')" class="btn btn-custom">{{ indent_icon() }}</button>
+  <button type="button" onclick="styleText('outdent')" class="btn btn-custom">{{ outdent_icon() }}</button>
+  <button type="button" onclick="styleText('createLink', $('#linkURL').val()); $('#linkURL').val('');" class="btn btn-custom">{{ link_icon() }}</button>
+  <button type="button" onclick="styleText('formatBlock', 'h3')" class="btn btn-custom">{{ heading_icon() }}</button>
+  <button type="button" onclick="styleText('removeFormat')" class="btn btn-custom">{{ erase_icon() }}</button>
+</div>
+<input id="linkURL" autocomplete="off" class="form-control mb-2" type="url" placeholder="URL">
+{% endmacro %}
+
+{% macro bullet_create_form() %}
+<form onsubmit="event.preventDefault(); bulletCreate(); this.reset();">
+  <select class="form-select mb-2" autocomplete="off" id="type_" onchange="changeType()">
+    <option value="Task">Task</option>
+    <option value="Event">Event</option>
+    <option value="Note">Note</option>
   </select>
-  {% endif %}
-  <button type="submit" class="btn btn-custom">+</button>
+  {{ toolbar() }}
+  <div contenteditable="true" class="border rounded mb-2 p-3" style="height:150px" id="content"></div>
+  <input style="display:none" type="date" id="eventDate" class="form-control mb-2" autocomplete="off">
+  <button type="submit" class="btn btn-custom w-100">+</button>
 </form>
 {% endmacro %}
 
-<!--Subtask create form-->
-{% macro subtask_create_form(task) %}
-<form>
-
+{% macro bullet_editor(bullet_) %}
+<form onsubmit="event.preventDefault(); bulletEdit({{ bullet_.id }});">
+  {{ toolbar() }}
+  <div contenteditable="true" class="border rounded mb-2 p-3 overflow-auto" style="height:300px" id="content">{{ bullet_.content | safe }}</div>
+  {% if bullet_.type_ == 'Event' %}<input type="date" id="eventDate" class="form-control mb-2" autocomplete="off" value="{{ bullet_.event_date }}">{% endif %}
+  <button type="submit" class="btn btn-custom w-100">
+    <span class="spinner-border spinner-border-sm" style="display:none" id="saveSpinner"></span>
+    Save
+  </button>
 </form>
-{% endmacro %}
-
-<!--Task update form-->
-{% macro task_update_form(task) %}
-<form>
-
-</form>
-{% endmacro %}
-
-<!--Folder create form-->
-{% macro folder_create_form() %}
-<form class="input-group" onsubmit="event.preventDefault(); folderCreate(); this.reset();">
-  <input autocomplete="off" class="form-control" id="folderName" placeholder="Name" type="text">
-  <button type="submit" class="btn btn-custom">+</button>
-</form>
-{% endmacro %}
-
-<!--Folder update form-->
-{% macro folder_edit_form(folder) %}
-<form onsubmit="event.preventDefault(); folderEdit({{ folder.id }});">
-  <input autocomplete="off" type="text" value="{{ folder.name }}" onchange="folderEdit({{ folder.id }})" class="form-control mb-2" id="folderName{{ folder.id }}">
-  <input autocomplete="off" type="color" value="{{ folder.color }}" onchange="folderEdit({{ folder.id }})" class="form-control mb-2" id="color{{ folder.id }}">
-  <button type="submit" class="btn btn-custom w-100">Save</button>
-</form>
-{% endmacro %}
-
-<!--Folders Sort-->
-{% macro folders_sort() %}
-<div>
-
-</div>
-{% endmacro %}
-
-<!--Tasks Sort-->
-{% macro tasks_sort() %}
-<div>
-  {% if order_by != 'tasks.date_created desc' %}<a class="link badge badge-custom rounded-pill" href="{{ url_for('tasks_', order_by='tasks.date_created desc') }}">Date Created</a>{% endif %}
-  {% if order_by != 'folders.name' %}<a class="link badge badge-custom rounded-pill" href="{{ url_for('tasks_', order_by='folders.name') }}">Folder</a>{% endif %}
-</div>
 {% endmacro %}

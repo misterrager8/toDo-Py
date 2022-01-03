@@ -3,14 +3,13 @@
 
 {% block body %}
 <title>Home</title>
-<a class="badge badge-custom link my-2" onclick="toggleDiv('folderCreate')">+ New Folder</a>
-<div style="display:none" id="folderCreate">
-  {{ macros.folder_create_form() }}
-</div>
-
-<div class="row" id="allFolders">
-  {% for i in folders_ %}
-  {{ macros.folder_card(i) }}
+{% if current_user.is_authenticated %}
+<a onclick="toggleDiv('bulletCreate')" class="badge badge-custom link my-3">+ New Bullet</a>
+<div style="display:none" id="bulletCreate">{{ macros.bullet_create_form() }}</div>
+<div id="tiles" class="row">
+  {% for i in bullets_ %}
+  {{ macros.bullet_tile(i) }}
   {% endfor %}
 </div>
+{% endif %}
 {% endblock %}

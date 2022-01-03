@@ -11,13 +11,16 @@
 </head>
 <nav class="navbar navbar-expand-xl navbar-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
+    <a class="navbar-brand border-end pe-3" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
     <button class="navbar-toggler" data-bs-target="#navContent" data-bs-toggle="collapse" type="button">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navContent">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a href="{{ url_for('tasks_') }}" class="nav-link">Tasks</a></li>
+        <li class="nav-item"><a href="{{ url_for('pinned') }}" class="nav-link">{{ macros.pin_icon(true, size=16) }}</a></li>
+        <li class="nav-item"><a href="{{ url_for('tasks') }}" class="nav-link">Tasks</a></li>
+        <li class="nav-item"><a href="{{ url_for('notes') }}" class="nav-link">Notes</a></li>
+        <li class="nav-item"><a href="{{ url_for('events') }}" class="nav-link">Events</a></li>
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" onclick="changeTheme()">{{ macros.theme_icon() }}</a></li>
@@ -28,6 +31,7 @@
           </a>
           <div class="dropdown-menu dropdown-menu-end text-center" id="userDD">
             {% if not current_user.is_anonymous %}
+            <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
             <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
             {% else %}
             <a class="dropdown-item" data-bs-target="#login" data-bs-toggle="modal">Log In</a>

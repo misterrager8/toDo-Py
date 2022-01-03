@@ -29,3 +29,7 @@ body, .card, input, select, textarea {
 a:hover {
     cursor: pointer;
 }
+
+.content-collapse {
+    height: 64px;
+}
