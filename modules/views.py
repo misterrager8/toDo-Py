@@ -1,7 +1,7 @@
 import datetime
 
 from flask import request, render_template, current_app, url_for
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
@@ -20,6 +20,7 @@ def load_user(id_) -> User:
 
 
 @current_app.route("/profile")
+@login_required
 def profile():
     return render_template("profile.html")
 
@@ -32,24 +33,28 @@ def index():
 
 
 @current_app.route("/notes")
+@login_required
 def notes():
     _ = current_user.bullets.filter(Bullet.type_ == "Note").order_by(text("date_created desc"))
     return render_template("notes.html", objects=_)
 
 
 @current_app.route("/events")
+@login_required
 def events():
     _ = current_user.bullets.filter(Bullet.type_ == "Event").order_by(text("date_created desc"))
     return render_template("events.html", objects=_)
 
 
 @current_app.route("/tasks")
+@login_required
 def tasks():
     _ = current_user.bullets.filter(Bullet.type_ == "Task").order_by(text("date_created desc"))
     return render_template("tasks.html", objects=_)
 
 
 @current_app.route("/pinned")
+@login_required
 def pinned():
     _ = current_user.bullets.filter(Bullet.pinned == True).order_by(text("date_created desc"))
     return render_template("pinned.html", objects=_)
@@ -87,6 +92,7 @@ def signup():
 
 
 @current_app.route("/user_edit", methods=["POST"])
+@login_required
 def user_edit():
     current_user.first_name = request.form["first_name"]
     current_user.last_name = request.form["last_name"]
@@ -98,6 +104,7 @@ def user_edit():
 
 
 @current_app.route("/bullet_create", methods=["POST"])
+@login_required
 def bullet_create():
     database.create(Bullet(type_=request.form["type_"],
                            content=request.form["content"],
@@ -108,6 +115,7 @@ def bullet_create():
 
 
 @current_app.route("/editor", methods=["POST", "GET"])
+@login_required
 def editor():
     if request.method == "POST":
         _: Bullet = database.get(Bullet, int(request.form["id_"]))
@@ -124,6 +132,7 @@ def editor():
 
 
 @current_app.route("/bullet_delete")
+@login_required
 def bullet_delete():
     _: Bullet = database.get(Bullet, int(request.args.get("id_")))
     database.delete(_)
@@ -132,6 +141,7 @@ def bullet_delete():
 
 
 @current_app.route("/task_toggle")
+@login_required
 def task_toggle():
     _: Bullet = database.get(Bullet, int(request.args.get("id_")))
     _.done = not _.done
@@ -144,6 +154,7 @@ def task_toggle():
 
 
 @current_app.route("/pin_toggle")
+@login_required
 def pin_toggle():
     _: Bullet = database.get(Bullet, int(request.args.get("id_")))
     _.pinned = not _.pinned
