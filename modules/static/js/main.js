@@ -10,13 +10,9 @@ function refreshDiv(divId) {
     $('#' + divId).load(location.href + ' #' + divId);
 }
 
-function changeType() {
-    if ($('#type_').val() == 'Event') {
-        $('#eventDate').show();
-    } else {
-        $('#eventDate').hide();
-    }
-}
+$('input[name=type_]').on('change', function(event) {
+    if (this.value == 'Event') { $('#eventDate').show(); } else { $('#eventDate').hide(); }
+});
 
 function styleText(style, val) {
     document.execCommand(style, false, val);
@@ -24,7 +20,7 @@ function styleText(style, val) {
 
 function bulletCreate() {
     $.post('bullet_create', {
-        type_ : $('#type_').val(),
+        type_ : $('input[name=type_]:checked').val(),
         content : $('#content').html(),
         event_date : $('#eventDate').val()
     }, function(data) {

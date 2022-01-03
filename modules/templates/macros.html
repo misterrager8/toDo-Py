@@ -222,11 +222,14 @@
 
 {% macro bullet_create_form() %}
 <form onsubmit="event.preventDefault(); bulletCreate(); this.reset();">
-  <select class="form-select mb-2" autocomplete="off" id="type_" onchange="changeType()">
-    <option value="Task">Task</option>
-    <option value="Event">Event</option>
-    <option value="Note">Note</option>
-  </select>
+  <div class="input-group mb-2">
+    <input type="radio" value="Task" name="type_" class="btn-check" id="task" checked>
+    <label class="btn btn-outline-light px-5 py-0" for="task">Task</label>
+    <input type="radio" value="Note" name="type_" class="btn-check" id="note">
+    <label class="btn btn-outline-light px-5 py-0" for="note">Note</label>
+    <input type="radio" value="Event" name="type_" class="btn-check" id="event">
+    <label class="btn btn-outline-light px-5 py-0" for="event">Event</label>
+  </div>
   {{ toolbar() }}
   <div contenteditable="true" class="border rounded mb-2 p-3" style="height:150px" id="content"></div>
   <input style="display:none" type="date" id="eventDate" class="form-control mb-2" autocomplete="off">
