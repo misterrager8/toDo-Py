@@ -42,7 +42,7 @@ def notes():
 @current_app.route("/events")
 @login_required
 def events():
-    _ = current_user.bullets.filter(Bullet.type_ == "Event").order_by(text("date_created desc"))
+    _ = current_user.bullets.filter(Bullet.type_ == "Event").order_by(text("event_date"))
     return render_template("events.html", objects=_)
 
 
