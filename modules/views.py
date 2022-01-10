@@ -2,7 +2,6 @@ import datetime
 
 from flask import request, render_template, current_app, url_for
 from flask_login import login_user, logout_user, current_user, login_required
-from sqlalchemy import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
@@ -27,37 +26,31 @@ def profile():
 
 @current_app.route("/")
 def index():
-    order_by = request.args.get("order_by", default="date_created desc")
-    bullets_ = current_user.bullets.order_by(text(order_by)) if current_user.is_authenticated else None
-    return render_template("index.html", order_by=order_by, bullets_=bullets_)
+    return render_template("index.html")
 
 
 @current_app.route("/notes")
 @login_required
 def notes():
-    _ = current_user.bullets.filter(Bullet.type_ == "Note").order_by(text("date_created desc"))
-    return render_template("notes.html", objects=_)
+    return render_template("notes.html")
 
 
 @current_app.route("/events")
 @login_required
 def events():
-    _ = current_user.bullets.filter(Bullet.type_ == "Event").order_by(text("event_date"))
-    return render_template("events.html", objects=_)
+    return render_template("events.html")
 
 
 @current_app.route("/tasks")
 @login_required
 def tasks():
-    _ = current_user.bullets.filter(Bullet.type_ == "Task").order_by(text("date_created desc"))
-    return render_template("tasks.html", objects=_)
+    return render_template("tasks.html")
 
 
 @current_app.route("/pinned")
 @login_required
 def pinned():
-    _ = current_user.bullets.filter(Bullet.pinned == True).order_by(text("date_created desc"))
-    return render_template("pinned.html", objects=_)
+    return render_template("pinned.html")
 
 
 @current_app.route("/login", methods=["POST"])

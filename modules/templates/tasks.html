@@ -4,7 +4,7 @@
 {% block body %}
 <title>Tasks</title>
 <div class="row" id="tiles">
-  {% for i in objects %}
+  {% for i in current_user.get_tasks() %}
   {{ macros.bullet_tile(i) }}
   {% endfor %}
 </div>

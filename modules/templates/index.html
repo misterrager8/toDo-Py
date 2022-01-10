@@ -7,7 +7,7 @@
 <a onclick="toggleDiv('bulletCreate')" class="badge badge-custom link my-3">+ New Bullet</a>
 <div style="display:none" id="bulletCreate">{{ macros.bullet_create_form() }}</div>
 <div id="tiles" class="row">
-  {% for i in bullets_ %}
+  {% for i in current_user.get_all() %}
   {{ macros.bullet_tile(i) }}
   {% endfor %}
 </div>

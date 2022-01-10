@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, Text, Boolean, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, Text, Boolean, Integer, ForeignKey, DateTime, text
 from sqlalchemy.orm import relationship
 
 from modules import db
@@ -18,6 +18,21 @@ class User(db.Model, UserMixin):
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
+
+    def get_all(self):
+        return self.bullets.order_by(text("date_created desc"))
+
+    def get_tasks(self):
+        return self.bullets.filter(Bullet.type_ == "Task").order_by(Bullet.done, text("date_created desc"))
+
+    def get_events(self):
+        return self.bullets.filter(Bullet.type_ == "Event").order_by(text("event_date"))
+
+    def get_notes(self):
+        return self.bullets.filter(Bullet.type_ == "Note").order_by(text("date_created desc"))
+
+    def get_pinned(self):
+        return self.bullets.filter(Bullet.pinned == True)
 
 
 class Bullet(db.Model):
