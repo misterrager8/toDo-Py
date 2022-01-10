@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
         return self.bullets.order_by(text("date_created desc"))
 
     def get_tasks(self):
-        return self.bullets.filter(Bullet.type_ == "Task").order_by(Bullet.done, text("date_created desc"))
+        return self.bullets.filter(Bullet.type_ == "Task", Bullet.done != True).order_by(text("date_created desc"))
 
     def get_events(self):
         return self.bullets.filter(Bullet.type_ == "Event").order_by(text("event_date"))

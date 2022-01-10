@@ -102,11 +102,13 @@ def bullet_create():
     type_ = request.form["type_"]
     content = request.form["content"]
     event_date = datetime.datetime.strptime(request.form["event_date"], "%Y-%m-%d").date() if type_ == "Event" else None
+    done = False if type_ == "Task" else None
 
     database.create(Bullet(type_=type_,
                            content=content,
                            event_date=event_date,
                            date_created=datetime.datetime.now(),
+                           done=done,
                            user=current_user.id))
 
     return redirect(url_for("index"))
