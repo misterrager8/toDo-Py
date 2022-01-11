@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy import Column, Text, Boolean, Integer, ForeignKey, DateTime, text
+from sqlalchemy import Column, Text, Boolean, Integer, ForeignKey, DateTime, text, Date
 from sqlalchemy.orm import relationship
 
 from modules import db
@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     password = Column(Text)
     date_joined = Column(DateTime)
     bullets = relationship("Bullet", lazy="dynamic")
+    habits = relationship("Habit", lazy="dynamic")
     id = Column(Integer, primary_key=True)
 
     def __init__(self, **kwargs):
@@ -63,3 +64,28 @@ class Bullet(db.Model):
             return "#320D6D"
         elif self.type_ == "Note":
             return "#FFD447"
+
+
+class Habit(db.Model):
+    __tablename__ = "habits"
+
+    description = Column(Text)
+    color = Column(Text)
+    entries = relationship("Entry", backref="habits", lazy="dynamic")
+    user = Column(Integer, ForeignKey("users.id"))
+    id = Column(Integer, primary_key=True)
+
+    def __init__(self, **kwargs):
+        super(Habit, self).__init__(**kwargs)
+
+
+class Entry(db.Model):
+    __tablename__ = "entries"
+
+    datestamp = Column(Date)
+    habit = Column(Integer, ForeignKey("habits.id"))
+    user = Column(Integer, ForeignKey("users.id"))
+    id = Column(Integer, primary_key=True)
+
+    def __init__(self, **kwargs):
+        super(Entry, self).__init__(**kwargs)

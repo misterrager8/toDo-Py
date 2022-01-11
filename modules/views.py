@@ -1,4 +1,5 @@
 import datetime
+import random
 
 from flask import request, render_template, current_app, url_for
 from flask_login import login_user, logout_user, current_user, login_required
@@ -6,8 +7,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
 from modules import login_manager, db
-from modules.ctrla import Database
-from modules.models import User, Bullet
+from modules.ctrla import Database, HabitCalendar
+from modules.models import User, Bullet, Habit, Entry
 
 database = Database()
 
@@ -45,6 +46,13 @@ def events():
 @login_required
 def tasks():
     return render_template("tasks.html")
+
+
+@current_app.route("/habits")
+@login_required
+def habits():
+    today = datetime.datetime.now()
+    return render_template("habits.html", cal=HabitCalendar().formatmonth(today.year, today.month))
 
 
 @current_app.route("/pinned")
@@ -164,3 +172,38 @@ def pin_toggle():
     database.update()
 
     return redirect(url_for("index"))
+
+
+@current_app.route("/habit_create", methods=["POST"])
+@login_required
+def habit_create():
+    description = request.form["description"]
+
+    database.create(Habit(description=description,
+                          color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
+                          user=current_user.id))
+
+    return redirect(url_for("habits"))
+
+
+@current_app.route("/habit_delete")
+@login_required
+def habit_delete():
+    _: Habit = database.get(Habit, int(request.args.get("id_")))
+
+    for i in _.entries: database.delete(i)
+    database.delete(_)
+
+    return redirect(url_for("habits"))
+
+
+@current_app.route("/entry_create")
+@login_required
+def entry_create():
+    _: Habit = database.get(Habit, int(request.args.get("id_")))
+
+    database.create(Entry(datestamp=datetime.date.today(),
+                          habit=_.id,
+                          user=current_user.id))
+
+    return redirect(url_for("habits"))

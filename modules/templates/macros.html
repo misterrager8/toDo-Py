@@ -203,6 +203,15 @@
 </div>
 {% endmacro %}
 
+{% macro habit_card(habit) %}
+<div class="p-3 rounded my-2" style="border: 5px solid {{ habit.color }}">
+  <span class="d-block">{{ habit.description }}</span>
+  <a class="link badge bg-success" onclick="entryCreate({{ habit.id }})">+ Today</a>
+  <a class="link badge bg-danger" onclick="toggleDiv('deleteHabit' + {{ habit.id }})">Delete</a>
+  <a class="link text-danger" onclick="habitDelete({{ habit.id }})" style="display:none" id="deleteHabit{{ habit.id }}">Delete?</a>
+</div>
+{% endmacro %}
+
 {% macro toolbar() %}
 <div class="list-inline mb-2">
   <button type="button" onclick="styleText('bold')" class="btn btn-custom">{{ bold_icon() }}</button>
@@ -246,5 +255,12 @@
     <span class="spinner-border spinner-border-sm" style="display:none" id="saveSpinner"></span>
     Save
   </button>
+</form>
+{% endmacro %}
+
+{% macro habit_create_form() %}
+<form onsubmit="event.preventDefault(); habitCreate(); this.reset();" class="input-group">
+  <input type="text" class="form-control" id="description" autocomplete="off" placeholder="Description">
+  <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}

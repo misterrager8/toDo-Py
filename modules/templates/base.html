@@ -22,6 +22,7 @@
         <li class="nav-item"><a href="{{ url_for('tasks') }}" class="nav-link">Tasks<span class="badge badge-custom">{{ current_user.get_tasks().count() }}</span></a></li>
         <li class="nav-item"><a href="{{ url_for('notes') }}" class="nav-link">Notes<span class="badge badge-custom">{{ current_user.get_notes().count() }}</span></a></li>
         <li class="nav-item"><a href="{{ url_for('events') }}" class="nav-link">Events<span class="badge badge-custom">{{ current_user.get_events().count() }}</span></a></li>
+        <li class="nav-item"><a href="{{ url_for('habits') }}" class="nav-link">Habits</a></li>
       </ul>
       {% endif %}
       <ul class="navbar-nav ms-auto">

@@ -71,3 +71,27 @@ function pinToggle(bulletId) {
         refreshDiv('tiles');
     });
 }
+
+function habitCreate() {
+    $.post('habit_create', {
+        description : $('#description').val()
+    }, function(data) {
+        refreshDiv('tiles');
+    });
+}
+
+function habitDelete(habitId) {
+    $.get('habit_delete', {
+        id_ : habitId
+    }, function(data) {
+        refreshDiv('tiles');
+    });
+}
+
+function entryCreate(habitId) {
+    $.get('entry_create', {
+        id_ : habitId
+    }, function(data) {
+        refreshDiv('tiles');
+    });
+}
