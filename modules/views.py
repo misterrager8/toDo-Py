@@ -1,5 +1,4 @@
 import datetime
-import random
 
 from flask import request, render_template, current_app, url_for
 from flask_login import login_user, logout_user, current_user, login_required
@@ -8,7 +7,7 @@ from werkzeug.utils import redirect
 
 from modules import login_manager, db
 from modules.ctrla import Database, HabitCalendar
-from modules.models import User, Bullet, Habit, Entry
+from modules.models import User, Task, Note, Event
 
 database = Database()
 
@@ -63,10 +62,10 @@ def pinned():
 
 @current_app.route("/login", methods=["POST"])
 def login():
-    email = request.form["email"]
+    username = request.form["username"]
     password = request.form["password"]
 
-    user = db.session.query(User).filter(User.email == email).first()
+    user = db.session.query(User).filter(User.username == username).first()
 
     if user and check_password_hash(user.password, password):
         login_user(user)
@@ -83,9 +82,7 @@ def logout():
 
 @current_app.route("/signup", methods=["POST"])
 def signup():
-    database.create(User(first_name=request.form["first_name"],
-                         last_name=request.form["last_name"],
-                         email=request.form["email"],
+    database.create(User(username=request.form["username"],
                          password=generate_password_hash(request.form["password"]),
                          date_joined=datetime.datetime.now()))
 
@@ -95,115 +92,138 @@ def signup():
 @current_app.route("/user_edit", methods=["POST"])
 @login_required
 def user_edit():
-    current_user.first_name = request.form["first_name"]
-    current_user.last_name = request.form["last_name"]
-    current_user.email = request.form["email"]
-
+    current_user.username = request.form["username"]
     database.update()
 
     return redirect(request.referrer)
 
 
-@current_app.route("/bullet_create", methods=["POST"])
+@current_app.route("/task_create", methods=["POST"])
 @login_required
-def bullet_create():
-    type_ = request.form["type_"]
-    content = request.form["content"]
-    event_date = datetime.datetime.strptime(request.form["event_date"], "%Y-%m-%d").date() if type_ == "Event" else None
-    done = False if type_ == "Task" else None
-
-    database.create(Bullet(type_=type_,
-                           content=content,
-                           event_date=event_date,
-                           date_created=datetime.datetime.now(),
-                           done=done,
-                           user=current_user.id))
-
-    return redirect(url_for("index"))
+def task_create():
+    _ = Task(user=current_user.id,
+             content=request.form["content"],
+             date_created=datetime.datetime.now())
+    database.create(_)
+    return redirect(request.referrer)
 
 
-@current_app.route("/editor", methods=["POST", "GET"])
+@current_app.route("/task_update", methods=["POST"])
 @login_required
-def editor():
-    if request.method == "POST":
-        _: Bullet = database.get(Bullet, int(request.form["id_"]))
-        _.content = request.form["content"]
-        _.event_date = datetime.datetime.strptime(request.form["event_date"],
-                                                  "%Y-%m-%d").date() if _.type_ == "Event" else None
-
-        database.update()
-
-        return redirect(request.referrer)
-
-    elif request.method == "GET":
-        _: Bullet = database.get(Bullet, request.args.get("id_"))
-
-        return render_template("editor.html", bullet_=_)
+def task_update():
+    _: Task = Task.query.get(request.form["id_"])
+    _.content = request.form["content"]
+    database.update()
+    return redirect(request.referrer)
 
 
-@current_app.route("/bullet_delete")
+@current_app.route("/task_delete")
 @login_required
-def bullet_delete():
-    _: Bullet = database.get(Bullet, int(request.args.get("id_")))
+def task_delete():
+    _: Task = Task.query.get(request.args.get("id_"))
+
     database.delete(_)
-
-    return redirect(url_for("index"))
+    return redirect(request.referrer)
 
 
 @current_app.route("/task_toggle")
 @login_required
 def task_toggle():
-    _: Bullet = database.get(Bullet, int(request.args.get("id_")))
+    _: Task = Task.query.get(request.args.get("id_"))
     _.done = not _.done
-
     _.date_done = datetime.datetime.now() if _.done else None
 
     database.update()
+    return redirect(request.referrer)
 
-    return redirect(url_for("index"))
 
-
-@current_app.route("/pin_toggle")
+@current_app.route("/event_create", methods=["POST"])
 @login_required
-def pin_toggle():
-    _: Bullet = database.get(Bullet, int(request.args.get("id_")))
+def event_create():
+    _ = Event(user=current_user.id,
+              content=request.form["content"],
+              date_created=datetime.datetime.now(),
+              event_date=request.form["event_date"])
+    database.create(_)
+    return redirect(request.referrer)
+
+
+@current_app.route("/event_update", methods=["POST"])
+@login_required
+def event_update():
+    _: Event = Event.query.get(request.form["id_"])
+    _.content = request.form["content"]
+    _.event_date = request.form["event_date"]
+
+    database.update()
+    return redirect(request.referrer)
+
+
+@current_app.route("/event_delete")
+@login_required
+def event_delete():
+    _: Event = Event.query.get(request.args.get("id_"))
+
+    database.delete(_)
+    return redirect(request.referrer)
+
+
+@current_app.route("/note_create", methods=["POST"])
+@login_required
+def note_create():
+    _ = Note(user=current_user.id,
+             content=request.form["content"],
+             date_created=datetime.datetime.now(),
+             date_modified=datetime.datetime.now())
+    database.create(_)
+    return redirect(request.referrer)
+
+
+@current_app.route("/note_update", methods=["POST"])
+@login_required
+def note_update():
+    _: Note = Note.query.get(request.form["id_"])
+    _.content = request.form["content"]
+    _.date_modified = datetime.datetime.now()
+
+    database.update()
+    return redirect(request.referrer)
+
+
+@current_app.route("/note_delete")
+@login_required
+def note_delete():
+    _: Note = Note.query.get(request.args.get("id_"))
+
+    database.delete(_)
+    return redirect(request.referrer)
+
+
+@current_app.route("/task_pin")
+@login_required
+def task_pin():
+    _: Task = Task.query.get(request.args.get("id_"))
     _.pinned = not _.pinned
 
     database.update()
+    return redirect(request.referrer)
 
-    return redirect(url_for("index"))
 
-
-@current_app.route("/habit_create", methods=["POST"])
+@current_app.route("/event_pin")
 @login_required
-def habit_create():
-    description = request.form["description"]
+def event_pin():
+    _: Event = Event.query.get(request.args.get("id_"))
+    _.pinned = not _.pinned
 
-    database.create(Habit(description=description,
-                          color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
-                          user=current_user.id))
-
-    return redirect(url_for("habits"))
+    database.update()
+    return redirect(request.referrer)
 
 
-@current_app.route("/habit_delete")
+@current_app.route("/note_pin")
 @login_required
-def habit_delete():
-    _: Habit = database.get(Habit, int(request.args.get("id_")))
+def note_pin():
+    _: Note = Note.query.get(request.args.get("id_"))
+    _.pinned = not _.pinned
 
-    for i in _.entries: database.delete(i)
-    database.delete(_)
-
-    return redirect(url_for("habits"))
-
-
-@current_app.route("/entry_create")
-@login_required
-def entry_create():
-    _: Habit = database.get(Habit, int(request.args.get("id_")))
-
-    database.create(Entry(datestamp=datetime.date.today(),
-                          habit=_.id,
-                          user=current_user.id))
-
-    return redirect(url_for("habits"))
+    database.update()
+    return redirect(request.referrer)

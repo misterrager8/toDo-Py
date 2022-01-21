@@ -1,74 +1,124 @@
-function changeTheme() {
-    $('.btn-custom, .badge-custom, .navbar, body').addClass('other-theme');
-}
-
 function toggleDiv(divId) {
     $('#' + divId).toggle();
 }
 
-function refreshDiv(divId) {
-    $('#' + divId).load(location.href + ' #' + divId);
+function refreshPage() {
+    $('#pageContent').load(location.href + ' #pageContent');
+    $('#navContent').load(location.href + ' #navContent');
 }
 
-$('input[name=type_]').on('change', function(event) {
-    if (this.value == 'Event') { $('#eventDate').show(); } else { $('#eventDate').hide(); }
-});
-
-function styleText(style, val) {
-    document.execCommand(style, false, val);
-}
-
-function bulletCreate() {
-    $.post('bullet_create', {
-        type_ : $('input[name=type_]:checked').val(),
-        content : $('#content').html(),
-        event_date : $('#eventDate').val()
+function taskCreate() {
+    $.post('task_create', {
+        content : $('#taskContent').val()
     }, function(data) {
-        $('#content').html('')
-        refreshDiv('tiles');
+        refreshPage();
     });
 }
 
-function bulletEdit(bulletId) {
-    $('#saveSpinner').show();
-    $.post('editor', {
-        id_ : bulletId,
-        content : $('#content').html(),
+function taskUpdate(taskId) {
+    $.post('task_update', {
+        id_ : taskId,
+        content : $('#taskContent' + taskId).val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function taskDelete(taskId) {
+    $.get('task_delete', {
+        id_ : taskId
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function eventCreate() {
+    $.post('event_create', {
+        content : $('#eventContent').val(),
         event_date : $('#eventDate').val()
     }, function(data) {
-        $('#saveSpinner').hide();
+        refreshPage();
+    });
+}
+
+function eventUpdate(eventId) {
+    $.post('event_update', {
+        id_ : eventId,
+        content : $('#eventContent' + eventId).val(),
+        event_date : $('#eventDate' + eventId).val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function eventDelete(eventId) {
+    $.get('event_delete', {
+        id_ : eventId
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function noteCreate() {
+    $.post('note_create', {
+        content : $('#noteContent').val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function noteUpdate(noteId) {
+    $.post('note_update', {
+        id_ : noteId,
+        content : $('#noteContent' + noteId).val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function noteDelete(noteId) {
+    $.get('note_delete', {
+        id_ : noteId
+    }, function(data) {
+        refreshPage();
     });
 }
 
 function userEdit() {
     $.post('user_edit', {
-        first_name : $('#firstName').val(),
-        last_name : $('#lastName').val(),
-        email : $('#email').val()
+        username : $('#username').val()
     });
 }
 
-function bulletDelete(bulletId) {
-    $.get('bullet_delete', {
-        id_ : bulletId
-    }, function(data) {
-        refreshDiv('tiles');
-    });
-}
-
-function taskToggle(bulletId) {
+function taskToggle(taskId) {
     $.get('task_toggle', {
-        id_ : bulletId
+        id_ : taskId
     }, function(data) {
-        refreshDiv('tiles');
+        refreshPage();
     });
 }
 
-function pinToggle(bulletId) {
-    $.get('pin_toggle', {
-        id_ : bulletId
+function taskPin(taskId) {
+    $.get('task_pin', {
+        id_ : taskId
     }, function(data) {
-        refreshDiv('tiles');
+        refreshPage();
+    });
+}
+
+function eventPin(eventId) {
+    $.get('event_pin', {
+        id_ : eventId
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function notePin(noteId) {
+    $.get('note_pin', {
+        id_ : noteId
+    }, function(data) {
+        refreshPage();
     });
 }
 
@@ -76,7 +126,7 @@ function habitCreate() {
     $.post('habit_create', {
         description : $('#description').val()
     }, function(data) {
-        refreshDiv('tiles');
+        refreshPage();
     });
 }
 
@@ -84,7 +134,7 @@ function habitDelete(habitId) {
     $.get('habit_delete', {
         id_ : habitId
     }, function(data) {
-        refreshDiv('tiles');
+        refreshPage();
     });
 }
 
@@ -92,6 +142,6 @@ function entryCreate(habitId) {
     $.get('entry_create', {
         id_ : habitId
     }, function(data) {
-        refreshDiv('tiles');
+        refreshPage();
     });
 }

@@ -1,24 +1,23 @@
 :root {
-    --navbar-bg-color: white;
-    --body-bg-color: black;
+    --navbar-bg: white;
+    --navbar-txt: black;
+    --body-bg: black;
+    --body-txt: white;
 }
 
-.other-theme {
-    --navbar-bg-color: black;
-    --body-bg-color: white;
+body, .card, .form-control, .modal-content {
+    background-color: var(--body-bg) !important;
+    color: var(--body-txt) !important;
 }
 
-body, .card, input, select, textarea {
-    background-color: var(--body-bg-color) !important;
-    color: var(--navbar-bg-color) !important;
+.navbar, .badge-custom, .btn-custom {
+    background-color: var(--navbar-bg) !important;
+    color: var(--navbar-txt) !important;
 }
 
-.badge-custom, .btn-custom, .navbar {
-    background-color: var(--navbar-bg-color);
-}
-
-.badge-custom {
-    color: var(--body-bg-color) !important;
+.tile {
+    margin-top: 25px;
+    border-radius: 5px;
 }
 
 .link, .link:hover {
@@ -26,10 +25,10 @@ body, .card, input, select, textarea {
     text-decoration: none;
 }
 
-a:hover {
-    cursor: pointer;
+.card {
+    border: none;
 }
 
-.content-collapse {
-    height: 64px;
+a:hover {
+    cursor: pointer;
 }
