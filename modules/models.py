@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
         super(User, self).__init__(**kwargs)
 
     def get_tasks(self, order_by: str = "date_created desc", filter_: str = "done is False"):
-        return self.tasks.filter(text(filter_)).order_by(text(order_by))
+        return self.tasks.filter(Task.parent_task == None, text(filter_)).order_by(text(order_by))
 
     def get_events(self, order_by: str = "event_date", filter_: str = ""):
         return self.events.filter(text(filter_)).order_by(text(order_by))
@@ -71,9 +71,20 @@ class Task(db.Model):
 
     done = Column(Boolean, default=False)
     date_done = Column(DateTime)
+    parent_task = Column(Integer, ForeignKey("tasks.id"))
+    steps = relationship("Task", lazy="dynamic")
 
     def __init__(self, **kwargs):
         super(Task, self).__init__(**kwargs)
+
+    def get_subtasks_count(self):
+        return self.steps.filter(Task.done == False).count()
+
+    def get_subtasks_progress(self):
+        done = self.steps.filter(Task.done == True).count()
+        total = self.steps.count()
+        perc = (done / total) * 100
+        return perc
 
 
 class Habit(db.Model):

@@ -6,7 +6,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
 from modules import login_manager, db
-from modules.ctrla import Database, HabitCalendar
+from modules.ctrla import Database
 from modules.models import User, Task, Note, Event
 
 database = Database()
@@ -47,11 +47,17 @@ def tasks():
     return render_template("tasks.html")
 
 
+@current_app.route("/task")
+@login_required
+def task():
+    _: Task = database.get(Task, request.args.get("id_"))
+    return render_template("task.html", task=_)
+
+
 @current_app.route("/habits")
 @login_required
 def habits():
-    today = datetime.datetime.now()
-    return render_template("habits.html", cal=HabitCalendar().formatmonth(today.year, today.month))
+    return render_template("habits.html", cal=[])
 
 
 @current_app.route("/pinned")
@@ -105,6 +111,18 @@ def task_create():
              content=request.form["content"],
              date_created=datetime.datetime.now())
     database.create(_)
+    return redirect(request.referrer)
+
+
+@current_app.route("/step_create", methods=["POST"])
+@login_required
+def step_create():
+    _: Task = Task.query.get(request.form["id_"])
+    new_ = Task(user=current_user.id,
+                parent_task=_.id,
+                content=request.form["content"],
+                date_created=datetime.datetime.now())
+    database.create(new_)
     return redirect(request.referrer)
 
 

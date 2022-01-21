@@ -15,12 +15,23 @@ function taskCreate() {
     });
 }
 
+function stepCreate(taskId) {
+    $.post('step_create', {
+        id_: taskId,
+        content : $('#stepFor' + taskId).val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
 function taskUpdate(taskId) {
+    $('#spinner').show();
     $.post('task_update', {
         id_ : taskId,
         content : $('#taskContent' + taskId).val()
     }, function(data) {
         refreshPage();
+        $('#spinner').hide();
     });
 }
 

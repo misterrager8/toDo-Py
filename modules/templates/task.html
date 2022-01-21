@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block body %}
+<title>Task</title>
+<form class="input-group mb-2" onsubmit="event.preventDefault(); taskUpdate({{ task.id }});">
+  <input value="{{ task.content }}" class="form-control text-center" id="taskContent{{ task.id }}">
+  <button class="btn btn-custom"> <span style="display:none" class="spinner-border spinner-border-sm" id="spinner"></span> Edit</button>
+</form>
+<div id="{{ task.id }}steps">
+  <form onsubmit="event.preventDefault(); stepCreate({{ task.id }}); this.reset();" class="input-group mb-2">
+    <input class="form-control" autocomplete="off" id="stepFor{{ task.id }}" placeholder="New Step...">
+    <button class="btn btn-custom">+</button>
+  </form>
+</div>
+{% if task.steps.count() > 0 %}
+<p class="text-center h5">Steps</p>
+<div class="progress">
+  <div class="progress-bar" role="progressbar" id="progress{{ task.id }}" style="width:{{ task.get_subtasks_progress() }}%"></div>
+</div>
+{% endif %}
+
+<div class="row">
+  {% for i in task.steps %}
+  {{ macros.task_tile(i) }}
+  {% endfor %}
+</div>
+{% endblock %}

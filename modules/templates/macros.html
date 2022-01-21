@@ -80,23 +80,30 @@
 
 {% macro task_tile(task) %}
 <div class="card col-xl-4">
-  <div class="tile" style="background-color:#320D6D">
+  <div class="tile {% if task.done %}opacity-25{% endif %}" style="background-color:#320D6D">
     <div class="card-header">
       <a onclick="taskPin({{ task.id }})" class="link me-2">{{ pin_icon(task.pinned) }}</a>Task
       <a class="link float-end" onclick="taskToggle({{ task.id }})">{% if task.done %}<span class="small me-2">{{ task.date_done.strftime('%B %d, %Y %I:%m %p') }}</span>{% endif %}{{ check_icon(task.done) }}</a>
     </div>
-    <div class="card-body">
-      {{ task.content }}
+    <div class="card-body collapsed text-truncate" onclick="$(this).toggleClass('collapsed')">
+      <p>{{ task.content | safe }}</p>
+      {% for i in task.steps %}
+      <span class="d-block {% if i.done %}text-decoration-line-through{% endif %}"><span>{{ check_icon(i.done) }}</span> {{ i.content }}</span>
+      {% endfor %}
     </div>
     <div class="card-footer">
-      <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editTask{{ task.id }}">Edit</a>
+      {% if task.steps.count() > 0 %}
+      <div class="progress mb-3">
+        <div class="progress-bar" role="progressbar" id="progress{{ task.id }}" style="width:{{ task.get_subtasks_progress() }}%"></div>
+      </div>
+      {% endif %}
+      <a class="badge badge-custom link" href="{{ url_for('task', id_=task.id) }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteTask' + {{ task.id }})">Delete</a>
       <a onclick="taskDelete({{ task.id }})" style="display:none" id="deleteTask{{ task.id }}" class="link badge text-danger">Delete?</a>
-      <span class="float-end small">{{ task.date_created.strftime('%B %d, %Y %I:%m %p') }}</span>
+      <span class="float-end small">{{ task.date_created.strftime('%B %d, %Y %I:%M %p') }}</span>
     </div>
   </div>
 </div>
-{% call modal('editTask%s' % task.id) %}{{ task_update_form(task) }}{% endcall %}
 {% endmacro %}
 
 {% macro event_tile(event) %}
@@ -106,9 +113,7 @@
       <a onclick="eventPin({{ event.id }})" class="link me-2">{{ pin_icon(event.pinned) }}</a>Event
       <p class="small float-end"><span class="me-2">{{ event.event_date.strftime('%B %d, %Y') }}</span>{{ reminder_icon() }}</p>
     </div>
-    <div class="card-body">
-      {{ event.content }}
-    </div>
+    <div class="card-body collapsed text-truncate" style="white-space: pre-wrap" onclick="$(this).toggleClass('collapsed')">{{ event.content | safe }}</div>
     <div class="card-footer">
       <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editEvent{{ event.id }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteEvent' + {{ event.id }})">Delete</a>
@@ -127,9 +132,7 @@
       <a onclick="notePin({{ note.id }})" class="link me-2">{{ pin_icon(note.pinned) }}</a>Note
       <p class="small float-end"><span class="me-2">{{ note.date_modified.strftime('%B %d, %Y %I:%m %p') }}</span>{{ edit_icon() }}</p>
     </div>
-    <div class="card-body">
-      {{ note.content }}
-    </div>
+    <div class="card-body collapsed text-truncate" style="white-space: pre-wrap" onclick="$(this).toggleClass('collapsed')">{{ note.content | safe }}</div>
     <div class="card-footer">
       <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editNote{{ note.id }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteNote' + {{ note.id }})">Delete</a>
@@ -177,21 +180,21 @@
 
 {% macro task_create_form() %}
 <form onsubmit="event.preventDefault(); taskCreate(); this.reset();">
-  <textarea id="taskContent" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content"></textarea>
+  <input id="taskContent" class="form-control mb-2" autocomplete="off" placeholder="Content">
   <button type="submit" class="btn btn-custom w-100">+</button>
 </form>
 {% endmacro %}
 
 {% macro note_create_form() %}
 <form onsubmit="event.preventDefault(); noteCreate(); this.reset();">
-  <textarea id="noteContent" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content"></textarea>
+  <textarea id="noteContent" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content" style="overflow:auto; white-space: pre-wrap;"></textarea>
   <button type="submit" class="btn btn-custom w-100">+</button>
 </form>
 {% endmacro %}
 
 {% macro event_create_form() %}
 <form onsubmit="event.preventDefault(); eventCreate(); this.reset();">
-  <textarea id="eventContent" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content"></textarea>
+  <textarea id="eventContent" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content" style="overflow:auto; white-space: pre-wrap;"></textarea>
   <input id="eventDate" class="form-control mb-2" type="date">
   <button type="submit" class="btn btn-custom w-100">+</button>
 </form>
@@ -199,21 +202,21 @@
 
 {% macro task_update_form(task) %}
 <form onsubmit="event.preventDefault(); taskUpdate({{ task.id }}); $('#editTask' + {{ task.id }}).modal('hide');">
-  <textarea id="taskContent{{ task.id }}" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content">{{ task.content }}</textarea>
+  <input id="taskContent{{ task.id }}" class="form-control mb-2" autocomplete="off" placeholder="Content" value="{{ task.content }}">
   <button type="submit" class="btn btn-custom w-100">Edit</button>
 </form>
 {% endmacro %}
 
 {% macro note_update_form(note) %}
 <form onsubmit="event.preventDefault(); noteUpdate({{ note.id }}); $('#editNote' + {{ note.id }}).modal('hide');">
-  <textarea id="noteContent{{ note.id }}" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content">{{ note.content }}</textarea>
+  <textarea id="noteContent{{ note.id }}" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content" style="overflow:auto; white-space: pre-wrap;">{{ note.content }}</textarea>
   <button type="submit" class="btn btn-custom w-100">Edit</button>
 </form>
 {% endmacro %}
 
 {% macro event_update_form(event) %}
 <form onsubmit="event.preventDefault(); eventUpdate({{ event.id }}); $('#editEvent' + {{ event.id }}).modal('hide');">
-  <textarea id="eventContent{{ event.id }}" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content">{{ event.content }}</textarea>
+  <textarea id="eventContent{{ event.id }}" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content" style="overflow:auto; white-space: pre-wrap;">{{ event.content }}</textarea>
   <input id="eventDate{{ event.id }}" class="form-control mb-2" type="date" value="{{ event.event_date() }}">
   <button type="submit" class="btn btn-custom w-100">Edit</button>
 </form>
