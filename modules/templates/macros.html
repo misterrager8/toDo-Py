@@ -113,7 +113,7 @@
       <a onclick="eventPin({{ event.id }})" class="link me-2">{{ pin_icon(event.pinned) }}</a>Event
       <p class="small float-end"><span class="me-2">{{ event.event_date.strftime('%B %d, %Y') }}</span>{{ reminder_icon() }}</p>
     </div>
-    <div class="card-body collapsed text-truncate" style="white-space: pre-wrap" onclick="$(this).toggleClass('collapsed')">{{ event.content | safe }}</div>
+    <div class="card-body collapsed text-truncate" onclick="$(this).toggleClass('collapsed')">{{ event.content | safe }}</div>
     <div class="card-footer">
       <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editEvent{{ event.id }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteEvent' + {{ event.id }})">Delete</a>
@@ -132,7 +132,7 @@
       <a onclick="notePin({{ note.id }})" class="link me-2">{{ pin_icon(note.pinned) }}</a>Note
       <p class="small float-end"><span class="me-2">{{ note.date_modified.strftime('%B %d, %Y %I:%m %p') }}</span>{{ edit_icon() }}</p>
     </div>
-    <div class="card-body collapsed text-truncate" style="white-space: pre-wrap" onclick="$(this).toggleClass('collapsed')">{{ note.content | safe }}</div>
+    <div class="card-body collapsed text-truncate" onclick="$(this).toggleClass('collapsed')">{{ note.content | safe }}</div>
     <div class="card-footer">
       <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editNote{{ note.id }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteNote' + {{ note.id }})">Delete</a>

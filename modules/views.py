@@ -161,7 +161,8 @@ def event_create():
     _ = Event(user=current_user.id,
               content=request.form["content"],
               date_created=datetime.datetime.now(),
-              event_date=request.form["event_date"])
+              event_date=datetime.datetime.strptime(request.form["event_date"],
+                                                    "%Y-%m-%d").date())
     database.create(_)
     return redirect(request.referrer)
 
