@@ -132,7 +132,7 @@
       <a onclick="notePin({{ note.id }})" class="link me-2">{{ pin_icon(note.pinned) }}</a>Note
       <p class="small float-end"><span class="me-2">{{ note.date_modified.strftime('%B %d, %Y %I:%m %p') }}</span>{{ edit_icon() }}</p>
     </div>
-    <div class="card-body collapsed text-truncate" onclick="$(this).toggleClass('collapsed')">{{ note.content | safe }}</div>
+    <div class="card-body collapsed text-truncate w-100" onclick="$(this).toggleClass('collapsed')" style="white-space:pre-wrap"><p>{{ note.content | safe }}</p></div>
     <div class="card-footer">
       <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editNote{{ note.id }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteNote' + {{ note.id }})">Delete</a>
@@ -209,7 +209,7 @@
 
 {% macro note_update_form(note) %}
 <form onsubmit="event.preventDefault(); noteUpdate({{ note.id }}); $('#editNote' + {{ note.id }}).modal('hide');">
-  <textarea id="noteContent{{ note.id }}" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Content" style="overflow:auto; white-space: pre-wrap;">{{ note.content }}</textarea>
+  <textarea id="noteContent{{ note.id }}" class="form-control mb-2" rows="10" autocomplete="off" placeholder="Content" style="overflow:auto; white-space: pre-wrap;">{{ note.content }}</textarea>
   <button type="submit" class="btn btn-custom w-100">Edit</button>
 </form>
 {% endmacro %}
