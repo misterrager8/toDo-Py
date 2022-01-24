@@ -172,7 +172,8 @@ def event_create():
 def event_update():
     _: Event = Event.query.get(request.form["id_"])
     _.content = request.form["content"]
-    _.event_date = request.form["event_date"]
+    _.event_date = datetime.datetime.strptime(request.form["event_date"],
+                                              "%Y-%m-%d").date()
 
     database.update()
     return redirect(request.referrer)

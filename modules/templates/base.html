@@ -27,7 +27,7 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-target="#userDD" data-bs-toggle="dropdown">
-            {% if not current_user.is_anonymous %}<span class="nav-item me-2">{{ current_user.first_name }}</span>{% endif %}
+            {% if not current_user.is_anonymous %}<span class="nav-item me-2">{{ current_user.username }}</span>{% endif %}
             {{ macros.user_icon() }}
           </a>
           <div class="dropdown-menu dropdown-menu-end text-center" id="userDD">

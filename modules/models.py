@@ -54,7 +54,7 @@ class Event(db.Model):
     user = Column(Integer, ForeignKey("users.id"))
     id = Column(Integer, primary_key=True)
 
-    event_date = Column(DateTime)
+    event_date = Column(Date)
 
     def __init__(self, **kwargs):
         super(Event, self).__init__(**kwargs)

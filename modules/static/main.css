@@ -5,6 +5,10 @@
     --body-txt: white;
 }
 
+::placeholder {
+    font-style: italic;
+}
+
 body, .card, .form-control, .modal-content {
     background-color: var(--body-bg) !important;
     color: var(--body-txt) !important;
