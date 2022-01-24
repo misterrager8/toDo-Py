@@ -77,6 +77,9 @@ class Task(db.Model):
     def __init__(self, **kwargs):
         super(Task, self).__init__(**kwargs)
 
+    def get_steps(self):
+        return self.steps.order_by(Task.done, text("date_created desc"))
+
     def get_subtasks_count(self):
         return self.steps.filter(Task.done == False).count()
 

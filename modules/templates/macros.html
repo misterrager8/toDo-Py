@@ -87,7 +87,7 @@
     </div>
     <div class="card-body collapsed text-truncate" onclick="$(this).toggleClass('collapsed')">
       <p>{{ task.content | safe }}</p>
-      {% for i in task.steps %}
+      {% for i in task.get_steps() %}
       <span class="d-block {% if i.done %}text-decoration-line-through{% endif %}"><span>{{ check_icon(i.done) }}</span> {{ i.content }}</span>
       {% endfor %}
     </div>
@@ -118,7 +118,7 @@
       <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editEvent{{ event.id }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteEvent' + {{ event.id }})">Delete</a>
       <a onclick="eventDelete({{ event.id }})" style="display:none" id="deleteEvent{{ event.id }}" class="link badge text-danger">Delete?</a>
-      <span class="float-end small">{{ event.date_created.strftime('%B %d, %Y %I:%m %p') }}</span>
+      <span class="float-end small">{{ event.date_created.strftime('%B %d, %Y %I:%M %p') }}</span>
     </div>
   </div>
 </div>
@@ -137,7 +137,7 @@
       <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editNote{{ note.id }}">Edit</a>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteNote' + {{ note.id }})">Delete</a>
       <a onclick="noteDelete({{ note.id }})" style="display:none" id="deleteNote{{ note.id }}" class="link badge text-danger">Delete?</a>
-      <span class="float-end small">{{ note.date_created.strftime('%B %d, %Y %I:%m %p') }}</span>
+      <span class="float-end small">{{ note.date_created.strftime('%B %d, %Y %I:%M %p') }}</span>
     </div>
   </div>
 </div>

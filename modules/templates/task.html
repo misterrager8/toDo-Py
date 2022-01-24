@@ -21,7 +21,7 @@
 {% endif %}
 
 <div class="row">
-  {% for i in task.steps %}
+  {% for i in task.get_steps() %}
   {{ macros.task_tile(i) }}
   {% endfor %}
 </div>

@@ -2,10 +2,10 @@
 {% import "macros.html" as macros with context %}
 
 {% block body %}
-<title>Home</title>
+<title>To Do</title>
 {% if current_user.is_authenticated %}
 <div>
-  <p class="h3">Tasks</p>
+  <a href="{{ url_for('tasks') }}" class="link d-block h3">Tasks</a>
   <a class="link badge badge-custom" onclick="toggleDiv('taskCreateForm')">+ New Task</a>
   <div id="taskCreateForm" style="display:none" class="pt-2">{{ macros.task_create_form() }}</div>
   <div class="row">
@@ -15,7 +15,7 @@
   </div>
 </div>
 <div class="pt-5">
-  <p class="h3">Notes</p>
+  <a href="{{ url_for('notes') }}" class="link d-block h3">Notes</a>
   <a class="link badge badge-custom" onclick="toggleDiv('noteCreateForm')">+ New Note</a>
   <div id="noteCreateForm" style="display:none" class="pt-2">{{ macros.note_create_form() }}</div>
   <div class="row">
@@ -25,7 +25,7 @@
   </div>
 </div>
 <div class="pt-5">
-  <p class="h3">Events</p>
+  <a href="{{ url_for('events') }}" class="link d-block h3">Events</a>
   <a class="link badge badge-custom" onclick="toggleDiv('eventCreateForm')">+ New Event</a>
   <div id="eventCreateForm" style="display:none" class="pt-2">{{ macros.event_create_form() }}</div>
   <div class="row">
