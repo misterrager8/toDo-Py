@@ -56,7 +56,7 @@
 </svg>
 {% endmacro %}
 
-{% macro pin_icon(pinned, size=16, class='') %}
+{% macro pin_icon(pinned, size=20, class='') %}
 {% if pinned %}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="red" class="bi bi-pin-angle-fill {{ class }}" viewBox="0 0 16 16">
   <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
@@ -79,81 +79,45 @@
 <!--CARDS, ETC-->
 
 {% macro task_tile(task) %}
-<div class="card col-xl-4">
-  <div class="tile {% if task.done %}opacity-25{% endif %}" style="background-color:#320D6D">
-    <div class="card-header">
-      <a onclick="taskPin({{ task.id }})" class="link me-2">{{ pin_icon(task.pinned) }}</a>Task
-      <a class="link ms-2" onclick="$(this).parent().next().toggleClass('collapsed')">{{ expand_icon() }}</a>
-      <a class="link float-end" onclick="taskToggle({{ task.id }})">{% if task.done %}<span class="small me-2">{{ task.date_done.strftime('%B %d, %Y %I:%m %p') }}</span>{% endif %}{{ check_icon(task.done) }}</a>
+<div class="card col-12">
+  <div class="card-body {% if task.done %}opacity-25{% endif %}">
+    <div>
+      <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done) }}{% if task.done %}<span class="small ms-2">{{ task.date_done.strftime('%B %d, %Y %I:%m %p') }}</span>{% endif %}</a>
+      <a onclick="taskPin({{ task.id }})" class="link float-end">{{ pin_icon(task.pinned) }}</a>
     </div>
-    <div class="card-body collapsed text-truncate">
+    <div class="mt-2 text-truncate">
       <p>{{ task.content | safe }}</p>
-      {% for i in task.get_steps() %}
-      <span class="d-block {% if i.done %}text-decoration-line-through{% endif %}"><span>{{ check_icon(i.done) }}</span> {{ i.content | safe }}</span>
-      {% endfor %}
     </div>
-    <div class="card-footer">
-      {% if task.steps.count() > 0 %}
-      <div class="progress mb-3">
-        <div class="progress-bar" role="progressbar" id="progress{{ task.id }}" style="width:{{ task.get_subtasks_progress() }}%"></div>
-      </div>
-      {% endif %}
-      <a class="badge badge-custom link" href="{{ url_for('task', id_=task.id) }}">Edit</a>
+    <div class="mb-3">
+      <span class="badge badge-custom rounded-circle">{{ task.get_subtasks(filter_='not done').count() }}</span>
       <a class="badge bg-danger link" onclick="toggleDiv('deleteTask' + {{ task.id }})">Delete</a>
       <a onclick="taskDelete({{ task.id }})" style="display:none" id="deleteTask{{ task.id }}" class="link badge text-danger">Delete?</a>
-      <span class="float-end small">{{ task.date_created.strftime('%B %d, %Y %I:%M %p') }}</span>
+      <span class="float-end small" title="{{ task.date_created }}">{{ task.date_created.strftime('%m-%d-%y') }}</span>
+    </div>
+    <div>
+      {{ subtask_create_form(task) }}
+      {% if task.subtasks.count() > 0 %}
+      <div class="progress mb-3">
+        <div class="progress-bar" role="progressbar" style="width:{{ task.get_subtasks_progress() }}%"></div>
+      </div>
+      {% endif %}
+      {% for i in task.get_subtasks() %}
+      {{ subtask_tile(i) }}
+      {% endfor %}
     </div>
   </div>
 </div>
 {% endmacro %}
 
-{% macro event_tile(event) %}
-<div class="card col-xl-4">
-  <div class="tile" style="background-color:#12664F">
-    <div class="card-header">
-      <a onclick="eventPin({{ event.id }})" class="link me-2">{{ pin_icon(event.pinned) }}</a>Event
-      <p class="small float-end"><span class="me-2">{{ event.event_date.strftime('%B %d, %Y') }}</span>{{ reminder_icon() }}</p>
-    </div>
-    <div class="card-body collapsed text-truncate" onclick="$(this).toggleClass('collapsed')">
-      <p>{{ event.content | safe }}</p>
-    </div>
-    <div class="card-footer">
-      <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editEvent{{ event.id }}">Edit</a>
-      <a class="badge bg-danger link" onclick="toggleDiv('deleteEvent' + {{ event.id }})">Delete</a>
-      <a onclick="eventDelete({{ event.id }})" style="display:none" id="deleteEvent{{ event.id }}" class="link badge text-danger">Delete?</a>
-      <span class="float-end small">{{ event.date_created.strftime('%B %d, %Y %I:%M %p') }}</span>
-    </div>
+{% macro subtask_tile(subtask) %}
+<div class="{% if subtask.done %}opacity-25{% endif %} list-group-item-action">
+  <a onclick="taskToggle({{ subtask.id }})" class="link me-2">{{ check_icon(subtask.done) }}</a>
+  <span>{{ subtask.content }}</span>
+  <div class="float-end">
+    <small class="me-2" title="{{ subtask.date_created }}">{{ subtask.date_created.strftime('%m-%d-%y') }}</small>
+    <a onclick="taskDelete({{ subtask.id }})" style="display:none" id="deleteTask{{ subtask.id }}" class="link badge text-danger">Delete?</a>
+    <a class="badge bg-danger link" onclick="toggleDiv('deleteTask' + {{ subtask.id }})">Delete</a>
   </div>
-</div>
-{% call modal('editEvent%s' % event.id) %}{{ event_update_form(event) }}{% endcall %}
-{% endmacro %}
-
-{% macro note_tile(note) %}
-<div class="card col-xl-4">
-  <div class="tile" style="background-color:#FFD447">
-    <div class="card-header">
-      <a onclick="notePin({{ note.id }})" class="link me-2">{{ pin_icon(note.pinned) }}</a>Note
-      <a class="link ms-2" onclick="$(this).parent().next().toggleClass('collapsed')">{{ expand_icon() }}</a>
-      <p class="small float-end"><span class="me-2">{{ note.date_modified.strftime('%B %d, %Y %I:%m %p') }}</span>{{ edit_icon() }}</p>
-    </div>
-    <div class="card-body collapsed text-truncate w-100" style="white-space:pre-wrap"><span>{{ note.content | safe }}</span></div>
-    <div class="card-footer">
-      <a class="badge badge-custom link" data-bs-toggle="modal" data-bs-target="#editNote{{ note.id }}">Edit</a>
-      <a class="badge bg-danger link" onclick="toggleDiv('deleteNote' + {{ note.id }})">Delete</a>
-      <a onclick="noteDelete({{ note.id }})" style="display:none" id="deleteNote{{ note.id }}" class="link badge text-danger">Delete?</a>
-      <span class="float-end small">{{ note.date_created.strftime('%B %d, %Y %I:%M %p') }}</span>
-    </div>
-  </div>
-</div>
-{% call modal('editNote%s' % note.id) %}{{ note_update_form(note) }}{% endcall %}
-{% endmacro %}
-
-{% macro habit_card(habit) %}
-<div class="p-3 rounded my-2" style="border: 5px solid {{ habit.color }}">
-  <span class="d-block">{{ habit.description }}</span>
-  <a class="link badge bg-success" onclick="entryCreate({{ habit.id }})">+ Today</a>
-  <a class="link badge bg-danger" onclick="toggleDiv('deleteHabit' + {{ habit.id }})">Delete</a>
-  <a class="link text-danger" onclick="habitDelete({{ habit.id }})" style="display:none" id="deleteHabit{{ habit.id }}">Delete?</a>
 </div>
 {% endmacro %}
 
@@ -175,32 +139,17 @@
 </form>
 {% endmacro %}
 
-{% macro habit_create_form() %}
-<form onsubmit="event.preventDefault(); habitCreate(); this.reset();" class="input-group">
-  <input type="text" class="form-control" id="description" autocomplete="off" placeholder="Description">
-  <button type="submit" class="btn btn-custom">+</button>
-</form>
-{% endmacro %}
-
 {% macro task_create_form() %}
 <form onsubmit="event.preventDefault(); taskCreate(); this.reset();" class="input-group">
-  <input id="taskContent" class="form-control" autocomplete="off" placeholder="Task">
+  <input id="taskContent" class="form-control" autocomplete="off" placeholder="Tasks, seperated by commas">
   <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
 
-{% macro note_create_form() %}
-<form onsubmit="event.preventDefault(); noteCreate(); this.reset();">
-  <textarea id="noteContent" class="form-control mb-2" rows="5" autocomplete="off" placeholder="Note" style="overflow:auto; white-space: pre-wrap;"></textarea>
-  <button type="submit" class="btn btn-custom w-100">+</button>
-</form>
-{% endmacro %}
-
-{% macro event_create_form() %}
-<form onsubmit="event.preventDefault(); eventCreate(); this.reset();" class="input-group">
-  <input id="eventContent" class="form-control" autocomplete="off" placeholder="Event">
-  <input id="eventDate" class="form-control" type="date">
-  <button type="submit" class="btn btn-custom">+</button>
+{% macro subtask_create_form(task) %}
+<form onsubmit="event.preventDefault(); subtaskCreate({{ task.id }}); this.reset();" class="input-group mb-3">
+  <input class="form-control" autocomplete="off" id="subtaskFor{{ task.id }}" placeholder="+ New Steps, seperated by commas">
+  <button class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
 
@@ -208,20 +157,5 @@
 <form onsubmit="event.preventDefault(); taskUpdate({{ task.id }}); $('#editTask' + {{ task.id }}).modal('hide');">
   <input id="taskContent{{ task.id }}" class="form-control mb-2" autocomplete="off" placeholder="Task" value="{{ task.content }}">
   <button type="submit" class="btn btn-custom w-100">Edit</button>
-</form>
-{% endmacro %}
-
-{% macro note_update_form(note) %}
-<form onsubmit="event.preventDefault(); noteUpdate({{ note.id }}); $('#editNote' + {{ note.id }}).modal('hide');">
-  <textarea id="noteContent{{ note.id }}" class="form-control mb-2" rows="10" autocomplete="off" placeholder="Note" style="overflow:auto; white-space: pre-wrap;">{{ note.content }}</textarea>
-  <button type="submit" class="btn btn-custom w-100">Edit</button>
-</form>
-{% endmacro %}
-
-{% macro event_update_form(event) %}
-<form onsubmit="event.preventDefault(); eventUpdate({{ event.id }}); $('#editEvent' + {{ event.id }}).modal('hide');" class="input-group">
-  <input id="eventContent{{ event.id }}" class="form-control" autocomplete="off" value="{{ event.content }}" placeholder="Event">
-  <input id="eventDate{{ event.id }}" class="form-control" type="date" value="{{ event.event_date }}">
-  <button type="submit" class="btn btn-custom">Edit</button>
 </form>
 {% endmacro %}

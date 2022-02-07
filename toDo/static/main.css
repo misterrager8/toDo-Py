@@ -9,19 +9,19 @@
     font-style: italic;
 }
 
-body, .card, .form-control, .modal-content {
+.list-group-item-action {
+    padding: 3px 10px;
+    border-radius: 3px;
+}
+
+body, .card, .form-control, .modal-content, .list-group-item-action {
     background-color: var(--body-bg) !important;
     color: var(--body-txt) !important;
 }
 
-.navbar, .badge-custom, .btn-custom {
+.navbar, .badge-custom, .btn-custom, .list-group-item-action:hover {
     background-color: var(--navbar-bg) !important;
     color: var(--navbar-txt) !important;
-}
-
-.tile {
-    margin-top: 25px;
-    border-radius: 5px;
 }
 
 .link, .link:hover {
@@ -33,10 +33,16 @@ body, .card, .form-control, .modal-content {
     border: none;
 }
 
+.card-body {
+    border: 1px solid var(--body-txt);
+    border-radius: 10px;
+    margin-top: 25px;
+}
+
 a:hover {
     cursor: pointer;
 }
 
-.collapsed {
-    height: 72px;
+.bg-danger {
+    color: white !important;
 }

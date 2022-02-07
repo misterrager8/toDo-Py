@@ -18,10 +18,8 @@
     <div class="collapse navbar-collapse" id="navContent">
       {% if not current_user.is_anonymous %}
       <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link"> <span class="badge badge-custom">{{ current_user.get_tasks().count() }} undone</span> </a></li>
         <li class="nav-item"><a href="{{ url_for('pinned') }}" class="nav-link">{{ macros.pin_icon(true, size=16) }}</a></li>
-        <li class="nav-item"><a href="{{ url_for('tasks') }}" class="nav-link">Tasks <span class="badge badge-custom">{{ current_user.get_tasks().count() }}</span> </a></li>
-        <li class="nav-item"><a href="{{ url_for('events') }}" class="nav-link">Events <span class="badge badge-custom">{{ current_user.get_events().count() }}</span> </a></li>
-        <li class="nav-item"><a href="{{ url_for('notes') }}" class="nav-link">Notes <span class="badge badge-custom">{{ current_user.get_notes().count() }}</span> </a></li>
       </ul>
       {% endif %}
       <ul class="navbar-nav ms-auto">
@@ -60,10 +58,10 @@
     </div>
   </div>
 </nav>
-<div class="container py-3" id="pageContent">
+<div class="container my-5" id="pageContent">
   {% block body %}
   {% endblock %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
 </div>
 </html>

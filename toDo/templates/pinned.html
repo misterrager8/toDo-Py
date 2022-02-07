@@ -7,11 +7,5 @@
   {% for i in current_user.get_tasks(filter_='pinned') %}
   {{ macros.task_tile(i) }}
   {% endfor %}
-  {% for i in current_user.get_notes(filter_='pinned') %}
-  {{ macros.note_tile(i) }}
-  {% endfor %}
-  {% for i in current_user.get_events(filter_='pinned') %}
-  {{ macros.event_tile(i) }}
-  {% endfor %}
 </div>
 {% endblock %}
