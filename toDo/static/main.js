@@ -46,6 +46,18 @@ function taskDelete(taskId) {
 function userEdit() {
     $.post('user_edit', {
         username : $('#username').val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function changePassword() {
+    $.post('change_password', {
+        old_password : $('#oldPassword').val(),
+        new_password1 : $('#newPassword1').val(),
+        new_password2 : $('#newPassword2').val()
+    }, function(data) {
+        refreshPage();
     });
 }
 

@@ -64,6 +64,21 @@ def signup():
     return redirect(url_for("index"))
 
 
+@current_app.route("/change_password", methods=["POST"])
+@login_required
+def change_password():
+    old_password = request.form["old_password"]
+    new_password1 = request.form["new_password1"]
+    new_password2 = request.form["new_password2"]
+
+    if check_password_hash(current_user.password, old_password) and new_password1 == new_password2:
+        current_user.password = generate_password_hash(request.form["new_password1"])
+        database.update()
+        return redirect(request.referrer)
+    else:
+        return "Try again"
+
+
 @current_app.route("/user_edit", methods=["POST"])
 @login_required
 def user_edit():

@@ -139,6 +139,22 @@
 </form>
 {% endmacro %}
 
+{% macro user_edit_form() %}
+<form onsubmit="event.preventDefault(); userEdit();" class="input-group">
+  <input autocomplete="off" class="form-control" type="text" id="username" placeholder="Username" value="{{ current_user.username }}">
+  <button type="submit" class="btn btn-custom">Edit</button>
+</form>
+{% endmacro %}
+
+{% macro change_password_form() %}
+<form onsubmit="event.preventDefault(); changePassword();" class="input-group">
+  <input autocomplete="off" class="form-control" type="password" id="oldPassword" placeholder="Old Password">
+  <input autocomplete="off" class="form-control" type="password" id="newPassword1" placeholder="New Password">
+  <input autocomplete="off" class="form-control" type="password" id="newPassword2" placeholder="Retype New Password">
+  <button type="submit" class="btn btn-custom">Change Password</button>
+</form>
+{% endmacro %}
+
 {% macro task_create_form() %}
 <form onsubmit="event.preventDefault(); taskCreate(); this.reset();" class="input-group">
   <input id="taskContent" class="form-control" autocomplete="off" placeholder="Tasks, seperated by commas">

@@ -3,7 +3,6 @@
 
 {% block body %}
 <title>Profile</title>
-<div class="form-group">
-  <input type="text" class="form-control mb-2" onchange="userEdit()" value="{{ current_user.username }}" id="username">
-</div>
+<div class="pb-3">{{ macros.user_edit_form() }}</div>
+<div class="pb-3">{{ macros.change_password_form() }}</div>
 {% endblock %}
