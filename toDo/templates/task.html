@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block body %}
+<title>{{ task_.content }}</title>
+<div class="text-center mb-3">
+  <span style="display:none" class="spinner-border spinner-border-sm" id="spinner{{ task_.id }}"></span>
+  <input value="{{ task_.content }}" autocomplete="off" class="input-hidden text-center h1" onchange="taskUpdate({{ task_.id }})" id="taskContent{{ task_.id }}"><br>
+  <div>{{ task_.date_created.strftime('%B %d, %Y') }}</div>
+  <a class="link badge bg-danger" onclick="toggleDiv('deleteTask' + {{ task_.id }})">Delete</a><br>
+  <a class="badge text-danger link" style="display:none" onclick="taskDelete({{ task_.id }})" id="deleteTask{{ task_.id }}">Delete?</a>
+</div>
+{{ macros.subtask_create_form(task_) }}
+{% if task_.subtasks.count() > 0 %}
+<div class="progress mb-3">
+  <div class="progress-bar" role="progressbar" style="width:{{ task_.get_subtasks_progress() }}%"></div>
+</div>
+{% endif %}
+{% for i in task_.get_subtasks() %}
+{{ macros.subtask_tile(i) }}
+{% endfor %}
+{% endblock %}

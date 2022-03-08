@@ -31,6 +31,11 @@ class Database:
         db.session.commit()
 
     @staticmethod
+    def delete_mutliple(objects: list):
+        for i in objects: db.session.delete(i)
+        db.session.commit()
+
+    @staticmethod
     def search(type_, order_by: str = "", filter_: str = ""):
         return db.session.query(type_).filter(text(filter_)).order_by(text(order_by))
 

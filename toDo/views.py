@@ -29,6 +29,12 @@ def index():
     return render_template("index.html")
 
 
+@current_app.route("/task")
+def task():
+    task_: Task = database.get(Task, int(request.args.get("id_")))
+    return render_template("task.html", task_=task_)
+
+
 @current_app.route("/pinned")
 @login_required
 def pinned():
@@ -126,6 +132,7 @@ def task_update():
 def task_delete():
     _: Task = Task.query.get(request.args.get("id_"))
 
+    database.delete_mutliple(_.subtasks)
     database.delete(_)
     return redirect(request.referrer)
 

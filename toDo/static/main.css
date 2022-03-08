@@ -9,17 +9,17 @@
     font-style: italic;
 }
 
-.list-group-item-action {
+.list-group-item {
     padding: 3px 10px;
     border-radius: 3px;
 }
 
-body, .card, .form-control, .modal-content, .list-group-item-action {
+body, .card, .form-control, .modal-content, .list-group-item {
     background-color: var(--body-bg) !important;
     color: var(--body-txt) !important;
 }
 
-.navbar, .badge-custom, .btn-custom, .list-group-item-action:hover {
+.navbar, .badge-custom, .btn-custom {
     background-color: var(--navbar-bg) !important;
     color: var(--navbar-txt) !important;
 }
@@ -45,4 +45,11 @@ a:hover {
 
 .bg-danger {
     color: white !important;
+}
+
+.input-hidden {
+    border: none;
+    background-color: var(--body-bg);
+    color: var(--body-txt);
+    text-overflow: ellipsis;
 }

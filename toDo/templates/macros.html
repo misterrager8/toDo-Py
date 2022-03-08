@@ -50,9 +50,10 @@
 </svg>
 {% endmacro %}
 
-{% macro expand_icon(size=20, color='currentcolor', class='') %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-arrows-expand" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 8zM7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708l2-2zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10z"/>
+{% macro info_icon(size=20, color='currentcolor', class='') %}
+<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{{ color }}" class="bi bi-info-circle {{ class }}" viewBox="0 0 16 16">
+  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+  <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
 </svg>
 {% endmacro %}
 
@@ -79,44 +80,32 @@
 <!--CARDS, ETC-->
 
 {% macro task_tile(task) %}
-<div class="card col-12">
+<div class="card col-xl-4">
   <div class="card-body {% if task.done %}opacity-25{% endif %}">
-    <div>
-      <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done) }}{% if task.done %}<span class="small ms-2">{{ task.date_done.strftime('%B %d, %Y %I:%m %p') }}</span>{% endif %}</a>
-      <a onclick="taskPin({{ task.id }})" class="link float-end">{{ pin_icon(task.pinned) }}</a>
-    </div>
-    <div class="mt-2 text-truncate">
-      <p>{{ task.content | safe }}</p>
-    </div>
-    <div class="mb-3">
-      <span class="badge badge-custom rounded-circle">{{ task.get_subtasks(filter_='not done').count() }}</span>
-      <a class="badge bg-danger link" onclick="toggleDiv('deleteTask' + {{ task.id }})">Delete</a>
-      <a onclick="taskDelete({{ task.id }})" style="display:none" id="deleteTask{{ task.id }}" class="link badge text-danger">Delete?</a>
-      <span class="float-end small" title="{{ task.date_created }}">{{ task.date_created.strftime('%m-%d-%y') }}</span>
-    </div>
-    <div>
-      {{ subtask_create_form(task) }}
-      {% if task.subtasks.count() > 0 %}
-      <div class="progress mb-3">
-        <div class="progress-bar" role="progressbar" style="width:{{ task.get_subtasks_progress() }}%"></div>
-      </div>
+    <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done) }}</a>
+    <a class="link me-1" href="{{ url_for('task', id_=task.id) }}">{{ info_icon() }}</a>
+    <span style="display:none" class="spinner-border spinner-border-sm" id="spinner{{ task.id }}"></span>
+    <input value="{{ task.content }}" autocomplete="off" class="input-hidden" onchange="taskUpdate({{ task.id }})" id="taskContent{{ task.id }}">
+    <div class="float-end">
+      {% if task.get_subtasks(filter_='not done').count() > 0 %}
+      <span class="badge badge-custom me-1">{{ task.get_subtasks(filter_='not done').count() }}</span>
       {% endif %}
-      {% for i in task.get_subtasks() %}
-      {{ subtask_tile(i) }}
-      {% endfor %}
+      <a onclick="taskPin({{ task.id }})" class="link me-1">{{ pin_icon(task.pinned) }}</a>
+      <a class="badge text-danger link" style="display:none" onclick="taskDelete({{ task.id }})" id="deleteTask{{ task.id }}">Delete?</a>
+      <a class="link badge bg-danger" onclick="toggleDiv('deleteTask' + {{ task.id }})">x</a>
     </div>
   </div>
 </div>
 {% endmacro %}
 
 {% macro subtask_tile(subtask) %}
-<div class="{% if subtask.done %}opacity-25{% endif %} list-group-item-action">
+<div class="{% if subtask.done %}opacity-25{% endif %} list-group-item">
   <a onclick="taskToggle({{ subtask.id }})" class="link me-2">{{ check_icon(subtask.done) }}</a>
-  <span>{{ subtask.content }}</span>
+  <span style="display:none" class="spinner-border spinner-border-sm" id="spinner{{ subtask.id }}"></span>
+  <input value="{{ subtask.content }}" autocomplete="off" class="input-hidden" onchange="taskUpdate({{ subtask.id }})" id="taskContent{{ subtask.id }}">
   <div class="float-end">
-    <small class="me-2" title="{{ subtask.date_created }}">{{ subtask.date_created.strftime('%m-%d-%y') }}</small>
     <a onclick="taskDelete({{ subtask.id }})" style="display:none" id="deleteTask{{ subtask.id }}" class="link badge text-danger">Delete?</a>
-    <a class="badge bg-danger link" onclick="toggleDiv('deleteTask' + {{ subtask.id }})">Delete</a>
+    <a class="badge bg-danger link" onclick="toggleDiv('deleteTask' + {{ subtask.id }})">x</a>
   </div>
 </div>
 {% endmacro %}
@@ -170,8 +159,5 @@
 {% endmacro %}
 
 {% macro task_update_form(task) %}
-<form onsubmit="event.preventDefault(); taskUpdate({{ task.id }}); $('#editTask' + {{ task.id }}).modal('hide');">
-  <input id="taskContent{{ task.id }}" class="form-control mb-2" autocomplete="off" placeholder="Task" value="{{ task.content }}">
-  <button type="submit" class="btn btn-custom w-100">Edit</button>
-</form>
+<input onchange="taskUpdate({{ task.id }})" id="taskContent{{ task.id }}" class="input-hidden" autocomplete="off" value="{{ task.content }}">
 {% endmacro %}

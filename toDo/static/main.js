@@ -25,13 +25,13 @@ function subtaskCreate(taskId) {
 }
 
 function taskUpdate(taskId) {
-    $('#spinner').show();
+    $('#spinner' + taskId).show();
     $.post('task_update', {
         id_ : taskId,
         content : $('#taskContent' + taskId).val()
     }, function(data) {
         refreshPage();
-        $('#spinner').hide();
+        $('#spinner' + taskId).hide();
     });
 }
 
