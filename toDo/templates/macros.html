@@ -2,9 +2,8 @@
 
 {% macro modal(id) %}
 <div class="modal" id="{{ id }}">
-  <div class="modal-dialog modal-fullscreen">
+  <div class="modal-dialog">
     <div class="modal-content p-3">
-      <a class="link" data-bs-dismiss="modal">Cancel</a>
       {{ caller() }}
     </div>
   </div>

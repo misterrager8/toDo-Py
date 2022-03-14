@@ -41,22 +41,13 @@
       </ul>
     </div>
   </div>
+  {% call macros.modal('login') %}
+  {{ macros.login_form() }}
+  {% endcall %}
 
-  <div class="modal" id="login">
-    <div class="modal-dialog">
-      <div class="modal-content p-3">
-        {{ macros.login_form() }}
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="signup">
-    <div class="modal-dialog">
-      <div class="modal-content p-3">
-        {{ macros.signup_form() }}
-      </div>
-    </div>
-  </div>
+  {% call macros.modal('signup') %}
+  {{ macros.signup_form() }}
+  {% endcall %}
 </nav>
 <div class="container my-5" id="pageContent">
   {% block body %}
