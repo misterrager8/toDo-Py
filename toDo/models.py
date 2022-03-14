@@ -40,12 +40,3 @@ class Task(db.Model):
 
     def get_subtasks(self, filter_: str = "", order_by: str = "date_created desc"):
         return self.subtasks.filter(text(filter_)).order_by(Task.done, text(order_by))
-
-    def get_subtasks_count(self):
-        return self.subtasks.filter(Task.done == False).count()
-
-    def get_subtasks_progress(self):
-        done = self.subtasks.filter(Task.done == True).count()
-        total = self.subtasks.count()
-        perc = (done / total) * 100
-        return perc
