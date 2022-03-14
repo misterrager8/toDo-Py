@@ -114,39 +114,43 @@
 
 {% macro signup_form() %}
 <form class="form-group" method="POST" action="{{ url_for('signup') }}">
-  <input autocomplete="off" class="form-control mb-2" type="text" name="username" placeholder="username">
-  <input autocomplete="off" class="form-control mb-2" type="password" name="password" placeholder="Password">
+  <div class="input-group mb-2">
+    <input autocomplete="off" class="col" type="text" name="username" placeholder="username">
+    <input autocomplete="off" class="col" type="password" name="password" placeholder="Password">
+  </div>
   <button type="submit" class="btn btn-custom w-100">Sign Up</button>
 </form>
 {% endmacro %}
 
 {% macro login_form() %}
 <form class="form-group" method="POST" action="{{ url_for('login') }}">
-  <input autocomplete="off" class="form-control mb-2" type="text" name="username" placeholder="Username">
-  <input autocomplete="off" class="form-control mb-2" type="password" name="password" placeholder="Password">
+  <div class="input-group mb-2">
+    <input autocomplete="off" class="col" type="text" name="username" placeholder="Username">
+    <input autocomplete="off" class="col" type="password" name="password" placeholder="Password">
+  </div>
   <button type="submit" class="btn btn-custom w-100">Log In</button>
 </form>
 {% endmacro %}
 
 {% macro user_edit_form() %}
 <form onsubmit="event.preventDefault(); userEdit();" class="input-group">
-  <input autocomplete="off" class="form-control" type="text" id="username" placeholder="Username" value="{{ current_user.username }}">
+  <input autocomplete="off" class="col" type="text" id="username" placeholder="Username" value="{{ current_user.username }}">
   <button type="submit" class="btn btn-custom">Edit</button>
 </form>
 {% endmacro %}
 
 {% macro change_password_form() %}
 <form onsubmit="event.preventDefault(); changePassword();" class="input-group">
-  <input autocomplete="off" class="form-control" type="password" id="oldPassword" placeholder="Old Password">
-  <input autocomplete="off" class="form-control" type="password" id="newPassword1" placeholder="New Password">
-  <input autocomplete="off" class="form-control" type="password" id="newPassword2" placeholder="Retype New Password">
+  <input autocomplete="off" class="col" type="password" id="oldPassword" placeholder="Old Password">
+  <input autocomplete="off" class="col" type="password" id="newPassword1" placeholder="New Password">
+  <input autocomplete="off" class="col" type="password" id="newPassword2" placeholder="Retype New Password">
   <button type="submit" class="btn btn-custom">Change Password</button>
 </form>
 {% endmacro %}
 
 {% macro task_create_form() %}
 <form onsubmit="event.preventDefault(); taskCreate(); this.reset();" class="input-group">
-  <input id="taskContent" class="form-control" autocomplete="off" placeholder="Tasks, seperated by commas">
+  <input id="taskContent" class="col" autocomplete="off" placeholder="Tasks, seperated by commas">
   <button type="submit" class="btn btn-custom">+</button>
 </form>
 {% endmacro %}
