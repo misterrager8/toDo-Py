@@ -29,12 +29,6 @@ def index():
     return render_template("index.html")
 
 
-@current_app.route("/task")
-def task():
-    task_: Task = database.get(Task, int(request.args.get("id_")))
-    return render_template("task.html", task_=task_)
-
-
 @current_app.route("/pinned")
 @login_required
 def pinned():

@@ -80,32 +80,38 @@
 
 {% macro task_tile(task) %}
 <div class="card col-xl-4">
-  <div class="card-body {% if task.done %}opacity-25{% endif %}">
-    <a class="link" onclick="taskToggle({{ task.id }})">{{ check_icon(task.done) }}</a>
-    <a class="link me-1" href="{{ url_for('task', id_=task.id) }}">{{ info_icon() }}</a>
-    <span style="display:none" class="spinner-border spinner-border-sm" id="spinner{{ task.id }}"></span>
-    <input value="{{ task.content }}" autocomplete="off" class="input-hidden" onchange="taskUpdate({{ task.id }})" id="taskContent{{ task.id }}">
-    <div class="float-end">
+  <div class="card-body my-3 {% if task.done %}opacity-25{% endif %}">
+    <a onclick="taskToggle({{ task.id }})">{{ check_icon(task.done) }}</a>
+    <a onclick="toggleDiv('info' + {{ task.id }})">
+      <span contenteditable="true" onkeydown="taskUpdate({{ task.id }}, event)" id="taskContent{{ task.id }}" class="px-2">{{ task.content }}</span>
       {% if task.get_subtasks(filter_='not done').count() > 0 %}
-      <span class="badge badge-custom me-1">{{ task.get_subtasks(filter_='not done').count() }}</span>
+      <span class="badge badge-custom">{{ task.get_subtasks(filter_='not done').count() }}</span>
       {% endif %}
-      <a onclick="taskPin({{ task.id }})" class="link me-1">{{ pin_icon(task.pinned) }}</a>
-      <a class="badge text-danger link" style="display:none" onclick="taskDelete({{ task.id }})" id="deleteTask{{ task.id }}">Delete?</a>
-      <a class="link badge bg-danger" onclick="toggleDiv('deleteTask' + {{ task.id }})">x</a>
+    </a>
+    <div class="float-end">
+      <a onclick="taskPin({{ task.id }})" class="me-1">{{ pin_icon(task.pinned) }}</a>
+      <a class="badge text-danger" style="display:none" onclick="taskDelete({{ task.id }})" id="deleteTask{{ task.id }}">Delete?</a>
+      <a class="badge text-danger" onclick="toggleDiv('deleteTask' + {{ task.id }})">X</a>
+    </div>
+    <div id="info{{ task.id }}" style="display:none">
+      <form onsubmit="event.preventDefault(); subtaskCreate({{ task.id }}); this.reset();" class="input-group my-3">
+        <input class="col" id="subtaskFor{{ task.id }}" autocomplete="off" placeholder="+ New Subtasks, seperated by commas">
+        <button type="submit" class="btn btn-custom">+</button>
+      </form>
+      {% for i in task.get_subtasks() %}
+      {{ subtask_tile(i) }}
+      {% endfor %}
     </div>
   </div>
 </div>
 {% endmacro %}
 
 {% macro subtask_tile(subtask) %}
-<div class="{% if subtask.done %}opacity-25{% endif %} list-group-item">
-  <a onclick="taskToggle({{ subtask.id }})" class="link me-2">{{ check_icon(subtask.done) }}</a>
-  <span style="display:none" class="spinner-border spinner-border-sm" id="spinner{{ subtask.id }}"></span>
-  <input value="{{ subtask.content }}" autocomplete="off" class="input-hidden" onchange="taskUpdate({{ subtask.id }})" id="taskContent{{ subtask.id }}">
-  <div class="float-end">
-    <a onclick="taskDelete({{ subtask.id }})" style="display:none" id="deleteTask{{ subtask.id }}" class="link badge text-danger">Delete?</a>
-    <a class="badge bg-danger link" onclick="toggleDiv('deleteTask' + {{ subtask.id }})">x</a>
-  </div>
+<div class="{% if subtask.done %}opacity-25{% endif %}">
+  <a onclick="taskToggle({{ subtask.id }})">{{ check_icon(subtask.done) }}</a>
+  <span class="px-2" contenteditable="true" id="taskContent{{ subtask.id }}" onkeydown="taskUpdate({{ subtask.id }}, event)">{{ subtask.content }}</span>
+  <a onclick="toggleDiv('deleteSubtask' + {{ subtask.id }})" class="badge text-danger float-end">X</a>
+  <a style="display:none" id="deleteSubtask{{ subtask.id }}" onclick="taskDelete({{ subtask.id }})" class="badge text-danger float-end">Delete?</a>
 </div>
 {% endmacro %}
 

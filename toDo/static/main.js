@@ -24,15 +24,16 @@ function subtaskCreate(taskId) {
     });
 }
 
-function taskUpdate(taskId) {
-    $('#spinner' + taskId).show();
-    $.post('task_update', {
-        id_ : taskId,
-        content : $('#taskContent' + taskId).val()
-    }, function(data) {
-        refreshPage();
-        $('#spinner' + taskId).hide();
-    });
+function taskUpdate(taskId, event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        $.post('task_update', {
+            id_ : taskId,
+            content : $('#taskContent' + taskId).html()
+        }, function(data) {
+            refreshPage();
+        });
+    }
 }
 
 function taskDelete(taskId) {
