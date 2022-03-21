@@ -57,9 +57,12 @@ def logout():
 
 @current_app.route("/signup", methods=["POST"])
 def signup():
-    database.create(User(username=request.form["username"],
-                         password=generate_password_hash(request.form["password"]),
-                         date_joined=datetime.datetime.now()))
+    user_ = User(username=request.form["username"],
+                 password=generate_password_hash(request.form["password"]),
+                 date_joined=datetime.datetime.now())
+
+    database.create(user_)
+    login_user(user_)
 
     return redirect(url_for("index"))
 
