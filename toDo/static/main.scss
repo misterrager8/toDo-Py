@@ -1,7 +1,7 @@
-$navbar-bg: white;
-$navbar-txt: black;
-$body-bg: black;
-$body-txt: white;
+$navbar-bg: darken(white, 10%);
+$navbar-txt: lighten(black, 10%);
+$body-bg: lighten(black, 10%);
+$body-txt: darken(white, 10%);
 
 @mixin border-custom {
     border: 1px solid $body-txt;
@@ -59,3 +59,5 @@ a, a:hover {
 .card-body {
     border-bottom: 1px solid $body-txt;
 }
+
+.card { border: none; }

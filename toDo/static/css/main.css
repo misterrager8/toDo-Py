@@ -1,5 +1,5 @@
 .border-custom {
-  border: 1px solid white;
+  border: 1px solid #e6e6e6;
   border-radius: 5px; }
 
   .font-custom {
@@ -8,12 +8,12 @@
     font-weight: bold; }
 
     body, .card, .modal-content, .input-custom, .btn-custom:hover {
-      background-color: black;
-      color: white; }
+      background-color: #1a1a1a;
+      color: #e6e6e6; }
 
       .navbar, .btn-custom {
-        background-color: white;
-        color: black; }
+        background-color: #e6e6e6;
+        color: #1a1a1a; }
 
         a, a:hover {
           color: inherit;
@@ -21,12 +21,12 @@
           cursor: pointer; }
 
           .input-custom {
-            border: 1px solid white;
+            border: 1px solid #e6e6e6;
             border-radius: 5px;
             padding: 3px 10px; }
 
             .btn-custom {
-              border: 1px solid white;
+              border: 1px solid #e6e6e6;
               border-radius: 5px;
               letter-spacing: 3px;
               text-transform: uppercase;
@@ -46,4 +46,7 @@
                 border-radius: 10px; }
 
                 .card-body {
-                  border-bottom: 1px solid white; }
+                  border-bottom: 1px solid #e6e6e6; }
+
+                  .card {
+                    border: none; }
