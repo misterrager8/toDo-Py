@@ -4,7 +4,6 @@ function toggleDiv(divId) {
 
 function refreshPage() {
     $('#pageContent').load(location.href + ' #pageContent');
-    $('#navContent').load(location.href + ' #navContent');
 }
 
 function taskCreate() {
