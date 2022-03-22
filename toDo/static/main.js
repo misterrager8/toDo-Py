@@ -1,5 +1,5 @@
 function toggleDiv(divId) {
-    $('#' + divId).toggle();
+    $('#' + divId).fadeToggle(250);
 }
 
 function refreshPage() {
