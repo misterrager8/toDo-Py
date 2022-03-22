@@ -12,35 +12,24 @@
 </head>
 <nav class="navbar navbar-expand-xl navbar-light">
   <div class="container-fluid">
-    <a class="navbar-brand border-end pe-3" href="{{ url_for('index') }}">{{ macros.brand_icon() }}</a>
-    <button class="navbar-toggler" data-bs-target="#navContent" data-bs-toggle="collapse" type="button">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navContent">
-      {% if not current_user.is_anonymous %}
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link"> <span class="badge badge-custom">{{ current_user.get_tasks().count() }} undone</span> </a></li>
-        <li class="nav-item"><a href="{{ url_for('pinned') }}" class="nav-link">{{ macros.pin_icon(true, size=16) }}</a></li>
-      </ul>
-      {% endif %}
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-target="#userDD" data-bs-toggle="dropdown">
-            {% if not current_user.is_anonymous %}<span class="nav-item me-2">{{ current_user.username }}</span>{% endif %}
-            {{ macros.user_icon() }}
-          </a>
-          <div class="dropdown-menu dropdown-menu-end text-center" id="userDD">
-            {% if not current_user.is_anonymous %}
-            <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
-            <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
-            {% else %}
-            <a class="dropdown-item" data-bs-target="#login" data-bs-toggle="modal">Log In</a>
-            <a class="dropdown-item" data-bs-target="#signup" data-bs-toggle="modal">Sign Up</a>
-            {% endif %}
-          </div>
-        </li>
-      </ul>
-    </div>
+    <a class="navbar-brand border-end pe-3" href="{{ url_for('index') }}"><i class="bi bi-check-all"></i></a>
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" data-bs-target="#userDD" data-bs-toggle="dropdown">
+          {% if not current_user.is_anonymous %}<span class="nav-item me-2">{{ current_user.username }}</span>{% endif %}
+          <i class="bi bi-person-fill"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-end text-center" id="userDD">
+          {% if not current_user.is_anonymous %}
+          <a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a>
+          <a class="dropdown-item" href="{{ url_for('logout') }}">Log Out</a>
+          {% else %}
+          <a class="dropdown-item" data-bs-target="#login" data-bs-toggle="modal">Log In</a>
+          <a class="dropdown-item" data-bs-target="#signup" data-bs-toggle="modal">Sign Up</a>
+          {% endif %}
+        </div>
+      </li>
+    </ul>
   </div>
   {% call macros.modal('login') %}
   {{ macros.login_form() }}

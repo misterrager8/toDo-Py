@@ -29,12 +29,6 @@ def index():
     return render_template("index.html")
 
 
-@current_app.route("/pinned")
-@login_required
-def pinned():
-    return render_template("pinned.html")
-
-
 @current_app.route("/login", methods=["POST"])
 def login():
     username = request.form["username"]
