@@ -8,6 +8,7 @@ function refreshPage() {
 }
 
 function taskCreate() {
+    $('#spinner').show();
     $.post('task_create', {
         content : $('#taskContent').val()
     }, function(data) {
@@ -16,6 +17,7 @@ function taskCreate() {
 }
 
 function subtaskCreate(taskId) {
+    $('#spinner').show();
     $.post('subtask_create', {
         id_: taskId,
         content : $('#subtaskFor' + taskId).val()
@@ -27,6 +29,7 @@ function subtaskCreate(taskId) {
 function taskUpdate(taskId, event) {
     if (event.key === 'Enter') {
         event.preventDefault();
+        $('#spinner').show();
         $.post('task_update', {
             id_ : taskId,
             content : $('#taskContent' + taskId).html()
@@ -37,6 +40,7 @@ function taskUpdate(taskId, event) {
 }
 
 function taskDelete(taskId) {
+    $('#spinner').show();
     $.get('task_delete', {
         id_ : taskId
     }, function(data) {
@@ -45,6 +49,7 @@ function taskDelete(taskId) {
 }
 
 function userEdit() {
+    $('#spinner').show();
     $.post('user_edit', {
         username : $('#username').val()
     }, function(data) {
@@ -53,6 +58,7 @@ function userEdit() {
 }
 
 function changePassword() {
+    $('#spinner').show();
     $.post('change_password', {
         old_password : $('#oldPassword').val(),
         new_password1 : $('#newPassword1').val(),
@@ -63,6 +69,7 @@ function changePassword() {
 }
 
 function taskToggle(taskId) {
+    $('#spinner').show();
     $.get('task_toggle', {
         id_ : taskId
     }, function(data) {
@@ -71,6 +78,7 @@ function taskToggle(taskId) {
 }
 
 function taskPin(taskId) {
+    $('#spinner').show();
     $.get('task_pin', {
         id_ : taskId
     }, function(data) {
