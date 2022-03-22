@@ -4,16 +4,26 @@ $body-bg: black;
 $body-txt: white;
 
 @mixin border-custom {
-    border-bottom: 1px solid $body-txt;
-//     border-radius: 5px;
+    border: 1px solid $body-txt;
+    border-radius: 5px;
 }
 
-body, .card, input, .modal-content {
+@mixin font-custom {
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.border-custom { @include border-custom; }
+
+.font-custom { @include font-custom; }
+
+body, .card, .modal-content, .input-custom, .btn-custom:hover {
     background-color: $body-bg;
     color: $body-txt;
 }
 
-.navbar, .btn-custom, .badge-custom {
+.navbar, .btn-custom {
     background-color: $navbar-bg;
     color: $navbar-txt;
 }
@@ -24,12 +34,28 @@ a, a:hover {
     cursor: pointer;
 }
 
-input {
-    border: none;
+.input-custom {
     @include border-custom;
-    padding: 0px 10px;
+    padding: 3px 10px;
+}
+
+.btn-custom {
+    @include border-custom;
+    @include font-custom;
+    padding: 5px 10px;
+    font-size: 0.8em;
+    transition: background-color .5s;
+}
+
+.badge-custom {
+    @include font-custom;
+    padding: 1px 10px;
+    font-size: 0.7em;
+    border: 1px solid currentcolor;
+    color: currentcolor;
+    border-radius: 10px;
 }
 
 .card-body {
-    @include border-custom;
+    border-bottom: 1px solid $body-txt;
 }
