@@ -1,7 +1,7 @@
-$navbar-bg: darken(white, 10%);
+$navbar-bg: white;
 $navbar-txt: lighten(black, 10%);
 $body-bg: lighten(black, 10%);
-$body-txt: darken(white, 10%);
+$body-txt: white;
 
 @mixin border-custom {
     border: 1px solid $body-txt;
@@ -16,7 +16,7 @@ $body-txt: darken(white, 10%);
 
 .border-custom { @include border-custom; }
 
-.font-custom { @include font-custom; }
+.font-custom, .dropdown-item { @include font-custom; }
 
 body, .card, .modal-content, .input-custom, .btn-custom:hover {
     background-color: $body-bg;

@@ -3,7 +3,7 @@
 
 {% block body %}
 <title>To Do</title>
-{% if current_user.is_authenticated %}
+{% if not current_user.is_anonymous %}
 <div>
   {{ macros.task_create_form() }}
   <span class="badge-custom border-0">{{ current_user.get_tasks().count() }} undone</span>
@@ -12,6 +12,14 @@
     {{ macros.task_tile(i) }}
     {% endfor %}
   </div>
+</div>
+{% else %}
+<div class="text-center opacity-25">
+  <div class="bi bi-person-fill" style="font-size:5em"></div>
+  <span class="h4">
+    <a data-bs-toggle="modal" data-bs-target="#login" class="font-custom text-decoration-underline">Log in</a> or
+    <a data-bs-toggle="modal" data-bs-target="#signup" class="font-custom text-decoration-underline">sign up</a>
+  </span>
 </div>
 {% endif %}
 {% endblock %}

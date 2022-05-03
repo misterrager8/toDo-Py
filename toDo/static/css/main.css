@@ -1,18 +1,18 @@
 .border-custom {
-  border: 1px solid #e6e6e6;
+  border: 1px solid white;
   border-radius: 5px; }
 
-  .font-custom {
+  .font-custom, .dropdown-item {
     letter-spacing: 3px;
     text-transform: uppercase;
     font-weight: bold; }
 
     body, .card, .modal-content, .input-custom, .btn-custom:hover {
       background-color: #1a1a1a;
-      color: #e6e6e6; }
+      color: white; }
 
       .navbar, .btn-custom {
-        background-color: #e6e6e6;
+        background-color: white;
         color: #1a1a1a; }
 
         a, a:hover {
@@ -21,12 +21,12 @@
           cursor: pointer; }
 
           .input-custom {
-            border: 1px solid #e6e6e6;
+            border: 1px solid white;
             border-radius: 5px;
             padding: 3px 10px; }
 
             .btn-custom {
-              border: 1px solid #e6e6e6;
+              border: 1px solid white;
               border-radius: 5px;
               letter-spacing: 3px;
               text-transform: uppercase;
@@ -46,7 +46,7 @@
                 border-radius: 10px; }
 
                 .card-body {
-                  border-bottom: 1px solid #e6e6e6; }
+                  border-bottom: 1px solid white; }
 
                   .card {
                     border: none; }
