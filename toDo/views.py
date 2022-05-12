@@ -51,9 +51,11 @@ def logout():
 
 @current_app.route("/signup", methods=["POST"])
 def signup():
-    user_ = User(username=request.form["username"],
-                 password=generate_password_hash(request.form["password"]),
-                 date_joined=datetime.datetime.now())
+    user_ = User(
+        username=request.form["username"],
+        password=generate_password_hash(request.form["password"]),
+        date_joined=datetime.datetime.now(),
+    )
 
     database.create(user_)
     login_user(user_)
@@ -68,7 +70,10 @@ def change_password():
     new_password1 = request.form["new_password1"]
     new_password2 = request.form["new_password2"]
 
-    if check_password_hash(current_user.password, old_password) and new_password1 == new_password2:
+    if (
+        check_password_hash(current_user.password, old_password)
+        and new_password1 == new_password2
+    ):
         current_user.password = generate_password_hash(request.form["new_password1"])
         database.update()
         return redirect(request.referrer)
@@ -89,9 +94,12 @@ def user_edit():
 @login_required
 def task_create():
     x = request.form["content"].split(", ")
-    database.create_multiple([Task(user=current_user.id,
-                                   content=i,
-                                   date_created=datetime.datetime.now()) for i in x])
+    database.create_multiple(
+        [
+            Task(user=current_user.id, content=i, date_created=datetime.datetime.now())
+            for i in x
+        ]
+    )
 
     return redirect(request.referrer)
 
@@ -101,10 +109,17 @@ def task_create():
 def subtask_create():
     _: Task = Task.query.get(request.form["id_"])
     x = request.form["content"].split(", ")
-    database.create_multiple([Task(user=current_user.id,
-                                   parent_task=_.id,
-                                   content=i,
-                                   date_created=datetime.datetime.now()) for i in x])
+    database.create_multiple(
+        [
+            Task(
+                user=current_user.id,
+                parent_task=_.id,
+                content=i,
+                date_created=datetime.datetime.now(),
+            )
+            for i in x
+        ]
+    )
 
     return redirect(request.referrer)
 

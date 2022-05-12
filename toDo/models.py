@@ -17,8 +17,12 @@ class User(db.Model, UserMixin):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
 
-    def get_tasks(self, order_by: str = "date_created desc", filter_: str = "done is False"):
-        return self.tasks.filter(Task.parent_task == None, text(filter_)).order_by(Task.done, text(order_by))
+    def get_tasks(
+        self, order_by: str = "date_created desc", filter_: str = "done is False"
+    ):
+        return self.tasks.filter(Task.parent_task == None, text(filter_)).order_by(
+            Task.done, text(order_by)
+        )
 
 
 class Task(db.Model):
