@@ -104,6 +104,12 @@ def task_create():
     return redirect(request.referrer)
 
 
+@current_app.route("/task")
+def task():
+    task_: Task = Task.query.get(int(request.args.get("id_")))
+    return render_template("task.html", task_=task_)
+
+
 @current_app.route("/subtask_create", methods=["POST"])
 @login_required
 def subtask_create():

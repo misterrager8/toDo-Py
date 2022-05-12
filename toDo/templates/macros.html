@@ -38,7 +38,7 @@
   <div class="card-body {% if task.done %}opacity-25{% endif %}">
     <a onclick="taskToggle({{ task.id }})">{{ check_icon(task.done) }}</a>
     <span contenteditable="true" onkeydown="taskUpdate({{ task.id }}, event)" id="taskContent{{ task.id }}" class="px-2">{{ task.content }}</span>
-    <a onclick="toggleDiv('info' + {{ task.id }})">
+    <a href="{{ url_for('task', id_=task.id) }}">
       {% if task.get_subtasks(filter_='not done').count() > 0 %}
       <span class="badge-custom text-warning">{{ task.get_subtasks(filter_='not done').count() }}</span>
       {% else %}
