@@ -1,9 +1,27 @@
+$( document ).ready(function() {
+    if (localStorage.getItem('todo_theme') == 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+});
+
 function toggleDiv(divId) {
     $('#' + divId).fadeToggle(250);
 }
 
 function refreshPage() {
     $('#pageContent').load(location.href + ' #pageContent');
+}
+
+function changeTheme() {
+    if (localStorage.getItem('todo_theme') == 'dark') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('todo_theme', 'light');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('todo_theme', 'dark');
+    }
 }
 
 function taskCreate() {
