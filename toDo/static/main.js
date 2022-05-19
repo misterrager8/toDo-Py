@@ -1,10 +1,11 @@
-$( document ).ready(function() {
-    if (localStorage.getItem('todo_theme') == 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-    }
+$(document).ready(function() {
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('todo_theme'));
 });
+
+function changeTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('todo_theme', theme);
+}
 
 function toggleDiv(divId) {
     $('#' + divId).fadeToggle(250);
@@ -12,16 +13,6 @@ function toggleDiv(divId) {
 
 function refreshPage() {
     $('#pageContent').load(location.href + ' #pageContent');
-}
-
-function changeTheme() {
-    if (localStorage.getItem('todo_theme') == 'dark') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('todo_theme', 'light');
-    } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('todo_theme', 'dark');
-    }
 }
 
 function taskCreate() {

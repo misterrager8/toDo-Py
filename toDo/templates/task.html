@@ -7,6 +7,7 @@
     <input class="input-custom" id="subtaskFor{{ task_.id }}" autocomplete="off" placeholder="+ New Subtasks, seperated by commas">
     <button type="submit" class="btn-custom"><i class="bi bi-plus-circle"></i></button>
 </form>
+<small class="font-custom">{{ '%s undone' % task_.get_subtasks(filter_='not done').count() }}</small>
 {% for i in task_.get_subtasks() %}
 {{ macros.subtask_tile(i) }}
 {% endfor %}

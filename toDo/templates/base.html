@@ -18,7 +18,20 @@
     </a>
     <div class="collapse navbar-collapse" id="navContent">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item p-2"><a class="bi bi-circle-half" onclick="changeTheme()"></a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-target="#themeDD"><i class=" bi bi-circle-half"></i></a>
+            <div class="dropdown-menu dropdown-menu-end text-center" id="themeDD">
+                <a class="dropdown-item" onclick="changeTheme('light')">light</a>
+                <a class="dropdown-item" onclick="changeTheme('gray')">gray</a>
+                <a class="dropdown-item" onclick="changeTheme('dark')">dark</a>
+                <a class="dropdown-item" onclick="changeTheme('blue')">blue</a>
+                <a class="dropdown-item" onclick="changeTheme('brown')">brown</a>
+                <a class="dropdown-item" onclick="changeTheme('vanilla')">vanilla</a>
+                <a class="dropdown-item" onclick="changeTheme('purple')">purple</a>
+                <a class="dropdown-item" onclick="changeTheme('green')">green</a>
+                <a class="dropdown-item" onclick="changeTheme('orange')">orange</a>
+            </div>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-target="#userDD" data-bs-toggle="dropdown">
             {% if not current_user.is_anonymous %}<span class="nav-item me-2">{{ current_user.username }}</span>{% endif %}
