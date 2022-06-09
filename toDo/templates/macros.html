@@ -1,42 +1,8 @@
 <!--suppress ALL-->
-
-{% macro modal(id) %}
-<div class="modal" id="{{ id }}">
-  <div class="modal-dialog">
-    <div class="modal-content p-3">
-      {{ caller() }}
-    </div>
-  </div>
-</div>
-{% endmacro %}
-
-<!--ICONS-->
-
-<!--Check icon-->
-{% macro check_icon(done, size=20) %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="{% if done %}green{% else %}lightgray{% endif %}" class="bi bi-check-lg" viewBox="0 0 20 20">
-  <path d="M13.485 1.431a1.473 1.473 0 0 1 2.104 2.062l-7.84 9.801a1.473 1.473 0 0 1-2.12.04L.431 8.138a1.473 1.473 0 0 1 2.084-2.083l4.111 4.112 6.82-8.69a.486.486 0 0 1 .04-.045z"/>
-</svg>
-{% endmacro %}
-
-{% macro pin_icon(pinned, size=20, class='') %}
-{% if pinned %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="red" class="bi bi-pin-angle-fill {{ class }}" viewBox="0 0 16 16">
-  <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146z"/>
-</svg>
-{% else %}
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ size }}" height="{{ size }}" fill="currentColor" class="bi bi-pin-angle {{ class }}" viewBox="0 0 16 16">
-  <path d="M9.828.722a.5.5 0 0 1 .354.146l4.95 4.95a.5.5 0 0 1 0 .707c-.48.48-1.072.588-1.503.588-.177 0-.335-.018-.46-.039l-3.134 3.134a5.927 5.927 0 0 1 .16 1.013c.046.702-.032 1.687-.72 2.375a.5.5 0 0 1-.707 0l-2.829-2.828-3.182 3.182c-.195.195-1.219.902-1.414.707-.195-.195.512-1.22.707-1.414l3.182-3.182-2.828-2.829a.5.5 0 0 1 0-.707c.688-.688 1.673-.767 2.375-.72a5.922 5.922 0 0 1 1.013.16l3.134-3.133a2.772 2.772 0 0 1-.04-.461c0-.43.108-1.022.589-1.503a.5.5 0 0 1 .353-.146zm.122 2.112v-.002.002zm0-.002v.002a.5.5 0 0 1-.122.51L6.293 6.878a.5.5 0 0 1-.511.12H5.78l-.014-.004a4.507 4.507 0 0 0-.288-.076 4.922 4.922 0 0 0-.765-.116c-.422-.028-.836.008-1.175.15l5.51 5.509c.141-.34.177-.753.149-1.175a4.924 4.924 0 0 0-.192-1.054l-.004-.013v-.001a.5.5 0 0 1 .12-.512l3.536-3.535a.5.5 0 0 1 .532-.115l.096.022c.087.017.208.034.344.034.114 0 .23-.011.343-.04L9.927 2.028c-.029.113-.04.23-.04.343a1.779 1.779 0 0 0 .062.46z"/>
-</svg>
-{% endif %}
-{% endmacro %}
-
-<!--CARDS, ETC-->
-
 {% macro task_tile(task) %}
 <div class="card col-xl-12">
   <div class="card-body {% if task.done %}opacity-25{% endif %}">
-    <a onclick="taskToggle({{ task.id }})">{{ check_icon(task.done) }}</a>
+    <a onclick="taskToggle({{ task.id }})" class="bi bi-check-lg {% if task.done %}text-success{% endif %}"></a>
     <span contenteditable="true" onkeydown="taskUpdate({{ task.id }}, event)" id="taskContent{{ task.id }}" class="px-2">{{ task.content }}</span>
     <a href="{{ url_for('task', id_=task.id) }}">
       {% if task.get_subtasks(filter_='not done').count() > 0 %}
@@ -46,7 +12,7 @@
       {% endif %}
     </a>
     <div class="float-end">
-      <a onclick="taskPin({{ task.id }})" class="me-1">{{ pin_icon(task.pinned) }}</a>
+      <a onclick="taskPin({{ task.id }})" class="bi bi-pin-angle{% if task.pinned %}-fill text-danger{% endif %} me-1"></a>
       <a class="badge-custom text-danger" style="display:none" onclick="taskDelete({{ task.id }})" id="deleteTask{{ task.id }}">Delete?</a>
       <a class="text-danger" onclick="toggleDiv('deleteTask' + {{ task.id }})"><i class="bi bi-trash3-fill"></i> </a>
     </div>
@@ -57,7 +23,7 @@
 {% macro subtask_tile(subtask) %}
 <div class="card">
   <div class="card-body py-1 {% if subtask.done %}opacity-25{% endif %}">
-    <a onclick="taskToggle({{ subtask.id }})">{{ check_icon(subtask.done) }}</a>
+    <a onclick="taskToggle({{ subtask.id }})" class="bi bi-check-lg {% if subtask.done %}text-success{% endif %}"></a>
     <span class="px-2" contenteditable="true" id="taskContent{{ subtask.id }}" onkeydown="taskUpdate({{ subtask.id }}, event)">{{ subtask.content }}</span>
     <a onclick="toggleDiv('deleteSubtask' + {{ subtask.id }})" class="text-danger float-end"><i class="bi bi-trash3-fill"></i> </a>
     <a style="display:none" id="deleteSubtask{{ subtask.id }}" onclick="taskDelete({{ subtask.id }})" class="badge-custom text-danger float-end">Delete?</a>
