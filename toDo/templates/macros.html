@@ -50,15 +50,6 @@
       <a class="badge-custom text-danger" style="display:none" onclick="taskDelete({{ task.id }})" id="deleteTask{{ task.id }}">Delete?</a>
       <a class="text-danger" onclick="toggleDiv('deleteTask' + {{ task.id }})"><i class="bi bi-trash3-fill"></i> </a>
     </div>
-    <div id="info{{ task.id }}" style="display:none">
-      <form onsubmit="event.preventDefault(); subtaskCreate({{ task.id }}); this.reset();" class="input-group my-3">
-        <input class="input-custom" id="subtaskFor{{ task.id }}" autocomplete="off" placeholder="+ New Subtasks, seperated by commas">
-        <button type="submit" class="btn-custom"><i class="bi bi-plus-circle"></i></button>
-      </form>
-      {% for i in task.get_subtasks() %}
-      {{ subtask_tile(i) }}
-      {% endfor %}
-    </div>
   </div>
 </div>
 {% endmacro %}
@@ -110,7 +101,7 @@
 
 {% macro task_create_form() %}
 <form onsubmit="event.preventDefault(); taskCreate(); this.reset();" class="input-group">
-  <input id="taskContent" class="input-custom" autocomplete="off" placeholder="Tasks, seperated by commas">
-  <button type="submit" class="btn-custom"><i class="bi bi-plus-lg"></i></button>
+  <input id="taskContent" class="input-custom flex-grow-1" autocomplete="off" placeholder="Tasks, seperated by ', '">
+  <button type="submit" class="btn-custom"><i class="bi bi-plus-lg"></i> add tasks</button>
 </form>
 {% endmacro %}
