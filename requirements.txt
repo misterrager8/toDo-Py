@@ -1,7 +1,8 @@
-Flask==2.0.0
-Flask_Login==0.5.0
-Flask_SQLAlchemy==2.5.1
-PyMySQL==1.0.2
-python-dotenv==0.20.0
-SQLAlchemy==1.4.35
-Werkzeug==2.0.3
+SQLAlchemy~=1.4.29
+python-dotenv~=0.19.0
+Flask~=2.0.1
+Werkzeug~=2.0.1
+gunicorn
+flask_sqlalchemy
+PyMySQL~=1.0.2
+flask_login
