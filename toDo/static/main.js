@@ -15,45 +15,75 @@ function refreshPage() {
     $('#pageContent').load(location.href + ' #pageContent');
 }
 
-function taskCreate() {
+function createTask() {
     $('#spinner').show();
-    $.post('task_create', {
-        content : $('#taskContent').val()
+    $.post('create_task', {
+        description : $('#description').val(),
+        list_id : $('#list_id').val()
     }, function(data) {
         refreshPage();
     });
 }
 
-function subtaskCreate(taskId) {
+function editTask(taskId) {
     $('#spinner').show();
-    $.post('subtask_create', {
+    $.post('edit_task', {
         id_: taskId,
-        content : $('#subtaskFor' + taskId).val()
+        description : $('#description' + taskId).val()
     }, function(data) {
         refreshPage();
     });
 }
 
-function taskUpdate(taskId, event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        $('#spinner').show();
-        $.post('task_update', {
-            id_ : taskId,
-            content : $('#taskContent' + taskId).html()
-        }, function(data) {
-            refreshPage();
-        });
-    }
-}
-
-function taskDelete(taskId) {
+function toggleTask(taskId) {
     $('#spinner').show();
-    $.get('task_delete', {
-        id_ : taskId
+    $.get('toggle_task', {
+        id_: taskId
     }, function(data) {
         refreshPage();
     });
+}
+
+function deleteTask(taskId) {
+    $('#spinner').show();
+    $.get('delete_task', {
+        id_: taskId
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function createList() {
+    $('#spinner').show();
+    $.post('create_list', {
+        name : $('#name').val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function editList(listId) {
+    $('#spinner').show();
+    $.post('edit_list', {
+        id_: listId,
+        name : $('#name' + listId).val()
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function deleteList(listId) {
+    $('#spinner').show();
+    $.get('delete_list', {
+        id_: listId
+    }, function(data) {
+        refreshPage();
+    });
+}
+
+function copyToClipboard(taskId) {
+    document.getElementById('description' + taskId).select();
+    document.execCommand('copy');
 }
 
 function userEdit() {
@@ -71,24 +101,6 @@ function changePassword() {
         old_password : $('#oldPassword').val(),
         new_password1 : $('#newPassword1').val(),
         new_password2 : $('#newPassword2').val()
-    }, function(data) {
-        refreshPage();
-    });
-}
-
-function taskToggle(taskId) {
-    $('#spinner').show();
-    $.get('task_toggle', {
-        id_ : taskId
-    }, function(data) {
-        refreshPage();
-    });
-}
-
-function taskPin(taskId) {
-    $('#spinner').show();
-    $.get('task_pin', {
-        id_ : taskId
     }, function(data) {
         refreshPage();
     });

@@ -2,31 +2,24 @@
 {% macro task_tile(task) %}
 <div class="card col-xl-12">
   <div class="card-body {% if task.done %}opacity-25{% endif %}">
-    <a onclick="taskToggle({{ task.id }})" class="bi bi-check-lg {% if task.done %}text-success{% endif %}"></a>
-    <span contenteditable="true" onkeydown="taskUpdate({{ task.id }}, event)" id="taskContent{{ task.id }}" class="px-2">{{ task.content }}</span>
-    <a href="{{ url_for('task', id_=task.id) }}">
-      {% if task.get_subtasks(filter_='not done').count() > 0 %}
-      <span class="badge-custom text-warning">{{ task.get_subtasks(filter_='not done').count() }}</span>
-      {% else %}
-      <i class="text-success bi bi-plus-circle"></i>
-      {% endif %}
-    </a>
-    <div class="float-end">
-      <a onclick="taskPin({{ task.id }})" class="bi bi-pin-angle{% if task.pinned %}-fill text-danger{% endif %} me-1"></a>
-      <a class="badge-custom text-danger" style="display:none" onclick="taskDelete({{ task.id }})" id="deleteTask{{ task.id }}">Delete?</a>
-      <a class="text-danger" onclick="toggleDiv('deleteTask' + {{ task.id }})"><i class="bi bi-trash3-fill"></i> </a>
-    </div>
+      <a class="me-2" onclick="toggleTask({{ task.id }})"><i class="bi bi-check {% if task.done %}text-success{% else %}text-secondary{% endif %}"></i></a>
+      <a class="me-2" onclick="copyToClipboard({{ task.id }})"><i class="bi bi-clipboard"></i></a>
+      <input required onchange="editTask({{ task.id }})" autocomplete="off" class="input-hidden" id="description{{ task.id }}" value="{{ task.description }}" placeholder="Task">
+      <div class="float-end">
+          {% if request.endpoint != 'list' %}
+          <a href="{{ url_for('list', id_=task.id) }}" class="badge-custom me-2" style="background-color: {{ task.lists.color }}">{{ task.lists.name }}</a>
+          {% endif %}
+          <a onclick="deleteTask({{ task.id }})" class="font-custom text-danger" id="deleteTask{{ task.id }}" style="display: none">Delete?</a>
+          <a onclick="toggleDiv('deleteTask' + {{ task.id }})" class="text-danger"><i class="bi bi-trash3"></i></a>
+      </div>
   </div>
 </div>
 {% endmacro %}
 
-{% macro subtask_tile(subtask) %}
-<div class="card">
-  <div class="card-body py-1 {% if subtask.done %}opacity-25{% endif %}">
-    <a onclick="taskToggle({{ subtask.id }})" class="bi bi-check-lg {% if subtask.done %}text-success{% endif %}"></a>
-    <span class="px-2" contenteditable="true" id="taskContent{{ subtask.id }}" onkeydown="taskUpdate({{ subtask.id }}, event)">{{ subtask.content }}</span>
-    <a onclick="toggleDiv('deleteSubtask' + {{ subtask.id }})" class="text-danger float-end"><i class="bi bi-trash3-fill"></i> </a>
-    <a style="display:none" id="deleteSubtask{{ subtask.id }}" onclick="taskDelete({{ subtask.id }})" class="badge-custom text-danger float-end">Delete?</a>
+{% macro list_tile(list) %}
+<div class="card col-xl-12">
+  <div class="card-body">
+      {{ list.name }}
   </div>
 </div>
 {% endmacro %}
@@ -65,9 +58,21 @@
 </form>
 {% endmacro %}
 
-{% macro task_create_form() %}
-<form onsubmit="event.preventDefault(); taskCreate(); this.reset();" class="input-group">
-  <input id="taskContent" class="input-custom flex-grow-1" autocomplete="off" placeholder="Tasks, seperated by ', '">
-  <button type="submit" class="btn-custom"><i class="bi bi-plus-lg"></i> add tasks</button>
+{% macro task_create_form(list=none) %}
+<form onsubmit="event.preventDefault(); createTask(); this.reset();" class="input-group">
+  <input required style="width: 170px" id="description" class="input-custom" autocomplete="off" placeholder="New Task">
+  <select id="list_id" class="input-custom" style="width: 70px; {% if list %}display: none{% endif %}">
+      {% for i in current_user.lists %}
+      <option value="{{ i.id }}" {% if list.id == i.id %}selected{% endif %}>{{ i.name }}</option>
+      {% endfor %}
+  </select>
+  <button type="submit" class="btn-custom"><i class="bi bi-plus-lg"></i> Task</button>
+</form>
+{% endmacro %}
+
+{% macro list_create_form() %}
+<form onsubmit="event.preventDefault(); createList(); this.reset();" class="input-group">
+  <input required id="name" class="input-custom" autocomplete="off" placeholder="New List">
+  <button type="submit" class="btn-custom"><i class="bi bi-plus-lg"></i> List</button>
 </form>
 {% endmacro %}

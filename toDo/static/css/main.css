@@ -12,72 +12,23 @@ html[data-theme="light"] {
    --body-txt: #1a1a1a;
 }
 
-html[data-theme="blue"] {
-    --navbar-bg: #C9CAF8;
-    --navbar-txt: #3D348B;
-    --body-bg: #3D348B;
-    --body-txt: #C9CAF8;
-}
-
-html[data-theme="brown"] {
-    --navbar-bg: #A19E91;
-    --navbar-txt: #230903;
-    --body-bg: #230903;
-    --body-txt: #A19E91;
-}
-
-html[data-theme="vanilla"] {
-    --navbar-bg: #F5FFD6;
-    --navbar-txt: #A6A670;
-    --body-bg: #A6A670;
-    --body-txt: #F5FFD6;
-}
-
-html[data-theme="purple"] {
-    --navbar-bg: #AF9AB2;
-    --navbar-txt: #672A4E;
-    --body-bg: #672A4E;
-    --body-txt: #AF9AB2;
-}
-
-html[data-theme="green"] {
-    --navbar-bg: #94A187;
-    --navbar-txt: #29524A;
-    --body-bg: #29524A;
-    --body-txt: #94A187;
-}
-
-html[data-theme="orange"] {
-    --navbar-bg: #FFFBBD;
-    --navbar-txt: #CA3C25;
-    --body-bg: #CA3C25;
-    --body-txt: #FFFBBD;
-}
-
-html[data-theme="gray"] {
-    --navbar-bg: #F2F2F2;
-    --navbar-txt: #595959;
-    --body-bg: #595959;
-    --body-txt: #F2F2F2;
-}
-
 .border-custom, .input-custom, .btn-custom {
     border: 1px solid var(--body-txt);
     border-radius: 5px;
 }
 
-.font-custom, .dropdown-item, .badge-custom, .btn-custom, ::placeholder {
+.font-custom, .dropdown-item, .btn-custom, ::placeholder {
     letter-spacing: 3px;
-    text-transform: uppercase;
+    font-size: 0.9em;
     font-weight: bold;
 }
 
-body, .card, .modal-content, .input-custom, .btn-custom:hover, .dropdown-item:hover {
+body, nav, .card, .modal-content, .input-custom, .input-hidden, .btn-custom:hover, .dropdown-item:hover {
     background-color: var(--body-bg);
     color: var(--body-txt) !important;
 }
 
-.navbar, .btn-custom, .dropdown-menu {
+.btn-custom, .dropdown-menu {
     background-color: var(--navbar-bg);
     color: var(--navbar-txt);
 }
@@ -92,18 +43,14 @@ a, a:hover, nav-link, nav-link:hover {
     padding: 3px 10px;
 }
 
+.input-hidden {
+    border: 0;
+}
+
 .btn-custom {
     padding: 5px 10px;
     font-size: 0.8em;
     transition: background-color .5s;
-}
-
-.badge-custom {
-    padding: 1px 10px;
-    font-size: 0.7em;
-    border: 1px solid currentcolor;
-    color: currentcolor;
-    border-radius: 10px;
 }
 
 .card-body {
@@ -119,4 +66,23 @@ a, a:hover, nav-link, nav-link:hover {
 
 .dropdown-item {
     transition: background-color .5s;
+}
+
+.badge-custom {
+    font-size: 0.8em;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-weight: bold;
+    color: white !important;
+}
+
+nav {
+    border-bottom: 1px solid var(--body-txt);
+}
+
+.badge-num {
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    padding: 1px 5px;
 }

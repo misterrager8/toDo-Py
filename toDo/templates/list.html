@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block body %}
+<title>{{ list_.name }}</title>
+<div>
+  <input class="input-hidden font-custom text-center w-100 mb-3" id="name{{ list_.id }}" autocomplete="off" value="{{ list_.name }}" onchange="editList({{ list_.id }})">
+  {{ macros.task_create_form(list_) }}
+  <span class="badge" style="color: inherit">{{ list_.get_tasks(filter_='not done').count() }} undone</span>
+    
+  <div class="row my-3">
+    {% for i in list_.get_tasks() %}
+    {{ macros.task_tile(i) }}
+    {% endfor %}
+  </div>
+    <a class="font-custom text-danger" onclick="toggleDiv('deleteTask')">Delete Folder</a>
+    <a id="deleteTask" style="display: none" class="font-custom text-danger" href="{{ url_for('delete_list', id_=list_.id) }}">?</a>
+</div>
+{% endblock %}

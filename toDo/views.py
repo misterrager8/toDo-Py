@@ -1,4 +1,5 @@
 import datetime
+import random
 
 from flask import request, render_template, current_app, url_for
 from flask_login import login_user, logout_user, current_user, login_required
@@ -6,15 +7,12 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 
 from toDo import login_manager, db
-from toDo.ctrla import Database
-from toDo.models import User, Task
-
-database = Database()
+from toDo.models import User, Task, List
 
 
 @login_manager.user_loader
 def load_user(id_) -> User:
-    _: User = database.get(User, id_)
+    _: User = User.query.get(id_)
     return _
 
 
@@ -22,6 +20,12 @@ def load_user(id_) -> User:
 @login_required
 def profile():
     return render_template("profile.html")
+
+
+@current_app.route("/list")
+def list():
+    list_ = List.query.get(int(request.args.get("id_")))
+    return render_template("list.html", list_=list_)
 
 
 @current_app.route("/")
@@ -54,10 +58,10 @@ def signup():
     user_ = User(
         username=request.form["username"],
         password=generate_password_hash(request.form["password"]),
-        date_joined=datetime.datetime.now(),
     )
 
-    database.create(user_)
+    db.session.add(user_)
+    db.session.commit()
     login_user(user_)
 
     return redirect(url_for("index"))
@@ -75,7 +79,7 @@ def change_password():
         and new_password1 == new_password2
     ):
         current_user.password = generate_password_hash(request.form["new_password1"])
-        database.update()
+        db.session.commit()
         return redirect(request.referrer)
     else:
         return "Try again"
@@ -85,86 +89,87 @@ def change_password():
 @login_required
 def user_edit():
     current_user.username = request.form["username"]
-    database.update()
+    db.session.commit()
 
     return redirect(request.referrer)
 
 
-@current_app.route("/task_create", methods=["POST"])
+@current_app.route("/create_task", methods=["POST"])
 @login_required
-def task_create():
-    x = request.form["content"].split(", ")
-    database.create_multiple(
-        [
-            Task(user=current_user.id, content=i, date_created=datetime.datetime.now())
-            for i in x
-        ]
+def create_task():
+    task_ = Task(
+        description=request.form["description"],
+        user=current_user.id,
+        list_id=request.form["list_id"],
+        date_created=datetime.datetime.now(),
     )
+    db.session.add(task_)
+    db.session.commit()
 
     return redirect(request.referrer)
 
 
-@current_app.route("/task")
-def task():
+@current_app.route("/edit_task", methods=["POST"])
+@login_required
+def edit_task():
+    task_: Task = Task.query.get(int(request.form["id_"]))
+    task_.description = request.form["description"]
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+
+@current_app.route("/delete_task")
+@login_required
+def delete_task():
     task_: Task = Task.query.get(int(request.args.get("id_")))
-    return render_template("task.html", task_=task_)
+    db.session.delete(task_)
+    db.session.commit()
+
+    return redirect(request.referrer)
 
 
-@current_app.route("/subtask_create", methods=["POST"])
+@current_app.route("/toggle_task")
 @login_required
-def subtask_create():
-    _: Task = Task.query.get(request.form["id_"])
-    x = request.form["content"].split(", ")
-    database.create_multiple(
-        [
-            Task(
-                user=current_user.id,
-                parent_task=_.id,
-                content=i,
-                date_created=datetime.datetime.now(),
-            )
-            for i in x
-        ]
+def toggle_task():
+    task_: Task = Task.query.get(int(request.args.get("id_")))
+    task_.done = not task_.done
+    db.session.commit()
+
+    return redirect(request.referrer)
+
+
+@current_app.route("/create_list", methods=["POST"])
+@login_required
+def create_list():
+    list_ = List(
+        name=request.form["name"],
+        color="#{:06x}".format(random.randint(0, 0xFFFFFF)),
+        user=current_user.id,
     )
+    db.session.add(list_)
+    db.session.commit()
 
     return redirect(request.referrer)
 
 
-@current_app.route("/task_update", methods=["POST"])
+@current_app.route("/edit_list", methods=["POST"])
 @login_required
-def task_update():
-    _: Task = Task.query.get(request.form["id_"])
-    _.content = request.form["content"]
-    database.update()
+def edit_list():
+    list_: List = List.query.get(int(request.form["id_"]))
+    list_.name = request.form["name"]
+    db.session.commit()
+
     return redirect(request.referrer)
 
 
-@current_app.route("/task_delete")
+@current_app.route("/delete_list")
 @login_required
-def task_delete():
-    _: Task = Task.query.get(request.args.get("id_"))
+def delete_list():
+    list_: List = List.query.get(int(request.args.get("id_")))
+    for i in list_.tasks:
+        db.session.delete(i)
+    db.session.delete(list_)
+    db.session.commit()
 
-    database.delete_mutliple(_.subtasks)
-    database.delete(_)
-    return redirect(request.referrer)
-
-
-@current_app.route("/task_toggle")
-@login_required
-def task_toggle():
-    _: Task = Task.query.get(request.args.get("id_"))
-    _.done = not _.done
-    _.date_done = datetime.datetime.now() if _.done else None
-
-    database.update()
-    return redirect(request.referrer)
-
-
-@current_app.route("/task_pin")
-@login_required
-def task_pin():
-    _: Task = Task.query.get(request.args.get("id_"))
-    _.pinned = not _.pinned
-
-    database.update()
-    return redirect(request.referrer)
+    return redirect(url_for("index"))
